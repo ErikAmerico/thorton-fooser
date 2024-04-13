@@ -1,0 +1,55 @@
+#footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  border-top: 1px solid #ccc;
+  background-color: gray;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+#footer-logo {
+  position: relative;
+  top: 2px;
+  width: 2.5rem;
+  height: 5rem;
+  margin-right: 1rem;
+}
+
+#footer-contact-info {
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+@media (max-width: 450px) {
+  #footer-message {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 415px) {
+  #footer-message {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 370px) {
+  #footer-message {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 315px) {
+  #footer-message {
+    font-size: 7px;
+  }
+}
