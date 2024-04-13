@@ -1,7 +1,21 @@
 #timer {
   font-size: 2rem;
   font-weight: bold;
-  color: red;
+  color: rgb(61, 128, 186);
+  text-align: center;
+  margin: 1rem 0;
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 15px;
+}
+
+#timer span {
+  display: block;
+}
+
+#countdown-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: black;
   text-align: center;
   margin: 1rem 0;
 }

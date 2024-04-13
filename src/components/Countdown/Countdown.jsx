@@ -16,6 +16,13 @@ const Timer = () => {
         minutes: Math.floor((difference / 1000 / 60) % 60),
         seconds: Math.floor((difference / 1000) % 60),
       };
+    } else {
+      timeLeft = {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
     }
 
     return timeLeft;
@@ -34,18 +41,18 @@ const Timer = () => {
   const timerComponents = [];
 
   Object.keys(timeLeft).forEach((interval) => {
-    if (!timeLeft[interval]) {
-      return;
+    if (timeLeft[interval] !== undefined && timeLeft[interval] !== null) {
+      timerComponents.push(
+        <span key={interval}>
+          {timeLeft[interval]} {interval}{" "}
+        </span>
+      );
     }
-
-    timerComponents.push(
-      <span key={interval}>
-        {timeLeft[interval]} {interval}{" "}
-      </span>
-    );
   });
+
   return (
     <div id="timer">
+      <h2 id="countdown-title">Countdown</h2>
       {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>}
     </div>
   );
