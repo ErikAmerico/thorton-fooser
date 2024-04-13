@@ -3,7 +3,7 @@ import "./timeLine.css";
 const TimeLine = () => {
   return (
     <div id="history-container">
-      <h2>The Champions</h2>
+      <h2>Past Champions</h2>
       <Timeline
         mode={"right"}
         items={[

@@ -1,5 +1,19 @@
-#trophy-image {
-  height: 10rem;
-  margin: 0;
-  width: 5rem;
+.reigning-champ-container {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 15px;
+}
+
+.reigning-champ-image {
+  background-image: url("/assets/britt&zach.png");
+  background-size: cover;
+  background-position: center;
+  height: 35rem;
+  width: 100%;
+  border-radius: 15px;
+}
+
+.reigning-champ-title {
+  color: rgb(175, 149, 1);
+  text-shadow: black 0 0 30px;
+  -webkit-text-stroke: 0.2px black;
 }
