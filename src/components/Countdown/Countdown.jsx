@@ -52,7 +52,6 @@ const Timer = () => {
 
   return (
     <div id="timer">
-      <h2 id="countdown-title">Countdown</h2>
       {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>}
     </div>
   );
