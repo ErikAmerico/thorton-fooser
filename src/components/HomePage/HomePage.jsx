@@ -8,21 +8,16 @@ const HomePage = () => {
     <>
       <div>
         <Row>
-          <Col lg={12}>
+          <Col lg={24}>
             <h1>NEXT TOURNAMENT: 4/20/2024 @ 8 PM</h1>
           </Col>
         </Row>
         <Row>
-          <Col lg={12}>
+          <Col lg={6} offset={3}>
             <Timer />
           </Col>
-          <Col lg={12}>
+          <Col lg={6} offset={3}>
             <TimeLine />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <img src="/assets/trophyImage.png" alt="" id="trophy-image" />
           </Col>
         </Row>
       </div>
