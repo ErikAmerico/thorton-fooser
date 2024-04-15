@@ -14,12 +14,24 @@
 
 .reigning-champ-title {
   color: rgb(175, 149, 1);
-  text-shadow: black 0 0 40px;
+  text-shadow: black 0 0 43px;
   -webkit-text-stroke: 0.2px black;
 }
 
-video {
+#doc-container {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 15px;
+}
+#doc-title {
+  color: rgb(61, 128, 186);
   margin-top: 20px;
+  font-family: "Roboto", sans-serif;
+  padding: 10px;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+video {
   max-width: 100%;
   height: auto;
   border-radius: 15px;
@@ -29,5 +41,17 @@ video {
 @media (min-width: 455px) and (max-width: 991px) {
   .reigning-champ-image {
     background-position: top;
+  }
+}
+
+@media (max-width: 370px) {
+  #doc-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 275px) {
+  #doc-title {
+    font-size: 25px;
   }
 }
