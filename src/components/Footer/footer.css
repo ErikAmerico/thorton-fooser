@@ -17,8 +17,6 @@
 }
 
 #footer-contact-info {
-  align-items: center;
-  justify-content: center;
   font-family: "Roboto", sans-serif;
 }
 
@@ -27,26 +25,8 @@ a {
   color: #000;
 }
 
-@media (max-width: 450px) {
-  #footer-message {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 415px) {
+@media (max-width: 285px) {
   #footer-message {
     font-size: 11px;
-  }
-}
-
-@media (max-width: 370px) {
-  #footer-message {
-    font-size: 9px;
-  }
-}
-
-@media (max-width: 315px) {
-  #footer-message {
-    font-size: 7px;
   }
 }

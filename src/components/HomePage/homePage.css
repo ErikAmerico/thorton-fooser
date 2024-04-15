@@ -14,6 +14,20 @@
 
 .reigning-champ-title {
   color: rgb(175, 149, 1);
-  text-shadow: black 0 0 30px;
+  text-shadow: black 0 0 40px;
   -webkit-text-stroke: 0.2px black;
+}
+
+video {
+  margin-top: 20px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 0 25px black;
+}
+
+@media (min-width: 455px) and (max-width: 991px) {
+  .reigning-champ-image {
+    background-position: top;
+  }
 }

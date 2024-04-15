@@ -9,10 +9,8 @@ const Footer = () => {
           <img id="footer-logo" src="assets/trophy.png" alt="" />
         </Col>
         <Col id="footer-contact-info">
-          <p id="footer-message">
-            Email Erik for address details with the subject `Foosball`
-          </p>
-          <p id="footer-email">olsonerik91@gmail.com</p>
+          <p id="footer-message">All foosball related inquires text:</p>
+          <p id="footer-text">781-333-1765</p>
         </Col>
       </Row>
     </div>
