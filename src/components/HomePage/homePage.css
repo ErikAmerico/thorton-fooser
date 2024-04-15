@@ -21,7 +21,9 @@
 #doc-container {
   background-color: rgba(128, 128, 128, 0.2);
   border-radius: 15px;
+  margin-bottom: 30px;
 }
+
 #doc-title {
   color: rgb(61, 128, 186);
   margin-top: 20px;
