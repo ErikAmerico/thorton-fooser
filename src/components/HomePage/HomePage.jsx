@@ -41,8 +41,11 @@ const HomePage = () => {
             <TimeLine />
           </Col>
           <Col
-            xs={{ span: 20, offset: 2, order: 2 }}
-            md={{ span: 16, offset: 4, order: 2 }}
+            // xs={{ span: 20, offset: 2, order: 2 }}
+            // md={{ span: 16, offset: 4, order: 2 }}
+            // lg={{ span: 6, offset: 4, order: 3 }}
+            xs={{ span: 24, offset: 0, order: 2 }}
+            md={{ span: 20, offset: 2, order: 2 }}
             lg={{ span: 6, offset: 4, order: 3 }}
           >
             <div className="reigning-champ-container">
