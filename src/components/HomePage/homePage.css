@@ -12,9 +12,8 @@
   border-radius: 15px;
 }
 
-.reigning-champ-title {
+.reigning-champ-title- {
   color: rgb(175, 149, 1);
-  text-shadow: black 0 0 44px;
   -webkit-text-stroke: 0.2px black;
 }
 
