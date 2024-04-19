@@ -46,7 +46,7 @@ const HomePage = () => {
             lg={{ span: 6, offset: 4, order: 3 }}
           >
             <div className="reigning-champ-container">
-              <h1 className="reigning-champ-title-">Reigning Champs</h1>
+              <h1 className="reigning-champ-title">Reigning Champs</h1>
               <h4 className="reigning-champ-team">Brickwall-Brittany & Zach</h4>
               <div className="reigning-champ-image"></div>
             </div>
