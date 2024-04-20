@@ -23,6 +23,7 @@ const Timer = () => {
         hours: 0,
         minutes: 0,
         seconds: 0,
+        expired: true,
       };
     }
 
@@ -37,12 +38,16 @@ const Timer = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
-  });
+  }, [timeLeft]);
 
   const timerComponents = [];
 
   Object.keys(timeLeft).forEach((interval) => {
-    if (timeLeft[interval] !== undefined && timeLeft[interval] !== null) {
+    if (
+      !timeLeft.expired &&
+      timeLeft[interval] !== undefined &&
+      timeLeft[interval] !== null
+    ) {
       timerComponents.push(
         <span key={interval}>
           {timeLeft[interval]} {interval}{" "}
