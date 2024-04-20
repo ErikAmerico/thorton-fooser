@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import moment from "moment-timezone";
 import "./countdown.css";
 
 const Timer = () => {
   const calculateTimeLeft = () => {
-    const now = new Date();
-    const targetDate = new Date("April 20, 2024 20:00:00 EST");
+    const now = moment();
+    const targetDate = moment.tz("2024-04-20 20:00:00", "America/New_York");
 
     const difference = targetDate - now;
     let timeLeft = {};
