@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import moment from "moment-timezone";
 import "./countdown.css";
 
 const Timer = () => {
   const calculateTimeLeft = () => {
-    const now = new Date();
-    const targetDate = new Date("April 20, 2024 20:00:00 EST");
+    const now = moment();
+    const targetDate = moment.tz("2024-04-20 20:00:00", "America/New_York");
 
     const difference = targetDate - now;
     let timeLeft = {};
@@ -22,6 +23,7 @@ const Timer = () => {
         hours: 0,
         minutes: 0,
         seconds: 0,
+        expired: true,
       };
     }
 
@@ -36,12 +38,16 @@ const Timer = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
-  });
+  }, [timeLeft]);
 
   const timerComponents = [];
 
   Object.keys(timeLeft).forEach((interval) => {
-    if (timeLeft[interval] !== undefined && timeLeft[interval] !== null) {
+    if (
+      !timeLeft.expired &&
+      timeLeft[interval] !== undefined &&
+      timeLeft[interval] !== null
+    ) {
       timerComponents.push(
         <span key={interval}>
           {timeLeft[interval]} {interval}{" "}
