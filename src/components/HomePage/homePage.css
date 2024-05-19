@@ -12,6 +12,15 @@
   border-radius: 15px;
 }
 
+.powerrankings-container {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 15px;
+}
+
+.powerrankings-title {
+  color: #3D80BA;
+}
+
 .reigning-champ-title {
   color: rgb(175, 149, 1);
   -webkit-text-stroke: 0.2px black;
