@@ -61,6 +61,7 @@ const HomePage = () => {
           >
             <div className="powerrankings-container">
               <h1 className="powerrankings-title">Power Rankings</h1>
+              <p>scoring details coming soon</p>
               <PowerRankings />
             </div>
           </Col>
