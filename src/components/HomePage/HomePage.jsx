@@ -1,6 +1,7 @@
 import "./homePage.css";
 import Timer from "./Countdown/Countdown";
 import TimeLine from "./TimeLine/TimeLine";
+import PowerRankings from "./PowerRankings/powerRankings";
 import { Row, Col, notification } from "antd";
 import { useEffect } from "react";
 
@@ -47,8 +48,20 @@ const HomePage = () => {
           >
             <div className="reigning-champ-container">
               <h1 className="reigning-champ-title">Reigning Champs</h1>
-              <h4 className="reigning-champ-team">Brickwall-Brittany & Erik</h4>
+              <h4 className="reigning-champ-team">
+                Brickwall-Brittany & Michelle
+              </h4>
               <div className="reigning-champ-image"></div>
+            </div>
+          </Col>
+          <Col
+            xs={{ span: 24, offset: 0, order: 4 }}
+            md={{ span: 20, offset: 2, order: 4 }}
+            lg={{ span: 6, offset: 4, order: 4 }}
+          >
+            <div className="powerrankings-container">
+              <h1 className="powerrankings-title">Power Rankings</h1>
+              <PowerRankings />
             </div>
           </Col>
         </Row>

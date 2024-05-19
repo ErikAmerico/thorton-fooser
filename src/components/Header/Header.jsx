@@ -6,7 +6,7 @@ const Header = () => {
     {
       key: "next-date",
       id: "next-date",
-      label: "NEXT TOURNAMENT: 5/18/2024 @ 8 PM",
+      label: "NEXT TOURNAMENT: 6/21/2024 @ 8 PM",
     },
   ];
 

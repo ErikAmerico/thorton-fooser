@@ -4,12 +4,21 @@
 }
 
 .reigning-champ-image {
-  background-image: url("/assets/erik_britt.png");
+  background-image: url("/assets/brittany&michelle.png");
   background-size: cover;
   background-position: center;
   height: 35rem;
   width: 100%;
   border-radius: 15px;
+}
+
+.powerrankings-container {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 15px;
+}
+
+.powerrankings-title {
+  color: #3D80BA;
 }
 
 .reigning-champ-title {
