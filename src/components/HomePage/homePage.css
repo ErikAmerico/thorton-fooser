@@ -4,9 +4,9 @@
 }
 
 .reigning-champ-image {
-  background-image: url("/assets/brittany&michelle.png");
+  background-image: url("/assets/ofir&erik.png");
   background-size: cover;
-  background-position: center;
+  background-position: top;
   height: 35rem;
   width: 100%;
   border-radius: 15px;
@@ -18,7 +18,7 @@
 }
 
 .powerrankings-title {
-  color: #3D80BA;
+  color: #3d80ba;
 }
 
 .reigning-champ-title {

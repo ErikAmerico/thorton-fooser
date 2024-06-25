@@ -41,6 +41,11 @@ const TimeLine = () => {
           },
           {
             label: "6/21/2024",
+            children: "Ofir & Erik",
+          },
+
+          {
+            label: "TBD",
             children: "TBD",
           },
         ]}

@@ -17,92 +17,55 @@ const columns = [
     key: "score",
   },
 ];
-const data = [
-  {
-    key: "1",
-    name: "Michelle",
-    rank: 1,
-    score: 12,
-  },
-  {
-    key: "2",
-    name: "Ofir",
-    rank: 2,
-    score: 11,
-  },
-  {
-    key: "3",
-    name: "Brittany",
-    rank: 2,
-    score: 11,
-  },
-  {
-    key: "4",
-    name: "Erik",
-    rank: 3,
-    score: 9,
-  },
-  {
-    key: "5",
-    name: "Andraya",
-    rank: 4,
-    score: 5,
-  },
-  {
-    key: "6",
-    name: "Anna",
-    rank: 4,
-    score: 5,
-  },
-  {
-    key: "7",
-    name: "Steve",
-    rank: 5,
-    score: 2,
-  },
-  {
-    key: "8",
-    name: "Sarah",
-    rank: 5,
-    score: 2,
-  },
-  {
-    key: "0",
-    name: "Zach",
-    rank: 5,
-    score: 2,
-  },
-  {
-    key: "9",
-    name: "Tommy",
-    rank: 6,
-    score: 1,
-  },
-  {
-    key: "10",
-    name: "Dan",
-    rank: 6,
-    score: 1,
-  },
-  {
-    key: "11",
-    name: "Rachel",
-    rank: 6,
-    score: 1,
-  },
-  {
-    key: "12",
-    name: "Ari",
-    rank: 6,
-    score: 1,
-  },
+
+const rawData = [
+  { key: "michelles", name: "Michelle", score: 14 },
+  { key: "ofir", name: "Ofir", score: 18 },
+  { key: "brickwall", name: "Brittany", score: 14 },
+  { key: "erik", name: "Erik", score: 16 },
+  { key: "dray", name: "Andraya", score: 11.5 },
+  { key: "anna", name: "Anna", score: 8 },
+  { key: "mattsarissa", name: "Matt", score: 6.5 },
+  { key: "stevem", name: "Steve", score: 2 },
+  { key: "sarah", name: "Sarah", score: 2 },
+  { key: "zachsm", name: "Zach Smith", score: 2 },
+  { key: "tommyb", name: "Tommy", score: 1 },
+  { key: "danrachel", name: "Dan", score: 1 },
+  { key: "rachelj", name: "Rachel Jobe", score: 1 },
+  { key: "ari", name: "Ari", score: 2 },
+  { key: "andyp", name: "Andy P", score: 2 },
+  { key: "karach", name: "Kara", score: 1 },
+  { key: "cj", name: "CJ", score: 1 },
+  { key: "kelly", name: "Kelly", score: 1 },
+  { key: "sarissa", name: "Sarissa", score: 1 },
+  { key: "lindsay", name: "Lindsay", score: 1 },
+  { key: "BryanCJ", name: "Bryan", score: 3 },
+  { key: "jakeRos", name: "Jake R", score: 3 },
+  { key: "mattdalton", name: "Matt D", score: 3 },
+  { key: "casey", name: "Casey", score: 3 },
 ];
+
+const sortAndRankData = (data) => {
+  const sortedData = data.sort((a, b) => b.score - a.score);
+  let rank = 0;
+  let prevScore = null;
+  sortedData.forEach((item, index) => {
+    if (item.score !== prevScore) {
+      rank = index + 1;
+    }
+    item.rank = rank;
+    prevScore = item.score;
+  });
+  return sortedData;
+};
+
 const PowerRankings = () => (
   <Table
     columns={columns}
-    dataSource={data}
+    dataSource={sortAndRankData(rawData)}
     pagination={false}
     scroll={{ y: 320 }}
   />
 );
+
 export default PowerRankings;

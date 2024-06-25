@@ -58,7 +58,8 @@ const Timer = () => {
 
   return (
     <div id="timer">
-      {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>}
+      {/* {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>} */}
+      <span>- - : - -</span>
     </div>
   );
 };

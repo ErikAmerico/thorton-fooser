@@ -48,9 +48,7 @@ const HomePage = () => {
           >
             <div className="reigning-champ-container">
               <h1 className="reigning-champ-title">Reigning Champs</h1>
-              <h4 className="reigning-champ-team">
-                Brickwall-Brittany & Michelle
-              </h4>
+              <h4 className="reigning-champ-team">Ofir & Erik</h4>
               <div className="reigning-champ-image"></div>
             </div>
           </Col>
@@ -61,7 +59,6 @@ const HomePage = () => {
           >
             <div className="powerrankings-container">
               <h1 className="powerrankings-title">Power Rankings</h1>
-              <p>scoring details coming soon</p>
               <PowerRankings />
             </div>
           </Col>
