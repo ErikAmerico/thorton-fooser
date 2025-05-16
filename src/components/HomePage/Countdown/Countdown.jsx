@@ -5,7 +5,7 @@ import "./countdown.css";
 const Timer = () => {
   const calculateTimeLeft = () => {
     const now = moment();
-    const targetDate = moment.tz("2024-06-21 20:00:00", "America/New_York");
+    const targetDate = moment.tz("2025-06-07 14:00:00", "America/New_York");
 
     const difference = targetDate - now;
     let timeLeft = {};
@@ -58,8 +58,8 @@ const Timer = () => {
 
   return (
     <div id="timer">
-      {/* {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>} */}
-      <span>- - : - -</span>
+      {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>}
+      {/* <span>- - : - -</span> */}
     </div>
   );
 };
