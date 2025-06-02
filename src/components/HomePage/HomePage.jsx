@@ -2,27 +2,9 @@ import "./homePage.css";
 import Timer from "./Countdown/Countdown";
 import TimeLine from "./TimeLine/TimeLine";
 import PowerRankings from "./PowerRankings/powerRankings";
-import { Row, Col, notification } from "antd";
-import { useEffect } from "react";
+import { Row, Col } from "antd";
 
 const HomePage = () => {
-  useEffect(() => {
-    const screenWidth = window.innerWidth;
-    if (screenWidth > 991) {
-      notification.open({
-        message: "Optimal Viewing Experience",
-        description: "This page is best viewed on mobile devices and tablets.",
-        duration: 10,
-        style: {
-          backgroundColor: "#f0f0f0",
-          border: "1px solid maroon",
-          borderRadius: "10px",
-          cursor: "default",
-        },
-      });
-    }
-  }, []);
-
   return (
     <>
       <div>
