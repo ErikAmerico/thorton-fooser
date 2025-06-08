@@ -17,7 +17,7 @@ const HomePage = () => {
           <Col xs={{ span: 24, offset: 0, order: 2 }} className="column">
             <div className="reigning-champ-container">
               <h1 className="reigning-champ-title">Reigning Champs</h1>
-              <h4 className="reigning-champ-team">Ofir & Erik</h4>
+              <h4 className="reigning-champ-team">Rachel & Ofir</h4>
               <div className="reigning-champ-image"></div>
             </div>
           </Col>
