@@ -1,5 +1,6 @@
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import "./powerRankings.css";
 
 const columns: ColumnsType<Player> = [
   {
@@ -76,12 +77,16 @@ const sortAndRankData = (data: Player[]): Player[] => {
 };
 
 const PowerRankings = () => (
-  <Table
-    columns={columns}
-    dataSource={sortAndRankData(rawData)}
-    pagination={false}
-    scroll={{ y: 320 }}
-  />
+  <div className="main-container">
+    <div className="powerrankings-container">
+      <h1 className="powerrankings-title">Power Rankings</h1>
+      <Table
+        columns={columns}
+        dataSource={sortAndRankData(rawData)}
+        pagination={false}
+      />
+    </div>
+  </div>
 );
 
 export default PowerRankings;
