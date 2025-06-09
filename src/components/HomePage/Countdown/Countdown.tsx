@@ -17,9 +17,6 @@ const calculateTimeLeft = (): TimeLeft => {
     "America/New_York"
   );
 
-  console.log("targetDate", targetDate);
-  console.log("now", now);
-
   const difference: number = targetDate.diff(now);
   let timeLeft = {
     days: 0,
