@@ -1,44 +1,30 @@
-#header-menu {
+.ant-menu-horizontal .ant-menu-item-selected,
+.ant-menu-horizontal .ant-menu-item-selected::after,
+.ant-menu-horizontal .ant-menu-item:hover::after,
+.ant-menu-horizontal .ant-menu-item-active::after {
+  color: white !important;
+}
+
+.header-menu .ant-menu-ink-bar {
+  display: none !important;
+  transition: none !important;
+}
+
+/* Hide all the ::after underlines (hover, active & selected) */
+.header-menu .ant-menu-item::after,
+.header-menu .ant-menu-item:hover::after,
+.header-menu .ant-menu-item-active::after,
+.header-menu .ant-menu-item-selected::after {
+  display: none !important;
+  transition: none !important;
+}
+
+.header-menu {
+  margin-bottom: 20px;
+  background-color: rgb(61, 128, 186);
+  border-radius: 5px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-}
-
-#next-date {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #333;
-}
-
-@media (max-width: 450px) {
-  #next-date {
-    font-size: 19px;
-  }
-}
-
-@media (max-width: 400px) {
-  #next-date {
-    font-size: 17px;
-  }
-}
-
-@media (max-width: 365px) {
-  #next-date {
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 330px) {
-  #next-date {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 294px) {
-  #next-date {
-    font-size: 11px;
-  }
+  box-shadow: 0px 0px 1px 1px rgb(61, 128, 186);
+  font-weight: 600;
 }

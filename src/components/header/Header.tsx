@@ -1,17 +1,46 @@
+import React, { useState } from "react";
+import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import "./header.css";
 
-const Header = () => {
-  const menuItems = [
-    {
-      key: "next-date",
-      id: "next-date",
-      // label: "NEXT TOURNAMENT: 6/7/2025 @ 2 PM",
-      label: "NEXT TOURNAMENT: --/--/-- @ -- --",
-    },
-  ];
+type MenuItem = Required<MenuProps>["items"][number];
 
-  return <Menu mode="horizontal" id="header-menu" items={menuItems} />;
+const items: MenuItem[] = [
+  {
+    label: "Home",
+    key: "home",
+  },
+  {
+    key: "bracket",
+    label: "Bracket",
+  },
+  {
+    key: "powerrankings",
+    label: "Power Rankings",
+  },
+  {
+    key: "doc",
+    label: "Documentary",
+  },
+];
+
+const Header: React.FC = () => {
+  const [current, setCurrent] = useState("mail");
+
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("click ", e);
+    setCurrent(e.key);
+  };
+
+  return (
+    <Menu
+      className="header-menu"
+      onClick={onClick}
+      selectedKeys={[current]}
+      mode="horizontal"
+      items={items}
+    />
+  );
 };
 
 export default Header;
