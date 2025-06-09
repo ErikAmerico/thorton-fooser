@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import moment, { Moment } from "moment-timezone";
+import NextDate from "./next-date/NextDate";
 import "./countdown.css";
 
 interface TimeLeft {
@@ -13,7 +14,7 @@ interface TimeLeft {
 const calculateTimeLeft = (): TimeLeft => {
   const now: Moment = moment();
   const targetDate: Moment = moment.tz(
-    "2025-06-07 14:00:00",
+    "2025-06-13 09:00:00",
     "America/New_York"
   );
 
@@ -58,28 +59,31 @@ const Timer = () => {
     return () => clearTimeout(timer);
   }, [timeLeft]);
 
-  const timerComponents = [];
+  const timerComponents: any[] = [];
   const timeKeys: (keyof TimeLeft)[] = ["days", "hours", "minutes", "seconds"];
 
   timeKeys.forEach((interval) => {
-    if (
-      !timeLeft.expired &&
-      timeLeft[interval] !== undefined &&
-      timeLeft[interval] !== null
-    ) {
+    const value = timeLeft[interval];
+    if (!timeLeft.expired && value != null) {
+      const label =
+        interval === "days" ? (value === 1 ? "day" : "days") : interval;
+
       timerComponents.push(
         <span key={interval}>
-          {timeLeft[interval]} {interval}{" "}
+          {value} {label}{" "}
         </span>
       );
     }
   });
 
   return (
-    <div id="timer">
-      {/* {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>} */}
-      <span>- - : - -</span>
-    </div>
+    <>
+      <NextDate />
+      <div id="timer">
+        {/* {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>} */}
+        <span>- - : - -</span>
+      </div>
+    </>
   );
 };
 
