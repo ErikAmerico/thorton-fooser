@@ -1,7 +1,7 @@
 import "./homePage.css";
 import Timer from "./Countdown/Countdown";
 import TimeLine from "./TimeLine/TimeLine";
-import PowerRankings from "./PowerRankings/powerRankings";
+import PowerRankings from "./PowerRankings/PowerRankings";
 import { Row, Col } from "antd";
 
 const HomePage = () => {

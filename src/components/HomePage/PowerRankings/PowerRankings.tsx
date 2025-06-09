@@ -1,10 +1,12 @@
 import { Table } from "antd";
-const columns = [
+import type { ColumnsType } from "antd/es/table";
+
+const columns: ColumnsType<Player> = [
   {
     title: "Name",
     dataIndex: "name",
     key: "name",
-    render: (text) => <a>{text}</a>,
+    render: (text: string) => <a>{text}</a>,
   },
   {
     title: "Rank",
@@ -17,6 +19,13 @@ const columns = [
     key: "score",
   },
 ];
+
+interface Player {
+  key: string;
+  name: string;
+  score: number;
+  rank?: number;
+}
 
 const rawData = [
   { key: "michelles", name: "Michelle", score: 18 },
@@ -48,17 +57,21 @@ const rawData = [
   { key: "cooperrich", name: "Cooper", score: 3 },
 ];
 
-const sortAndRankData = (data) => {
-  const sortedData = data.sort((a, b) => b.score - a.score);
+const sortAndRankData = (data: Player[]): Player[] => {
+  // Make a copy so we don't mutate the original:
+  const sortedData = [...data].sort((a, b) => b.score - a.score);
+
   let rank = 0;
-  let prevScore = null;
-  sortedData.forEach((item, index) => {
+  let prevScore: number | null = null;
+
+  sortedData.forEach((item, idx) => {
     if (item.score !== prevScore) {
-      rank = index + 1;
+      rank = idx + 1;
     }
     item.rank = rank;
     prevScore = item.score;
   });
+
   return sortedData;
 };
 
