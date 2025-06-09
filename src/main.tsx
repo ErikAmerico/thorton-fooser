@@ -1,8 +1,7 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import HomePage from "./components/HomePage/HomePage";
+import HomePage from "./components/home-page/HomePage";
 
 export const RootComponent = () => {
   return (
