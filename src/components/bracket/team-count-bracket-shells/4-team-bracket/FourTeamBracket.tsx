@@ -1,5 +1,3 @@
-// import "./fourTeamBracket.css";
-
 export default function FourTeamBracket() {
   return (
     <div className="bracket-shell">

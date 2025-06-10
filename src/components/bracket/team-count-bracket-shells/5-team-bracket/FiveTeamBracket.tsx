@@ -1,5 +1,3 @@
-// import "./fiveTeamBracket.css";
-
 export default function FiveTeamBracket() {
   return (
     <div className="bracket-shell">

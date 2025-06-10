@@ -1,5 +1,3 @@
-import "./twoTeamBracket.css";
-
 export default function TwoTeamBracket() {
   return (
     <div className="bracket-shell">
