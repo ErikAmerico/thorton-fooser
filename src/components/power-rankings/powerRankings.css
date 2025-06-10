@@ -1,0 +1,13 @@
+.powerrankings-container {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 15px;
+}
+
+.powerrankings-title {
+  color: rgb(61, 128, 186);
+  margin-top: 20px;
+  font-family: "Roboto", sans-serif;
+  padding: 10px;
+  font-size: 40px;
+  font-weight: bold;
+}
