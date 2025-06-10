@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
+import { MenuOutlined } from "@ant-design/icons";
 import "./header.css";
 
 const items = [
@@ -9,21 +10,21 @@ const items = [
     label: "Home",
     key: "home",
   },
-  {
-    key: "bracket",
-    label: "Bracket",
-  },
+  // {
+  //   key: "bracket",
+  //   label: "Bracket",
+  // },
   {
     key: "rankings",
     label: "Power Rankings",
   },
   {
-    key: "doc",
-    label: "Documentary",
-  },
-  {
     key: "champs",
     label: "Champions",
+  },
+  {
+    key: "doc",
+    label: "Documentary",
   },
 ];
 
@@ -53,6 +54,7 @@ const Header = () => {
       selectedKeys={[current]}
       mode="horizontal"
       items={items}
+      overflowedIndicator={<MenuOutlined />}
     />
   );
 };
