@@ -1,4 +1,14 @@
-export default function FourTeamBracket() {
+interface FourTeamBracketProps {
+  teams: [string, string][] | null; // exactly 4 teams of 2
+}
+
+export default function FourTeamBracket({ teams }: FourTeamBracketProps) {
+  if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
+
+  if (teams) {
+    console.log("teams in 4teamsgracket", teams);
+  }
+
   return (
     <div className="bracket-shell">
       {/* Top row headers */}
@@ -8,40 +18,61 @@ export default function FourTeamBracket() {
         <div className="column-header">Finals</div>
       </div>
 
-      {/* Top row matches */}
+      {/* Round 1 */}
       <div className="match-row top-row">
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input className="team-input" placeholder="Team 1" />
-            <input className="team-input" placeholder="Team 4" />
+            <input
+              className="team-input"
+              value={`${teams[0][0]} & ${teams[0][1]}`}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={`${teams[1][0]} & ${teams[1][1]}`}
+              readOnly
+            />
             <span className="match-number">Match 1</span>
           </div>
           <div className="match-cell upper-line">
-            <input className="team-input" placeholder="Team 2" />
-            <input className="team-input" placeholder="Team 3" />
+            <input
+              className="team-input"
+              value={`${teams[2][0]} & ${teams[2][1]}`}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={`${teams[3][0]} & ${teams[3][1]}`}
+              readOnly
+            />
             <span className="match-number">Match 2</span>
           </div>
         </div>
 
         {/* Semifinals */}
         <div className="match-cell lower-match-col lower-line">
-          <input className="team-input" placeholder="Winner of 1" />
-          <input className="team-input" placeholder="Winner of 2" />
+          <input className="team-input" placeholder="Winner of 1" readOnly />
+          <input className="team-input" placeholder="Winner of 2" readOnly />
           <span className="match-number">Match 4</span>
         </div>
 
         {/* Finals / Championship placeholder */}
         <div className="match-cell lower-match-col2">
-          <input className="team-input" placeholder="Winner of 4" />
-          <input className="team-input" placeholder="Winner of Losers" />
+          <input className="team-input" placeholder="Winner of 4" readOnly />
+          <input
+            className="team-input"
+            placeholder="Winner of Losers"
+            readOnly
+          />
           <span className="match-number">Match 6</span>
         </div>
 
         <div className="match-cell lower-match-col2 no-dash">
-          <input className="team-input" placeholder="Winner of 6" />
+          <input className="team-input" placeholder="Winner of 6" readOnly />
           <input
             className="team-input"
             placeholder="Loser of 6 (if necessary)"
+            readOnly
           />
           <span className="match-number">Match 7</span>
         </div>
@@ -57,15 +88,15 @@ export default function FourTeamBracket() {
       <div className="match-row bottom-row">
         {/* Losers Round 1 */}
         <div className="match-cell lower-match-col upper-line">
-          <input className="team-input" placeholder="Loser of 1" />
-          <input className="team-input" placeholder="Loser of 2" />
+          <input className="team-input" placeholder="Loser of 1" readOnly />
+          <input className="team-input" placeholder="Loser of 2" readOnly />
           <span className="match-number">Match 3</span>
         </div>
 
         {/* Losers Round 2 */}
         <div className="match-cell upper-line angle-up65 single-cell">
-          <input className="team-input" placeholder="Loser of 4" />
-          <input className="team-input" placeholder="Winner of 3" />
+          <input className="team-input" placeholder="Loser of 4" readOnly />
+          <input className="team-input" placeholder="Winner of 3" readOnly />
           <span className="match-number">Match 5</span>
         </div>
       </div>
