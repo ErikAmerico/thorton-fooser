@@ -189,11 +189,7 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
                 readOnly
               />
               <span className="match-number">
-                Match 5{" "}
-                <TrophyFilled
-                  onClick={() => showModal(5)}
-                  style={{ cursor: "pointer" }}
-                />
+                Match 5 <TrophyFilled onClick={() => showModal(5)} />
               </span>
             </div>
             {resetWinner && (
