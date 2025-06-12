@@ -195,3 +195,19 @@
   cursor: pointer;
   font-size: 14px;
 }
+
+.champ-logo {
+  position: relative;
+  top: 2px;
+  width: 1.466rem;
+  height: 3.33rem;
+}
+
+.match-row.final-row {
+  position: relative;
+}
+
+.champion-text {
+  margin-top: 25px;
+  color: rgb(186, 158, 0);
+}

@@ -1,6 +1,7 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
 import { useState } from "react";
+import Confetti from "../../confetti";
 
 interface ThreeTeamBracketProps {
   teams: [string, string][] | null;
@@ -19,7 +20,7 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
     null
   );
 
-  // Track results for matches 1-4
+  // Track results for matches 1-5
   const [matchResults, setMatchResults] = useState<MatchResult[]>([
     { winner: null, loser: null }, // index 0 unused
     { winner: null, loser: null }, // Match 1
@@ -166,35 +167,15 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
           </span>
         </div>
 
-        {/* <div className="match-cell lower-match-col2 no-dash">
-          <input
-            className="team-input"
-            placeholder="Winner of 4 (if necessary)"
-            value={
-              matchResults[4].winner === matchResults[2].winner
-                ? ""
-                : matchResults[4].winner ?? ""
-            }
-            readOnly
-          />
-          <input
-            className="team-input"
-            value={matchResults[4].loser ?? ""}
-            placeholder="Loser of 4 (if necessary)"
-            readOnly
-          />
-          <span className="match-number">
-            Match 5 <TrophyFilled onClick={() => showModal(5)} />
-          </span>
-        </div> */}
-
         {tournamentOver ? (
-          <div className="champion-row">
-            <div className="champion-text">{grandWinner} won!</div>
+          <div className="match-row final-row">
+            <div className="match-cell lower-match-col2 champ-cell no-dash">
+              <div className="champion-text">{grandWinner} won!</div>
+            </div>
           </div>
         ) : needsReset ? (
-          <div className="match-row final-row">
-            <div className="match-cell lower-match-col2 no-dash">
+          <div className="match-row">
+            <div className="match-cell lower-match-col2">
               <input
                 className="team-input"
                 value={matchResults[4].loser ?? ""}
@@ -216,12 +197,20 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
               </span>
             </div>
             {resetWinner && (
-              <div className="champion-row">
-                <div className="champion-text">{resetWinner} won!</div>
+              <div className="match-row final-row">
+                <div className="match-cell lower-match-col2 no-dash">
+                  <div className="champion-text">{resetWinner} won!</div>
+                </div>
               </div>
             )}
           </div>
-        ) : null}
+        ) : (
+          <div className="match-row">
+            <div className="match-cell lower-match-col2 no-dash">
+              <h1>?</h1>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Bottom row headers */}
@@ -275,6 +264,8 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
           )}
         </Radio.Group>
       </Modal>
+      {!needsReset && grandWinner && <Confetti />}
+      {resetWinner && <Confetti />}
     </div>
   );
 }
