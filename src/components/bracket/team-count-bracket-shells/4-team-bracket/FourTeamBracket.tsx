@@ -27,8 +27,8 @@ export default function FourTeamBracket({ teams }: FourTeamBracketProps) {
     { winner: null, loser: null }, // Match 3
     { winner: null, loser: null }, // Match 4
     { winner: null, loser: null }, // Match 5 (Losers Final)
-    { winner: null, loser: null }, // Match 4 (Grand Final)
-    { winner: null, loser: null }, // Match 5 (Reset Final)
+    { winner: null, loser: null }, // Match 6 (Grand Final)
+    { winner: null, loser: null }, // Match 7 (Reset Final)
   ]);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
@@ -200,15 +200,6 @@ export default function FourTeamBracket({ teams }: FourTeamBracketProps) {
           </span>
         </div>
 
-        {/* <div className="match-cell lower-match-col2 no-dash">
-          <input className="team-input" placeholder="Winner of 6" readOnly />
-          <input
-            className="team-input"
-            placeholder="Loser of 6 (if necessary)"
-            readOnly
-          />
-          <span className="match-number">Match 7</span>
-        </div> */}
         {tournamentOver ? (
           <div className="match-row final-row">
             <div className="match-cell lower-match-col2 champ-cell no-dash">
@@ -220,14 +211,14 @@ export default function FourTeamBracket({ teams }: FourTeamBracketProps) {
             <div className="match-cell lower-match-col2">
               <input
                 className="team-input"
-                value={matchResults[6].loser ?? ""}
-                placeholder="Loser of 6"
+                value={matchResults[6].winner ?? ""}
+                placeholder="winner of 6"
                 readOnly
               />
               <input
                 className="team-input"
-                value={matchResults[6].winner ?? ""}
-                placeholder="Winner of 6 (if necessary)"
+                value={matchResults[6].loser ?? ""}
+                placeholder="loser of 6 (if necessary)"
                 readOnly
               />
               <span className="match-number">

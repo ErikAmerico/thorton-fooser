@@ -178,14 +178,14 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
             <div className="match-cell lower-match-col2">
               <input
                 className="team-input"
-                value={matchResults[4].loser ?? ""}
-                placeholder="Loser of 4"
+                value={matchResults[4].winner ?? ""}
+                placeholder="winner of 4"
                 readOnly
               />
               <input
                 className="team-input"
-                value={matchResults[4].winner ?? ""}
-                placeholder="Winner of 4 (if necessary)"
+                value={matchResults[4].loser ?? ""}
+                placeholder="loser of 4 (if necessary)"
                 readOnly
               />
               <span className="match-number">
