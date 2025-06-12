@@ -1,6 +1,6 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Confetti from "../../confetti";
 
 interface FiveTeamBracketProps {
@@ -19,6 +19,12 @@ export default function FiveTeamBracket({ teams }: FiveTeamBracketProps) {
   const [modalTeams, setModalTeams] = useState<{ A: string; B: string } | null>(
     null
   );
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      message.warning("Brackets are best viewed in Landscape Mode", 5);
+    }
+  }, []);
 
   // Track results for matches 1-5
   const [matchResults, setMatchResults] = useState<MatchResult[]>([
@@ -233,16 +239,6 @@ export default function FiveTeamBracket({ teams }: FiveTeamBracketProps) {
             Match 8 <TrophyFilled onClick={() => showModal(8)} />
           </span>
         </div>
-
-        {/* <div className="match-cell lower-match-col2 no-dash">
-          <input className="team-input" placeholder="" readOnly />
-          <input
-            className="team-input"
-            placeholder="Loser of 8 (if necessary)"
-            readOnly
-          />
-          <span className="match-number">Match 9</span>
-        </div> */}
 
         {tournamentOver ? (
           <div className="match-row final-row">

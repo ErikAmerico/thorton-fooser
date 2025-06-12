@@ -1,6 +1,6 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Confetti from "../../confetti";
 
 interface ThreeTeamBracketProps {
@@ -19,6 +19,12 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
   const [modalTeams, setModalTeams] = useState<{ A: string; B: string } | null>(
     null
   );
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      message.warning("Brackets are best viewed in Landscape Mode", 5);
+    }
+  }, []);
 
   // Track results for matches 1-5
   const [matchResults, setMatchResults] = useState<MatchResult[]>([
