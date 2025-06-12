@@ -16,7 +16,7 @@ const items = [
   },
   {
     key: "rankings",
-    label: "Power Rankings",
+    label: "Rankings",
   },
   {
     key: "champs",

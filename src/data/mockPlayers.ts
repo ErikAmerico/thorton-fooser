@@ -20,7 +20,7 @@ export const mockPlayers: Player[] = [
   { id: "14", name: "Casey" },
   { id: "15", name: "Jake" },
   { id: "16", name: "Andraya" },
-  { id: "17", name: "Brittany (Brickwall)" },
+  { id: "17", name: "Brickwall" },
   { id: "18", name: "Matt D" },
   { id: "19", name: "Ari S" },
   { id: "20", name: "Bryan" },
