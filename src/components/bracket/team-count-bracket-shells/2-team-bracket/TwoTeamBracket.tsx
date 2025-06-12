@@ -29,6 +29,10 @@ export default function TwoTeamBracket({ teams }: TwoTeamBracketProps) {
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
+  if (teams) {
+    console.log("teams in 2teamsgracket", teams);
+  }
+
   const team1 = `${teams[0][0]} & ${teams[0][1]}`;
   const team2 = `${teams[1][0]} & ${teams[1][1]}`;
 

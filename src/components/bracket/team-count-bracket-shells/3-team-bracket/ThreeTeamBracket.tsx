@@ -32,6 +32,10 @@ export default function ThreeTeamBracket({ teams }: ThreeTeamBracketProps) {
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
+  if (teams) {
+    console.log("teams in 3teamsgracket", teams);
+  }
+
   const team1 = `${teams[0][0]} & ${teams[0][1]}`;
   const team2 = `${teams[1][0]} & ${teams[1][1]}`;
   const team3 = `${teams[2][0]} & ${teams[2][1]}`;

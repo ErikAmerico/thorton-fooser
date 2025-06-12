@@ -11,9 +11,22 @@ import SixTeamBracket from "./team-count-bracket-shells/6-team-bracket/SixTeamBr
 import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTeamBracket";
 import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
 
-const MAX_PLAYERS = 16;
+const MAX_PLAYERS = 10;
+const AUTO_SELECT_COUNT = 10;
 
 export default function Bracket() {
+  // const allPlayers = [...mockPlayers].sort((a, b) =>
+  //   a.name.localeCompare(b.name)
+  // );
+
+  ////ABOVE AND BELOW ARE USED FOR QUICK DEVELOPMENT TESTING
+  ////UNCOMMENT THESE. AND COMMENT OUT THEIR EQUIVALENTS BELOW
+  ////TO CONTINUE TESTING
+
+  // const [selected, setSelected] = useState<string[]>(
+  //   allPlayers.slice(0, AUTO_SELECT_COUNT).map((p) => p.name)
+  // );
+
   const [selected, setSelected] = useState<string[]>([]);
   const [teams, setTeams] = useState<[string, string][] | null>(null);
 
