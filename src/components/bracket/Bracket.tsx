@@ -85,7 +85,7 @@ export default function Bracket() {
             </div>
             <Button
               type="primary"
-              disabled={selected.length < 2 || selected.length % 2 !== 0}
+              disabled={selected.length < 4 || selected.length % 2 !== 0}
               onClick={buildBracket}
               className="generate-bracket-button"
             >
