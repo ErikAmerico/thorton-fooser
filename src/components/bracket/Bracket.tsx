@@ -153,7 +153,9 @@ export default function Bracket() {
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         {!teams && (
           <>
-            <h3 style={{ color: "#fff" }}>Who is playing?</h3>
+            <h3 style={{ color: "#fff", fontFamily: "sans-serif" }}>
+              Who is playing?
+            </h3>
             <div className="player-grid">
               {allPlayers.map((player: Player) => (
                 <Checkbox
