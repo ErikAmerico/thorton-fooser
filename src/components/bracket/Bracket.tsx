@@ -136,8 +136,6 @@ export default function Bracket() {
     localStorage.removeItem(STORAGE_KEY);
     setBracketState(initialState);
     setIsModalOpen(false);
-
-    message.success("Bracket cleared. Start a new game!");
   };
 
   const submitResults = () => {
