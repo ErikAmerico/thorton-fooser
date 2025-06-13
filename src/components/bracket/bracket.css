@@ -211,3 +211,43 @@
   margin-top: 25px;
   color: rgb(186, 158, 0);
 }
+
+.bracket-controls {
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+.cancel-tourney-btn {
+  background-color: rgb(61, 128, 186);
+  border: 1px solid rgb(61, 128, 186);
+  color: white;
+}
+
+.cancel-tourney-btn:hover {
+  background-color: rgb(168, 0, 0) !important;
+  border: 1px solid rgb(168, 0, 0) !important;
+  color: white !important;
+}
+
+.submit-results-btn {
+  background-color: rgb(61, 128, 186);
+  border: 1px solid rgb(61, 128, 186);
+  color: white;
+}
+
+.submit-results-btn:hover {
+  background-color: green !important;
+  border: 1px solid green !important;
+  color: white !important;
+}
+
+.bracket-controls-desc {
+  color: white;
+  margin-top: 5px;
+  font-family: sans-serif;
+}
+
+.bracket-controls-text {
+  font-size: 13px;
+}

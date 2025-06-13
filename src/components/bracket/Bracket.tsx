@@ -10,6 +10,7 @@ import FiveTeamBracket from "./team-count-bracket-shells/5-team-bracket/FiveTeam
 import SixTeamBracket from "./team-count-bracket-shells/6-team-bracket/SixTeamBracker";
 import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTeamBracket";
 import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
+import { TrophyFilled } from "@ant-design/icons";
 
 const MAX_PLAYERS = 10;
 const STORAGE_KEY = "bracketState"; //local stroage key
@@ -28,6 +29,7 @@ interface MatchResult {
 
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   // const allPlayers = [...mockPlayers].sort((a, b) =>
   //   a.name.localeCompare(b.name)
   // );
@@ -48,10 +50,15 @@ export default function Bracket() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setIsSubmitModalOpen(false);
   };
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const showSubmitModal = () => {
+    setIsSubmitModalOpen(true);
   };
 
   const [bracketState, setBracketState] = useState<StoredState>(() => {
@@ -133,6 +140,11 @@ export default function Bracket() {
     message.success("Bracket cleared. Start a new game!");
   };
 
+  const submitResults = () => {
+    console.log("results submitted");
+    setIsSubmitModalOpen(false);
+  };
+
   // how many teams did we get?
   const teamCount = teams?.length ?? 0;
 
@@ -169,10 +181,28 @@ export default function Bracket() {
         )}
 
         {teams && (
-          <div style={{ marginRight: "100%" }}>
-            <Button danger onClick={showModal}>
-              Cancel Game
-            </Button>
+          <div>
+            <div className="bracket-controls">
+              <span className="bracket-controls-desc">
+                ?{" "}
+                <span className="bracket-controls-text">
+                  = Reset Match (if needed)
+                </span>
+              </span>{" "}
+              <span className="bracket-controls-desc">
+                <TrophyFilled />{" "}
+                <span className="bracket-controls-text">= Report Winner</span>
+              </span>
+            </div>
+            <div className="bracket-controls">
+              <Button className="cancel-tourney-btn" onClick={showModal}>
+                Cancel Game
+              </Button>
+
+              <Button className="submit-results-btn" onClick={showSubmitModal}>
+                Submit Results
+              </Button>
+            </div>
           </div>
         )}
 
@@ -229,6 +259,18 @@ export default function Bracket() {
       >
         Canceling this game will lose all progress. It will be like it never
         existed.
+      </Modal>
+      <Modal
+        title="Submit Results"
+        open={isSubmitModalOpen}
+        onOk={submitResults}
+        onCancel={handleCancel}
+        closable={false}
+        okText="Submit"
+        style={{ textAlign: "center" }}
+      >
+        In the future - submitted results will be saved to a database and every
+        players score will update in the rankings.
       </Modal>
     </div>
   );
