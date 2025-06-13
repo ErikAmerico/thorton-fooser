@@ -1,0 +1,253 @@
+.bracket-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #1d1d1d;
+  height: calc(100vh - 168px);
+  box-shadow: 0 0 25px 10px rgb(61, 128, 186);
+}
+
+.bracket-scroll-content {
+  width: max-content;
+}
+
+.bracket-shell {
+  background: #1d1d1d;
+  color: #ddd;
+  padding: 24px;
+  font-family: sans-serif;
+}
+
+.header-row,
+.match-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 200px;
+  column-gap: 32px;
+}
+
+.round1-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.losers-headers {
+  margin-top: 48px;
+}
+
+/* header styling */
+.column-header {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #aaa;
+  margin-bottom: 16px;
+}
+
+/* each match “box” */
+.match-cell {
+  background: #2e2e3e;
+  border-radius: 4px;
+  padding: 8px;
+  position: relative;
+  min-height: 64px;
+  max-height: 85px;
+  box-shadow: 0 0 5px 0.01px rgb(61, 128, 186);
+}
+
+.lower-match-col {
+  height: 69px;
+  margin-top: 50px;
+}
+
+.lower-match-col2 {
+  height: 69px;
+  margin-top: 100px;
+}
+
+.lower-match-col3 {
+  height: 69px;
+  margin-top: 150px;
+}
+
+.lower-match-col4 {
+  height: 69px;
+  margin-top: 200px;
+}
+
+.single-cell {
+  height: 69px;
+}
+
+.match-cell.no-dash::after {
+  display: none;
+}
+
+.match-cell::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #fff;
+  line-height: 1;
+}
+
+.match-cell.lower-line::after {
+  content: "→";
+  position: absolute;
+  top: 80%;
+  right: -20px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #fff;
+  line-height: 1;
+}
+
+.match-cell.lower-line.angle-down45::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.match-cell.upper-line::after {
+  content: "→";
+  position: absolute;
+  top: 20%;
+  right: -20px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #fff;
+  line-height: 1;
+}
+
+.match-cell.upper-line.angle-up45::after {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.match-cell.upper-line.angle-up65::after {
+  transform: translateY(-50%) rotate(-65deg);
+}
+
+.match-cell.upper-line.angle-up90::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.team-input {
+  width: 100%;
+  background: #3a3a4a;
+  border: none;
+  border-radius: 2px;
+  color: #fff;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+.team-input:last-child {
+  margin-bottom: 0;
+}
+
+.match-number {
+  font-size: 13px;
+  display: block;
+  cursor: default;
+}
+
+.match-cell.placeholder {
+  visibility: hidden;
+}
+
+.match-cell.placeholder::after {
+  display: none;
+}
+
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-around;
+  gap: 8px;
+  margin-bottom: 16px;
+  background-color: rgb(61, 128, 186);
+  box-shadow: 0 0 5px 10px rgb(61, 128, 186);
+}
+
+.generate-bracket-button.ant-btn-primary {
+  background-color: green !important;
+  border-color: green !important;
+  color: #fff !important;
+}
+
+.generate-bracket-button.ant-btn-disabled,
+.generate-bracket-button:disabled {
+  background-color: #888 !important;
+  border-color: #888 !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+
+.anticon.anticon-trophy {
+  color: gold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.champ-logo {
+  position: relative;
+  top: 2px;
+  width: 1.466rem;
+  height: 3.33rem;
+}
+
+.match-row.final-row {
+  position: relative;
+}
+
+.champion-text {
+  margin-top: 25px;
+  color: rgb(186, 158, 0);
+}
+
+.bracket-controls {
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+.cancel-tourney-btn {
+  background-color: rgb(61, 128, 186);
+  border: 1px solid rgb(61, 128, 186);
+  color: white;
+}
+
+.cancel-tourney-btn:hover {
+  background-color: rgb(168, 0, 0) !important;
+  border: 1px solid rgb(168, 0, 0) !important;
+  color: white !important;
+}
+
+.submit-results-btn {
+  background-color: rgb(61, 128, 186);
+  border: 1px solid rgb(61, 128, 186);
+  color: white;
+}
+
+.submit-results-btn:hover {
+  background-color: green !important;
+  border: 1px solid green !important;
+  color: white !important;
+}
+
+.bracket-controls-desc {
+  color: white;
+  margin-top: 5px;
+  font-family: sans-serif;
+}
+
+.bracket-controls-text {
+  font-size: 13px;
+}

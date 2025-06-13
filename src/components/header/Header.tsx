@@ -10,13 +10,13 @@ const items = [
     label: "Home",
     key: "home",
   },
-  // {
-  //   key: "bracket",
-  //   label: "Bracket",
-  // },
+  {
+    key: "bracket",
+    label: "Bracket",
+  },
   {
     key: "rankings",
-    label: "Power Rankings",
+    label: "Rankings",
   },
   {
     key: "champs",

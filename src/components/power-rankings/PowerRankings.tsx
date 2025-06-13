@@ -79,7 +79,7 @@ const sortAndRankData = (data: Player[]): Player[] => {
 const PowerRankings = () => (
   <div className="main-container">
     <div className="powerrankings-container">
-      <h1 className="powerrankings-title">Power Rankings</h1>
+      <h1 className="powerrankings-title">Rankings</h1>
       <Table
         columns={columns}
         dataSource={sortAndRankData(rawData)}
