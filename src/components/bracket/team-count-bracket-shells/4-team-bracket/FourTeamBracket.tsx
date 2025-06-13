@@ -96,7 +96,7 @@ export default function FourTeamBracket({
         return;
     }
     setModalTeams({ A, B });
-    setSelectedWinner(A);
+    setSelectedWinner(null);
     setCurrentMatch(matchNum);
     setIsModalOpen(true);
   };
@@ -287,6 +287,7 @@ export default function FourTeamBracket({
         onCancel={handleCancel}
         closable={false}
         okText="Submit Winner"
+        okButtonProps={{ disabled: !selectedWinner }}
         style={{ textAlign: "center" }}
       >
         <Radio.Group

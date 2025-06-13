@@ -65,7 +65,7 @@ export default function TwoTeamBracket({
         return;
     }
     setModalTeams({ A, B });
-    setSelectedWinner(A);
+    setSelectedWinner(null);
     setCurrentMatch(matchNum);
     setIsModalOpen(true);
   };
@@ -182,6 +182,7 @@ export default function TwoTeamBracket({
         onCancel={handleCancel}
         closable={false}
         okText="Submit Winner"
+        okButtonProps={{ disabled: !selectedWinner }}
         style={{ textAlign: "center" }}
       >
         <Radio.Group

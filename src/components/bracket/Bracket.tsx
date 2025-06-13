@@ -12,9 +12,8 @@ import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTe
 import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
 import { TrophyFilled } from "@ant-design/icons";
 
-const MAX_PLAYERS = 10;
+const MAX_PLAYERS = 12;
 const STORAGE_KEY = "bracketState"; //local stroage key
-const AUTO_SELECT_COUNT = 10; //test variable
 
 interface StoredState {
   selected: string[];
@@ -30,17 +29,6 @@ interface MatchResult {
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
-  // const allPlayers = [...mockPlayers].sort((a, b) =>
-  //   a.name.localeCompare(b.name)
-  // );
-
-  ////ABOVE AND BELOW ARE USED FOR QUICK DEVELOPMENT TESTING
-  ////UNCOMMENT THESE. AND COMMENT OUT THEIR EQUIVALENTS BELOW
-  ////TO CONTINUE TESTING
-
-  // const [selected, setSelected] = useState<string[]>(
-  //   allPlayers.slice(0, AUTO_SELECT_COUNT).map((p) => p.name)
-  // );
 
   const initialState: StoredState = {
     selected: [],
@@ -243,7 +231,15 @@ export default function Bracket() {
               }
             />
           )}
-          {/* {teams && teamCount === 6 && <SixTeamBracket />} */}
+          {teams && teamCount === 6 && (
+            <SixTeamBracket
+              teams={teams}
+              matchResults={matchResults!}
+              onChange={(newResults) =>
+                setBracketState((st) => ({ ...st, matchResults: newResults }))
+              }
+            />
+          )}
           {/* {teams && teamCount === 7 && <SevenTeamBracket />} */}
           {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
         </div>
