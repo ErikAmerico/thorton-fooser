@@ -12,7 +12,7 @@ import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTe
 import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
 import { TrophyFilled } from "@ant-design/icons";
 
-const MAX_PLAYERS = 12;
+const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //local stroage key
 
 interface StoredState {
@@ -240,7 +240,15 @@ export default function Bracket() {
               }
             />
           )}
-          {/* {teams && teamCount === 7 && <SevenTeamBracket />} */}
+          {teams && teamCount === 7 && (
+            <SevenTeamBracket
+              teams={teams}
+              matchResults={matchResults!}
+              onChange={(newResults) =>
+                setBracketState((st) => ({ ...st, matchResults: newResults }))
+              }
+            />
+          )}
           {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
         </div>
       </Space>
