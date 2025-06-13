@@ -269,8 +269,8 @@ export default function Bracket() {
         okText="Submit"
         style={{ textAlign: "center" }}
       >
-        In the future - submitted results will be saved to a database and every
-        players score will update in the rankings.
+        In the near future - submitted results will be saved to a database and
+        every players score will update in the rankings.
       </Modal>
     </div>
   );
