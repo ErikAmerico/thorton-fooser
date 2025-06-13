@@ -1,6 +1,6 @@
 import "./bracket.css";
-import { Space, Button, Input, message, Checkbox } from "antd";
-import { useState } from "react";
+import { Space, Button, message, Checkbox, Modal } from "antd";
+import { useState, useEffect } from "react";
 import { mockPlayers, Player } from "../../data/mockPlayers";
 
 import TwoTeamBracket from "./team-count-bracket-shells/2-team-bracket/TwoTeamBracket";
@@ -12,9 +12,22 @@ import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTe
 import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
 
 const MAX_PLAYERS = 10;
-const AUTO_SELECT_COUNT = 10;
+const STORAGE_KEY = "bracketState"; //local stroage key
+const AUTO_SELECT_COUNT = 10; //test variable
+
+interface StoredState {
+  selected: string[];
+  teams: [string, string][] | null;
+  matchResults?: any;
+}
+
+interface MatchResult {
+  winner: string | null;
+  loser: string | null;
+}
 
 export default function Bracket() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // const allPlayers = [...mockPlayers].sort((a, b) =>
   //   a.name.localeCompare(b.name)
   // );
@@ -27,25 +40,55 @@ export default function Bracket() {
   //   allPlayers.slice(0, AUTO_SELECT_COUNT).map((p) => p.name)
   // );
 
-  const [selected, setSelected] = useState<string[]>([]);
-  const [teams, setTeams] = useState<[string, string][] | null>(null);
+  const initialState: StoredState = {
+    selected: [],
+    teams: null,
+    matchResults: null,
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const [bracketState, setBracketState] = useState<StoredState>(() => {
+    try {
+      const json = localStorage.getItem(STORAGE_KEY);
+      if (json) return JSON.parse(json);
+    } catch {}
+    return initialState;
+  });
+
+  const { selected, teams, matchResults } = bracketState;
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bracketState));
+  }, [bracketState]);
 
   const allPlayers = [...mockPlayers].sort((a, b) =>
     a.name.localeCompare(b.name)
   );
 
   const onCheck = (name: string, checked: boolean) => {
-    if (checked) {
-      if (selected.length >= MAX_PLAYERS) {
-        return message.error(`Max ${MAX_PLAYERS} players`);
-      }
-      setSelected((p) => [...p, name]);
-    } else {
-      setSelected((p) => p.filter((n) => n !== name));
+    if (checked && selected.length >= MAX_PLAYERS) {
+      return message.error(`Max ${MAX_PLAYERS} players`);
     }
-    setTeams(null);
+    const newSelected = checked
+      ? [...selected, name]
+      : selected.filter((n) => n !== name);
+
+    // reset any existing bracket if players change
+    setBracketState({
+      selected: newSelected,
+      teams: null,
+      matchResults: null,
+    });
   };
 
+  //fisher-yates shuffle
   const shuffle = (arr: any[]) => {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -58,18 +101,36 @@ export default function Bracket() {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
-    const s = shuffle([...selected]);
+    const s: string[] = shuffle([...selected]);
     const pairs: [string, string][] = [];
     for (let i = 0; i < s.length; i += 2) {
       pairs.push([s[i], s[i + 1]]);
     }
-    setTeams(pairs);
+
+    // initialize one result-slot per match (we’ll use length = pairs.length*2 + 1)
+    const emptyResults: MatchResult[] = Array(pairs.length * 2 + 1)
+      .fill(null)
+      .map(() => ({ winner: null, loser: null }));
+
+    setBracketState({
+      selected,
+      teams: pairs,
+      matchResults: emptyResults,
+    });
   };
 
   const addPlayer = () => {
     console.log("adding player");
     //add player to database.
     //will just add to dummy data for now.
+  };
+
+  const deleteGame = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setBracketState(initialState);
+    setIsModalOpen(false);
+
+    message.success("Bracket cleared. Start a new game!");
   };
 
   // how many teams did we get?
@@ -107,13 +168,68 @@ export default function Bracket() {
           </>
         )}
 
+        {teams && (
+          <div style={{ marginRight: "100%" }}>
+            <Button danger onClick={showModal}>
+              Cancel Game
+            </Button>
+          </div>
+        )}
+
         <div className="bracket-scroll-content">
-          {teams && teamCount === 2 && <TwoTeamBracket teams={teams} />}
-          {teams && teamCount === 3 && <ThreeTeamBracket teams={teams} />}
-          {teams && teamCount === 4 && <FourTeamBracket teams={teams} />}
-          {teams && teamCount === 5 && <FiveTeamBracket teams={teams} />}
+          {teams && teamCount === 2 && (
+            <TwoTeamBracket
+              teams={teams}
+              matchResults={matchResults!}
+              onChange={(newResults) =>
+                setBracketState((st) => ({ ...st, matchResults: newResults }))
+              }
+            />
+          )}
+          {teams && teamCount === 3 && (
+            <ThreeTeamBracket
+              teams={teams}
+              matchResults={matchResults!}
+              onChange={(newResults) =>
+                setBracketState((st) => ({ ...st, matchResults: newResults }))
+              }
+            />
+          )}
+          {teams && teamCount === 4 && (
+            <FourTeamBracket
+              teams={teams}
+              matchResults={matchResults!}
+              onChange={(newResults) =>
+                setBracketState((st) => ({ ...st, matchResults: newResults }))
+              }
+            />
+          )}
+          {teams && teamCount === 5 && (
+            <FiveTeamBracket
+              teams={teams}
+              matchResults={matchResults!}
+              onChange={(newResults) =>
+                setBracketState((st) => ({ ...st, matchResults: newResults }))
+              }
+            />
+          )}
+          {/* {teams && teamCount === 6 && <SixTeamBracket />} */}
+          {/* {teams && teamCount === 7 && <SevenTeamBracket />} */}
+          {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
         </div>
       </Space>
+      <Modal
+        title="Are you sure?"
+        open={isModalOpen}
+        onOk={deleteGame}
+        onCancel={handleCancel}
+        closable={false}
+        okText="Confirm"
+        style={{ textAlign: "center" }}
+      >
+        Canceling this game will lose all progress. It will be like it never
+        existed.
+      </Modal>
     </div>
   );
 }

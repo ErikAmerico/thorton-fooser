@@ -5,6 +5,8 @@ import Confetti from "../../confetti";
 
 interface FiveTeamBracketProps {
   teams: [string, string][] | null;
+  matchResults: MatchResult[];
+  onChange: (newResults: MatchResult[]) => void;
 }
 
 interface MatchResult {
@@ -12,7 +14,11 @@ interface MatchResult {
   loser: string | null;
 }
 
-export default function FiveTeamBracket({ teams }: FiveTeamBracketProps) {
+export default function FiveTeamBracket({
+  teams,
+  matchResults,
+  onChange,
+}: FiveTeamBracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
   const [selectedWinner, setSelectedWinner] = useState<string | null>(null);
@@ -25,20 +31,6 @@ export default function FiveTeamBracket({ teams }: FiveTeamBracketProps) {
       message.warning("Brackets are best viewed in Landscape Mode", 5);
     }
   }, []);
-
-  // Track results for matches 1-5
-  const [matchResults, setMatchResults] = useState<MatchResult[]>([
-    { winner: null, loser: null }, // index 0 unused
-    { winner: null, loser: null }, // Match 1
-    { winner: null, loser: null }, // Match 2
-    { winner: null, loser: null }, // Match 3
-    { winner: null, loser: null }, // Match 4
-    { winner: null, loser: null }, // Match 5
-    { winner: null, loser: null }, // Match 6
-    { winner: null, loser: null }, // Match 7 (losers Final)
-    { winner: null, loser: null }, // Match 8 (Grand Final)
-    { winner: null, loser: null }, // Match 9 (Reset Final)
-  ]);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
@@ -138,11 +130,9 @@ export default function FiveTeamBracket({ teams }: FiveTeamBracketProps) {
     if (currentMatch && selectedWinner && modalTeams) {
       const loser =
         selectedWinner === modalTeams.A ? modalTeams.B : modalTeams.A;
-      setMatchResults((prev) => {
-        const copy = [...prev];
-        copy[currentMatch] = { winner: selectedWinner, loser };
-        return copy;
-      });
+      const newResults = [...matchResults];
+      newResults[currentMatch] = { winner: selectedWinner, loser };
+      onChange(newResults);
       console.log("selectedWinner", selectedWinner);
     }
     setIsModalOpen(false);

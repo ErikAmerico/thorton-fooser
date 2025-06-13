@@ -3,7 +3,9 @@ import { Modal, Radio, message } from "antd";
 import { useState, useEffect } from "react";
 import Confetti from "../../confetti";
 interface TwoTeamBracketProps {
-  teams: [string, string][] | null; // exactly 2 teams of 2
+  teams: [string, string][] | null;
+  matchResults: MatchResult[];
+  onChange: (newResults: MatchResult[]) => void;
 }
 
 interface MatchResult {
@@ -11,7 +13,11 @@ interface MatchResult {
   loser: string | null;
 }
 
-export default function TwoTeamBracket({ teams }: TwoTeamBracketProps) {
+export default function TwoTeamBracket({
+  teams,
+  matchResults,
+  onChange,
+}: TwoTeamBracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
   const [selectedWinner, setSelectedWinner] = useState<string | null>(null);
@@ -24,14 +30,6 @@ export default function TwoTeamBracket({ teams }: TwoTeamBracketProps) {
       message.warning("Brackets are best viewed in Landscape Mode", 5);
     }
   }, []);
-
-  // Track results for matches 1-5
-  const [matchResults, setMatchResults] = useState<MatchResult[]>([
-    { winner: null, loser: null }, // index 0 unused
-    { winner: null, loser: null }, // Match 1
-    { winner: null, loser: null }, // Match 2 (finals)
-    { winner: null, loser: null }, // Match 3 (Reset Final)
-  ]);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
@@ -83,11 +81,9 @@ export default function TwoTeamBracket({ teams }: TwoTeamBracketProps) {
     if (currentMatch && selectedWinner && modalTeams) {
       const loser =
         selectedWinner === modalTeams.A ? modalTeams.B : modalTeams.A;
-      setMatchResults((prev) => {
-        const copy = [...prev];
-        copy[currentMatch] = { winner: selectedWinner, loser };
-        return copy;
-      });
+      const newResults = [...matchResults];
+      newResults[currentMatch] = { winner: selectedWinner, loser };
+      onChange(newResults);
       console.log("selectedWinner", selectedWinner);
     }
     setIsModalOpen(false);
