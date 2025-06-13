@@ -125,7 +125,7 @@ export default function SixTeamBracket({
         return;
     }
     setModalTeams({ A, B });
-    setSelectedWinner(A);
+    setSelectedWinner(null);
     setCurrentMatch(matchNum);
     setIsModalOpen(true);
   };
@@ -384,6 +384,7 @@ export default function SixTeamBracket({
         onCancel={handleCancel}
         closable={false}
         okText="Submit Winner"
+        okButtonProps={{ disabled: !selectedWinner }}
         style={{ textAlign: "center" }}
       >
         <Radio.Group
