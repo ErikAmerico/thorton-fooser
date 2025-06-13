@@ -29,7 +29,7 @@ export default function SixTeamBracket({
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
   if (teams) {
-    console.log("teams in 5teamsgracket", teams);
+    console.log("teams in 6teamsgracket", teams);
   }
 
   const team1 = `${teams[0][0]} & ${teams[0][1]}`;
