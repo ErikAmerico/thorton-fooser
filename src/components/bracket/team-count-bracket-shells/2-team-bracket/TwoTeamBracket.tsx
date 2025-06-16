@@ -2,8 +2,15 @@ import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
 import { useState } from "react";
 import Confetti from "../../confetti";
+
+interface PlayerFromDB {
+  id: string;
+  name: string;
+  score: number;
+  hint: string;
+}
 interface TwoTeamBracketProps {
-  teams: [string, string][] | null;
+  teams: [PlayerFromDB, PlayerFromDB][] | null;
   matchResults: MatchResult[];
   onChange: (newResults: MatchResult[]) => void;
 }
@@ -31,8 +38,8 @@ export default function TwoTeamBracket({
     console.log("teams in 2teamsgracket", teams);
   }
 
-  const team1 = `${teams[0][0]} & ${teams[0][1]}`;
-  const team2 = `${teams[1][0]} & ${teams[1][1]}`;
+  const team1 = `${teams[0][0].name} - ${teams[0][1].name}`;
+  const team2 = `${teams[1][0].name} - ${teams[1][1].name}`;
 
   // Helper to open modal for any match
   const showModal = (matchNum: number) => {
