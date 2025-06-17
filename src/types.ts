@@ -50,3 +50,20 @@ export interface ConfirmWinnerArgs {
   onChange: (newResults: MatchResult[]) => void;
   closeModal: () => void;
 }
+
+export interface CancelGameProps {
+  open: boolean;
+  onOk: () => void;
+  onCancel: () => void;
+}
+
+export interface SubmitResultsProps {
+  open: boolean;
+  onOk: () => void;
+  onCancel: () => void;
+}
+
+export interface InfoModalProps {
+  open: boolean;
+  onOk: () => void;
+}

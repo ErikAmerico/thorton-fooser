@@ -9,9 +9,12 @@ import FiveTeamBracket from "./team-count-brackets/5-team-bracket/FiveTeamBracke
 import SixTeamBracket from "./team-count-brackets/6-team-bracket/SixTeamBracker";
 import SevenTeamBracket from "./team-count-brackets/7-team-bracket/SevenTeamBracket";
 import EightTeamBracket from "./team-count-brackets/8-team-bracket/EightTeamBracket";
-import { TrophyFilled, InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
 import { mockPlayers } from "../../data/mockData";
+import CancelGameModal from "./_components/CancelGameModal";
+import SubmitResultsModal from "./_components/SubmitResultsModal";
+import InfoModal from "./_components/InfoModal";
 
 const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //local stroage key
@@ -143,7 +146,7 @@ export default function Bracket() {
   //   //will just add to dummy data for now.
   // };
 
-  const deleteGame = () => {
+  const cancelGame = () => {
     localStorage.removeItem(STORAGE_KEY);
     setBracketState(initialState);
     setIsModalOpen(false);
@@ -277,49 +280,17 @@ export default function Bracket() {
           {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
         </div>
       </Space>
-      <Modal
-        title="Are you sure?"
+      <CancelGameModal
         open={isModalOpen}
-        onOk={deleteGame}
+        onOk={cancelGame}
         onCancel={handleCancel}
-        closable={false}
-        okText="Confirm"
-        style={{ textAlign: "center" }}
-      >
-        Canceling this game will lose all progress. It will be like it never
-        existed.
-      </Modal>
-      <Modal
-        title="Submit Results"
+      />
+      <SubmitResultsModal
         open={isSubmitModalOpen}
         onOk={submitResults}
         onCancel={handleCancel}
-        closable={false}
-        okText="Submit"
-        style={{ textAlign: "center" }}
-      >
-        In the near future - submitted results will be saved to a database and
-        every players score will update in the rankings.
-      </Modal>
-      <Modal
-        title=""
-        open={isInfoModalOpen}
-        onOk={handleCancel}
-        closable={false}
-        cancelButtonProps={{ style: { display: "none" } }}
-        okText="Got It."
-        style={{ textAlign: "center" }}
-      >
-        <div>
-          <span className="">
-            ? <span className="">= Reset Match (if needed)</span>
-          </span>{" "}
-          <br />
-          <span className="">
-            <TrophyFilled /> <span className="">= Report Winner</span>
-          </span>
-        </div>
-      </Modal>
+      />
+      <InfoModal open={isInfoModalOpen} onOk={handleCancel} />
     </div>
   );
 }
