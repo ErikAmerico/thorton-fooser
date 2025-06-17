@@ -1,44 +1,67 @@
 import "./bracket.css";
 import { Space, Button, message, Checkbox, Modal } from "antd";
 import { useState, useEffect } from "react";
-import { mockPlayers, Player } from "../../data/mockPlayers";
 
-import TwoTeamBracket from "./team-count-bracket-shells/2-team-bracket/TwoTeamBracket";
-import ThreeTeamBracket from "./team-count-bracket-shells/3-team-bracket/ThreeTeamBracket";
-import FourTeamBracket from "./team-count-bracket-shells/4-team-bracket/FourTeamBracket";
-import FiveTeamBracket from "./team-count-bracket-shells/5-team-bracket/FiveTeamBracket";
-import SixTeamBracket from "./team-count-bracket-shells/6-team-bracket/SixTeamBracker";
-import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTeamBracket";
-import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
-import { TrophyFilled } from "@ant-design/icons";
+import TwoTeamBracket from "./team-count-brackets/2-team-bracket/TwoTeamBracket";
+import ThreeTeamBracket from "./team-count-brackets/3-team-bracket/ThreeTeamBracket";
+import FourTeamBracket from "./team-count-brackets/4-team-bracket/FourTeamBracket";
+import FiveTeamBracket from "./team-count-brackets/5-team-bracket/FiveTeamBracket";
+import SixTeamBracket from "./team-count-brackets/6-team-bracket/SixTeamBracker";
+import SevenTeamBracket from "./team-count-brackets/7-team-bracket/SevenTeamBracket";
+import EightTeamBracket from "./team-count-brackets/8-team-bracket/EightTeamBracket";
+import { TrophyFilled, InfoCircleOutlined } from "@ant-design/icons";
+import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
+import { mockPlayers } from "../../data/mockData";
 
 const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //local stroage key
 
-interface StoredState {
-  selected: string[];
-  teams: [string, string][] | null;
-  matchResults?: any;
-}
-
-interface MatchResult {
-  winner: string | null;
-  loser: string | null;
-}
+const initialState = {
+  selected: [],
+  teams: null,
+  matchResults: null,
+};
 
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  // const [players, setPlayers] = useState<PlayerFromDB[]>([]);
+  const [bracketState, setBracketState] = useState<StoredState>(() => {
+    try {
+      const json = localStorage.getItem(STORAGE_KEY);
+      if (json) return JSON.parse(json);
+    } catch {}
+    return initialState;
+  });
+  const [isTourneyFinished, setIsTourneyFinished] = useState(false);
+  const { selected, teams, matchResults } = bracketState;
+  const API = "http://localhost:3000";
 
-  const initialState: StoredState = {
-    selected: [],
-    teams: null,
-    matchResults: null,
-  };
+  useEffect(() => {
+    console.log("tournament over?", isTourneyFinished);
+    if (isTourneyFinished) {
+      console.log("calculate results!");
+    }
+  }, [isTourneyFinished]);
+
+  // useEffect(() => {
+  //   fetch(`${API}/players`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // console.log("fetched players", data);
+  //       setPlayers(data);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Failed to load players:", err);
+  //       message.error("Couldn't load players");
+  //     });
+  // }, []);
 
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsSubmitModalOpen(false);
+    setIsInfoModalOpen(false);
   };
 
   const showModal = () => {
@@ -49,31 +72,31 @@ export default function Bracket() {
     setIsSubmitModalOpen(true);
   };
 
-  const [bracketState, setBracketState] = useState<StoredState>(() => {
-    try {
-      const json = localStorage.getItem(STORAGE_KEY);
-      if (json) return JSON.parse(json);
-    } catch {}
-    return initialState;
-  });
-
-  const { selected, teams, matchResults } = bracketState;
+  const showInfoModal = () => {
+    setIsInfoModalOpen(true);
+  };
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bracketState));
   }, [bracketState]);
 
+  // const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
+
   const allPlayers = [...mockPlayers].sort((a, b) =>
     a.name.localeCompare(b.name)
-  );
+  ); //getting players from mockData
 
-  const onCheck = (name: string, checked: boolean) => {
+  console.log(allPlayers);
+
+  const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
       return message.error(`Max ${MAX_PLAYERS} players`);
     }
     const newSelected = checked
-      ? [...selected, name]
-      : selected.filter((n) => n !== name);
+      ? [...selected, player]
+      : selected.filter((plyr) => plyr.id !== player.id);
+
+    // console.log(newSelected);
 
     // reset any existing bracket if players change
     setBracketState({
@@ -96,13 +119,13 @@ export default function Bracket() {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
-    const s: string[] = shuffle([...selected]);
-    const pairs: [string, string][] = [];
-    for (let i = 0; i < s.length; i += 2) {
-      pairs.push([s[i], s[i + 1]]);
+    const plyrs: PlayerFromDB[] = shuffle([...selected]);
+    const pairs: Team[] = [];
+    for (let i = 0; i < plyrs.length; i += 2) {
+      pairs.push([plyrs[i], plyrs[i + 1]]);
     }
 
-    // initialize one result-slot per match (we’ll use length = pairs.length*2 + 1)
+    // initialize one result-slot per match
     const emptyResults: MatchResult[] = Array(pairs.length * 2 + 1)
       .fill(null)
       .map(() => ({ winner: null, loser: null }));
@@ -114,11 +137,11 @@ export default function Bracket() {
     });
   };
 
-  const addPlayer = () => {
-    console.log("adding player");
-    //add player to database.
-    //will just add to dummy data for now.
-  };
+  // const addPlayer = () => {
+  //   // console.log("adding player");
+  //   //add player to database.
+  //   //will just add to dummy data for now.
+  // };
 
   const deleteGame = () => {
     localStorage.removeItem(STORAGE_KEY);
@@ -127,7 +150,7 @@ export default function Bracket() {
   };
 
   const submitResults = () => {
-    console.log("results submitted");
+    // console.log("results submitted");
     setIsSubmitModalOpen(false);
   };
 
@@ -143,15 +166,17 @@ export default function Bracket() {
               Who is playing?
             </h3>
             <div className="player-grid">
-              {allPlayers.map((player: Player) => (
+              {allPlayers.map((player: PlayerFromDB) => (
                 <Checkbox
                   key={player.id}
-                  checked={selected.includes(player.name)}
+                  checked={bracketState.selected.some(
+                    (p) => p.id === player.id
+                  )}
                   disabled={
-                    !selected.includes(player.name) &&
-                    selected.length >= MAX_PLAYERS
+                    !bracketState.selected.some((p) => p.id === player.id) &&
+                    bracketState.selected.length >= MAX_PLAYERS
                   }
-                  onChange={(e) => onCheck(player.name, e.target.checked)}
+                  onChange={(e) => onCheck(player, e.target.checked)}
                 >
                   {player.name}
                 </Checkbox>
@@ -171,18 +196,6 @@ export default function Bracket() {
         {teams && (
           <div>
             <div className="bracket-controls">
-              <span className="bracket-controls-desc">
-                ?{" "}
-                <span className="bracket-controls-text">
-                  = Reset Match (if needed)
-                </span>
-              </span>{" "}
-              <span className="bracket-controls-desc">
-                <TrophyFilled />{" "}
-                <span className="bracket-controls-text">= Report Winner</span>
-              </span>
-            </div>
-            <div className="bracket-controls">
               <Button className="cancel-tourney-btn" onClick={showModal}>
                 Cancel Game
               </Button>
@@ -190,6 +203,12 @@ export default function Bracket() {
               <Button className="submit-results-btn" onClick={showSubmitModal}>
                 Submit Results
               </Button>
+
+              <InfoCircleOutlined
+                onClick={showInfoModal}
+                className="infoCircle"
+                style={{ color: "white" }}
+              />
             </div>
           </div>
         )}
@@ -202,6 +221,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 3 && (
@@ -211,6 +231,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 4 && (
@@ -220,6 +241,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 5 && (
@@ -229,6 +251,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 6 && (
@@ -238,6 +261,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 7 && (
@@ -247,6 +271,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
@@ -275,6 +300,25 @@ export default function Bracket() {
       >
         In the near future - submitted results will be saved to a database and
         every players score will update in the rankings.
+      </Modal>
+      <Modal
+        title=""
+        open={isInfoModalOpen}
+        onOk={handleCancel}
+        closable={false}
+        cancelButtonProps={{ style: { display: "none" } }}
+        okText="Got It."
+        style={{ textAlign: "center" }}
+      >
+        <div>
+          <span className="">
+            ? <span className="">= Reset Match (if needed)</span>
+          </span>{" "}
+          <br />
+          <span className="">
+            <TrophyFilled /> <span className="">= Report Winner</span>
+          </span>
+        </div>
       </Modal>
     </div>
   );

@@ -1,30 +1,23 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Confetti from "../../confetti";
-
-interface SevenTeamBracketProps {
-  teams: [string, string][] | null;
-  matchResults: MatchResult[];
-  onChange: (newResults: MatchResult[]) => void;
-}
-
-interface MatchResult {
-  winner: string | null;
-  loser: string | null;
-}
+import { Team, BracketProps } from "../../../../types";
+import renderTeamName from "../../_helpers/renderTeamName";
 
 export default function SevenTeamBracket({
   teams,
   matchResults,
   onChange,
-}: SevenTeamBracketProps) {
+  setIsTourneyFinished,
+}: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
-  const [selectedWinner, setSelectedWinner] = useState<string | null>(null);
-  const [modalTeams, setModalTeams] = useState<{ A: string; B: string } | null>(
-    null
-  );
+  const [selectedWinner, setSelectedWinner] = useState<Team | null>(null);
+  const [modalTeams, setModalTeams] = useState<{
+    A: Team;
+    B: Team;
+  } | null>(null);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
@@ -32,19 +25,16 @@ export default function SevenTeamBracket({
     console.log("teams in 7teamsgracket", teams);
   }
 
-  const team1 = `${teams[0][0]} & ${teams[0][1]}`;
-  const team2 = `${teams[1][0]} & ${teams[1][1]}`;
-  const team3 = `${teams[2][0]} & ${teams[2][1]}`;
-  const team4 = `${teams[3][0]} & ${teams[3][1]}`;
-  const team5 = `${teams[4][0]} & ${teams[4][1]}`;
-  const team6 = `${teams[5][0]} & ${teams[5][1]}`;
-  const team7 = `${teams[6][0]} & ${teams[6][1]}`;
+  const team1 = teams[0];
+  const team2 = teams[1];
+  const team3 = teams[2];
+  const team4 = teams[3];
+  const team5 = teams[4];
+  const team6 = teams[5];
+  const team7 = teams[6];
 
-  // Helper to open modal for any match
   const showModal = (matchNum: number) => {
-    // determine the two competing teams
-    let A = "",
-      B = "";
+    let A: Team, B: Team;
     switch (matchNum) {
       case 1:
         A = team4;
@@ -171,6 +161,13 @@ export default function SevenTeamBracket({
   const needsReset = grandWinner && grandWinner !== matchResults[10].winner;
   const tournamentOver = grandWinner && !needsReset;
   const resetWinner = matchResults[13].winner;
+
+  useEffect(() => {
+    if (tournamentOver || resetWinner) {
+      setIsTourneyFinished(true);
+    }
+  }, [tournamentOver, resetWinner, setIsTourneyFinished]);
+
   return (
     <div className="bracket-shell">
       {/* Top row headers */}
@@ -185,24 +182,48 @@ export default function SevenTeamBracket({
       <div className="match-row top-row ">
         <div className="round1-column">
           <div className="match-cell lower-match-col upper-line">
-            <input className="team-input" value={team4} readOnly />
-            <input className="team-input" value={team5} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team4)}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={renderTeamName(team5)}
+              readOnly
+            />
             <span className="match-number">
               Match 1 <TrophyFilled onClick={() => showModal(1)} />
             </span>
           </div>
 
           <div className="match-cell lower-line">
-            <input className="team-input" value={team2} readOnly />
-            <input className="team-input" value={team7} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team2)}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={renderTeamName(team7)}
+              readOnly
+            />
             <span className="match-number">
               Match 2 <TrophyFilled onClick={() => showModal(2)} />
             </span>
           </div>
 
           <div className="match-cell upper-line">
-            <input className="team-input" value={team3} readOnly />
-            <input className="team-input" value={team6} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team3)}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={renderTeamName(team6)}
+              readOnly
+            />
             <span className="match-number">
               Match 2 <TrophyFilled onClick={() => showModal(3)} />
             </span>
@@ -212,11 +233,15 @@ export default function SevenTeamBracket({
         {/* round 2 */}
         <div className="round1-column">
           <div className="match-cell lower-line angle-down45">
-            <input className="team-input" value={team1} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team1)}
+              readOnly
+            />
             <input
               className="team-input"
               placeholder="Winner of 1"
-              value={matchResults[1].winner ?? ""}
+              value={renderTeamName(matchResults[1].winner)}
               readOnly
             />
             <span className="match-number">
@@ -228,13 +253,13 @@ export default function SevenTeamBracket({
             <input
               className="team-input"
               placeholder="Winner of 2"
-              value={matchResults[2].winner ?? ""}
+              value={renderTeamName(matchResults[2].winner)}
               readOnly
             />
             <input
               className="team-input"
               placeholder="Winner of 3"
-              value={matchResults[3].winner ?? ""}
+              value={renderTeamName(matchResults[3].winner)}
               readOnly
             />
             <span className="match-number">
@@ -247,13 +272,13 @@ export default function SevenTeamBracket({
           <input
             className="team-input"
             placeholder="Winner of 5"
-            value={matchResults[5].winner ?? ""}
+            value={renderTeamName(matchResults[5].winner)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of 6"
-            value={matchResults[6].winner ?? ""}
+            value={renderTeamName(matchResults[6].winner)}
             readOnly
           />
           <span className="match-number">
@@ -265,13 +290,13 @@ export default function SevenTeamBracket({
           <input
             className="team-input"
             placeholder="Winner of 10"
-            value={matchResults[10].winner ?? ""}
+            value={renderTeamName(matchResults[10].winner)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of losers"
-            value={matchResults[11].winner ?? ""}
+            value={renderTeamName(matchResults[11].winner)}
             readOnly
           />
           <span className="match-number">
@@ -282,7 +307,9 @@ export default function SevenTeamBracket({
         {tournamentOver ? (
           <div className="match-row final-row">
             <div className="match-cell lower-match-col3 champ-cell no-dash">
-              <div className="champion-text">{grandWinner} won!</div>
+              <div className="champion-text">
+                {renderTeamName(grandWinner)} won!
+              </div>
             </div>
           </div>
         ) : needsReset ? (
@@ -290,13 +317,13 @@ export default function SevenTeamBracket({
             <div className="match-cell lower-match-col3">
               <input
                 className="team-input"
-                value={matchResults[12].winner ?? ""}
+                value={renderTeamName(matchResults[12].winner)}
                 placeholder="Winner of 12"
                 readOnly
               />
               <input
                 className="team-input"
-                value={matchResults[12].loser ?? ""}
+                value={renderTeamName(matchResults[12].loser)}
                 placeholder="Loser of 12 (if necessary)"
                 readOnly
               />
@@ -307,7 +334,9 @@ export default function SevenTeamBracket({
             {resetWinner && (
               <div className="match-row final-row">
                 <div className="match-cell lower-match-col3 no-dash">
-                  <div className="champion-text">{resetWinner} won!</div>
+                  <div className="champion-text">
+                    {renderTeamName(resetWinner)} won!
+                  </div>
                 </div>
               </div>
             )}
@@ -336,13 +365,13 @@ export default function SevenTeamBracket({
           <input
             className="team-input"
             placeholder="Loser of 2"
-            value={matchResults[2].loser ?? ""}
+            value={renderTeamName(matchResults[2].loser)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Loser of 3"
-            value={matchResults[3].loser ?? ""}
+            value={renderTeamName(matchResults[3].loser)}
             readOnly
           />
           <span className="match-number">
@@ -356,13 +385,13 @@ export default function SevenTeamBracket({
             <input
               className="team-input"
               placeholder="Loser of 6"
-              value={matchResults[6].loser ?? ""}
+              value={renderTeamName(matchResults[6].loser)}
               readOnly
             />
             <input
               className="team-input"
               placeholder="Loser of 1"
-              value={matchResults[1].loser ?? ""}
+              value={renderTeamName(matchResults[1].loser)}
               readOnly
             />
             <span className="match-number">
@@ -374,13 +403,13 @@ export default function SevenTeamBracket({
             <input
               className="team-input"
               placeholder="Loser of 5"
-              value={matchResults[5].loser ?? ""}
+              value={renderTeamName(matchResults[5].loser)}
               readOnly
             />
             <input
               className="team-input"
               placeholder="Winner of 4"
-              value={matchResults[4].winner ?? ""}
+              value={renderTeamName(matchResults[4].winner)}
               readOnly
             />
             <span className="match-number">
@@ -394,13 +423,13 @@ export default function SevenTeamBracket({
           <input
             className="team-input"
             placeholder="Winner of 8"
-            value={matchResults[8].winner ?? ""}
+            value={renderTeamName(matchResults[8].winner)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of 7"
-            value={matchResults[7].winner ?? ""}
+            value={renderTeamName(matchResults[7].winner)}
             readOnly
           />
           <span className="match-number">
@@ -412,13 +441,13 @@ export default function SevenTeamBracket({
           <input
             className="team-input"
             placeholder="Loser of 10"
-            value={matchResults[10].loser ?? ""}
+            value={renderTeamName(matchResults[10].loser)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of 9"
-            value={matchResults[9].winner ?? ""}
+            value={renderTeamName(matchResults[9].winner)}
             readOnly
           />
           <span className="match-number">
@@ -443,8 +472,8 @@ export default function SevenTeamBracket({
         >
           {modalTeams && (
             <>
-              <Radio value={modalTeams.A}>{modalTeams.A}</Radio>
-              <Radio value={modalTeams.B}>{modalTeams.B}</Radio>
+              <Radio value={modalTeams.A}>{renderTeamName(modalTeams.A)}</Radio>
+              <Radio value={modalTeams.B}>{renderTeamName(modalTeams.B)}</Radio>
             </>
           )}
         </Radio.Group>

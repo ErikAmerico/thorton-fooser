@@ -1,30 +1,23 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Confetti from "../../confetti";
-
-interface ThreeTeamBracketProps {
-  teams: [string, string][] | null;
-  matchResults: MatchResult[];
-  onChange: (newResults: MatchResult[]) => void;
-}
-
-interface MatchResult {
-  winner: string | null;
-  loser: string | null;
-}
+import { Team, BracketProps } from "../../../../types";
+import renderTeamName from "../../_helpers/renderTeamName";
 
 export default function ThreeTeamBracket({
   teams,
   matchResults,
   onChange,
-}: ThreeTeamBracketProps) {
+  setIsTourneyFinished,
+}: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
-  const [selectedWinner, setSelectedWinner] = useState<string | null>(null);
-  const [modalTeams, setModalTeams] = useState<{ A: string; B: string } | null>(
-    null
-  );
+  const [selectedWinner, setSelectedWinner] = useState<Team | null>(null);
+  const [modalTeams, setModalTeams] = useState<{
+    A: Team;
+    B: Team;
+  } | null>(null);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
@@ -32,15 +25,12 @@ export default function ThreeTeamBracket({
     console.log("teams in 3teamsgracket", teams);
   }
 
-  const team1 = `${teams[0][0]} & ${teams[0][1]}`;
-  const team2 = `${teams[1][0]} & ${teams[1][1]}`;
-  const team3 = `${teams[2][0]} & ${teams[2][1]}`;
+  const team1 = teams[0];
+  const team2 = teams[1];
+  const team3 = teams[2];
 
-  // Helper to open modal for any match
   const showModal = (matchNum: number) => {
-    // determine the two competing teams
-    let A = "",
-      B = "";
+    let A: Team, B: Team;
     switch (matchNum) {
       case 1:
         A = team2;
@@ -86,7 +76,7 @@ export default function ThreeTeamBracket({
     setIsModalOpen(true);
   };
 
-  // Handle clicking "Submit Winner"
+  // "Submit Winner"
   const handleOk = () => {
     if (currentMatch && selectedWinner && modalTeams) {
       const loser =
@@ -111,6 +101,12 @@ export default function ThreeTeamBracket({
   const tournamentOver = grandWinner && !needsReset;
   const resetWinner = matchResults[5].winner;
 
+  useEffect(() => {
+    if (tournamentOver || resetWinner) {
+      setIsTourneyFinished(true);
+    }
+  }, [tournamentOver, resetWinner, setIsTourneyFinished]);
+
   return (
     <div className="bracket-shell">
       {/* Top row headers */}
@@ -124,8 +120,16 @@ export default function ThreeTeamBracket({
       <div className="match-row top-row">
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input className="team-input" value={team2} readOnly />
-            <input className="team-input" value={team3} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team2)}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={renderTeamName(team3)}
+              readOnly
+            />
             <span className="match-number">
               Match 1 <TrophyFilled onClick={() => showModal(1)} />
             </span>
@@ -136,11 +140,15 @@ export default function ThreeTeamBracket({
         <div className="match-cell lower-match-col lower-line">
           <input
             className="team-input"
-            value={matchResults[1].winner ?? ""}
+            value={renderTeamName(matchResults[1].winner)}
             placeholder="Winner of 1"
             readOnly
           />
-          <input className="team-input" value={team1} readOnly />
+          <input
+            className="team-input"
+            value={renderTeamName(team1)}
+            readOnly
+          />
           <span className="match-number">
             Match 2 <TrophyFilled onClick={() => showModal(2)} />
           </span>
@@ -150,13 +158,13 @@ export default function ThreeTeamBracket({
         <div className="match-cell lower-match-col2">
           <input
             className="team-input"
-            value={matchResults[2].winner ?? ""}
+            value={renderTeamName(matchResults[2].winner)}
             placeholder="Winner of 2"
             readOnly
           />
           <input
             className="team-input"
-            value={matchResults[3].winner ?? ""}
+            value={renderTeamName(matchResults[3].winner)}
             placeholder="Winner of Losers"
             readOnly
           />
@@ -168,7 +176,9 @@ export default function ThreeTeamBracket({
         {tournamentOver ? (
           <div className="match-row final-row">
             <div className="match-cell lower-match-col2 champ-cell no-dash">
-              <div className="champion-text">{grandWinner} won!</div>
+              <div className="champion-text">
+                {renderTeamName(grandWinner)} won!
+              </div>
             </div>
           </div>
         ) : needsReset ? (
@@ -176,13 +186,13 @@ export default function ThreeTeamBracket({
             <div className="match-cell lower-match-col2">
               <input
                 className="team-input"
-                value={matchResults[4].winner ?? ""}
+                value={renderTeamName(matchResults[4].winner)}
                 placeholder="winner of 4"
                 readOnly
               />
               <input
                 className="team-input"
-                value={matchResults[4].loser ?? ""}
+                value={renderTeamName(matchResults[4].loser)}
                 placeholder="loser of 4 (if necessary)"
                 readOnly
               />
@@ -193,7 +203,9 @@ export default function ThreeTeamBracket({
             {resetWinner && (
               <div className="match-row final-row">
                 <div className="match-cell lower-match-col2 no-dash">
-                  <div className="champion-text">{resetWinner} won!</div>
+                  <div className="champion-text">
+                    {renderTeamName(resetWinner)} won!
+                  </div>
                 </div>
               </div>
             )}
@@ -222,12 +234,12 @@ export default function ThreeTeamBracket({
           <input
             className="team-input"
             placeholder="Loser of 2"
-            value={matchResults[2].loser ?? ""}
+            value={renderTeamName(matchResults[2].loser)}
             readOnly
           />
           <input
             className="team-input"
-            value={matchResults[1].loser ?? ""}
+            value={renderTeamName(matchResults[1].loser)}
             placeholder="Loser of 1"
             readOnly
           />
@@ -253,8 +265,8 @@ export default function ThreeTeamBracket({
         >
           {modalTeams && (
             <>
-              <Radio value={modalTeams.A}>{modalTeams.A}</Radio>
-              <Radio value={modalTeams.B}>{modalTeams.B}</Radio>
+              <Radio value={modalTeams.A}>{renderTeamName(modalTeams.A)}</Radio>
+              <Radio value={modalTeams.B}>{renderTeamName(modalTeams.B)}</Radio>
             </>
           )}
         </Radio.Group>
