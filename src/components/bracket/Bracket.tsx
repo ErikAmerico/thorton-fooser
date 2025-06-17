@@ -26,7 +26,7 @@ export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [players, setPlayers] = useState<PlayerFromDB[]>([]);
+  // const [players, setPlayers] = useState<PlayerFromDB[]>([]);
   const [bracketState, setBracketState] = useState<StoredState>(() => {
     try {
       const json = localStorage.getItem(STORAGE_KEY);
@@ -45,18 +45,18 @@ export default function Bracket() {
     }
   }, [isTourneyFinished]);
 
-  useEffect(() => {
-    fetch(`${API}/players`)
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log("fetched players", data);
-        setPlayers(data);
-      })
-      .catch((err) => {
-        console.error("Failed to load players:", err);
-        message.error("Couldn't load players");
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${API}/players`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // console.log("fetched players", data);
+  //       setPlayers(data);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Failed to load players:", err);
+  //       message.error("Couldn't load players");
+  //     });
+  // }, []);
 
   const handleCancel = () => {
     setIsModalOpen(false);
