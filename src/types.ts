@@ -26,3 +26,9 @@ export interface StoredState {
   teams: Team[] | null;
   matchResults?: MatchResult[] | null;
 }
+
+export interface isTournamentFinsihedProps {
+  resetWinner: Team | null;
+  tournamentOver: boolean | null;
+  setIsTourneyFinished: Dispatch<SetStateAction<boolean>>;
+}

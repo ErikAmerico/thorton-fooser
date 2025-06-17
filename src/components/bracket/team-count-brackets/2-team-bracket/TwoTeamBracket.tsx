@@ -1,9 +1,10 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Confetti from "../../confetti";
 import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
+import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 
 export default function TwoTeamBracket({
   teams,
@@ -86,11 +87,11 @@ export default function TwoTeamBracket({
   const tournamentOver = grandWinner && !needsReset;
   const resetWinner = matchResults[3].winner;
 
-  useEffect(() => {
-    if (tournamentOver || resetWinner) {
-      setIsTourneyFinished(true);
-    }
-  }, [tournamentOver, resetWinner, setIsTourneyFinished]);
+  isTournamentFinsihed({
+    resetWinner,
+    tournamentOver,
+    setIsTourneyFinished,
+  });
 
   return (
     <div className="bracket-shell">
