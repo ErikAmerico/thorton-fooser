@@ -1,7 +1,6 @@
 import "./bracket.css";
-import { Space, Button, message } from "antd";
+import { Space, message } from "antd";
 import { useState, useEffect } from "react";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import CancelGameModal from "./_components/CancelGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/InfoModal";
