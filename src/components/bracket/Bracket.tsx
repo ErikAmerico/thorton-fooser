@@ -15,6 +15,7 @@ import CancelGameModal from "./_components/CancelGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/InfoModal";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
+import PlayerPicker from "./_components/PlayerPicker";
 
 const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //local stroage key
@@ -89,7 +90,7 @@ export default function Bracket() {
     a.name.localeCompare(b.name)
   ); //getting players from mockData
 
-  console.log(allPlayers);
+  // console.log(allPlayers);
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
@@ -119,7 +120,7 @@ export default function Bracket() {
       pairs.push([plyrs[i], plyrs[i + 1]]);
     }
 
-    // initialize one result-slot per match
+    // initialize one result-slot per match - skipping index 0.
     const emptyResults: MatchResult[] = Array(pairs.length * 2 + 1)
       .fill(null)
       .map(() => ({ winner: null, loser: null }));
@@ -155,36 +156,13 @@ export default function Bracket() {
     <div className="bracket-scroll-wrapper">
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         {!teams && (
-          <>
-            <h3 style={{ color: "#fff", fontFamily: "sans-serif" }}>
-              Who is playing?
-            </h3>
-            <div className="player-grid">
-              {allPlayers.map((player: PlayerFromDB) => (
-                <Checkbox
-                  key={player.id}
-                  checked={bracketState.selected.some(
-                    (p) => p.id === player.id
-                  )}
-                  disabled={
-                    !bracketState.selected.some((p) => p.id === player.id) &&
-                    bracketState.selected.length >= MAX_PLAYERS
-                  }
-                  onChange={(e) => onCheck(player, e.target.checked)}
-                >
-                  {player.name}
-                </Checkbox>
-              ))}
-            </div>
-            <Button
-              type="primary"
-              disabled={selected.length < 4 || selected.length % 2 !== 0}
-              onClick={buildBracket}
-              className="generate-bracket-button"
-            >
-              Generate {selected.length / 2}-Team Bracket
-            </Button>
-          </>
+          <PlayerPicker
+            players={allPlayers}
+            selected={selected}
+            maxPlayers={MAX_PLAYERS}
+            onToggle={onCheck}
+            onGenerate={buildBracket}
+          />
         )}
 
         {teams && (

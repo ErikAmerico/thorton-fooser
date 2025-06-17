@@ -67,3 +67,11 @@ export interface InfoModalProps {
   open: boolean;
   onOk: () => void;
 }
+
+export interface PlayerPickerProps {
+  players: PlayerFromDB[];
+  selected: PlayerFromDB[];
+  maxPlayers: number;
+  onToggle: (player: PlayerFromDB, checked: boolean) => void;
+  onGenerate: () => void;
+}
