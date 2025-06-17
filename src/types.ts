@@ -75,3 +75,9 @@ export interface PlayerPickerProps {
   onToggle: (player: PlayerFromDB, checked: boolean) => void;
   onGenerate: () => void;
 }
+
+export interface BracketControlsProps {
+  onCancelGame: () => void;
+  onSubmitResults: () => void;
+  onShowInfo: () => void;
+}

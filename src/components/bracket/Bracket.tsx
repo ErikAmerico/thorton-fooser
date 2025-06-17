@@ -7,6 +7,7 @@ import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/InfoModal";
 import PlayerPicker from "./_components/PlayerPicker";
 import { RenderBracket } from "./_components/BracketRenderer";
+import BracketControls from "./_components/BracketControls";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
@@ -91,6 +92,8 @@ export default function Bracket() {
     });
   };
 
+  console.log(bracketState);
+
   const buildBracket = () => {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
@@ -147,23 +150,11 @@ export default function Bracket() {
         )}
 
         {teams && (
-          <div>
-            <div className="bracket-controls">
-              <Button className="cancel-tourney-btn" onClick={showModal}>
-                Cancel Game
-              </Button>
-
-              <Button className="submit-results-btn" onClick={showSubmitModal}>
-                Submit Results
-              </Button>
-
-              <InfoCircleOutlined
-                onClick={showInfoModal}
-                className="infoCircle"
-                style={{ color: "white" }}
-              />
-            </div>
-          </div>
+          <BracketControls
+            onCancelGame={showModal}
+            onSubmitResults={showSubmitModal}
+            onShowInfo={showInfoModal}
+          />
         )}
 
         <div className="bracket-scroll-content">
