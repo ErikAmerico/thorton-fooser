@@ -30,7 +30,7 @@ export default function SixTeamBracket({
   const team3 = teams[2];
   const team4 = teams[3];
   const team5 = teams[4];
-  const team6 = teams[4];
+  const team6 = teams[5];
 
   const showModal = (matchNum: number) => {
     let A: Team, B: Team;

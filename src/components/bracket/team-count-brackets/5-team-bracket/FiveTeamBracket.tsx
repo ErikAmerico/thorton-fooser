@@ -31,9 +31,7 @@ export default function FiveTeamBracket({
   const team4 = teams[3];
   const team5 = teams[4];
 
-  // Helper to open modal for any match
   const showModal = (matchNum: number) => {
-    // determine the two competing teams
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
