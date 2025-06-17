@@ -32,3 +32,12 @@ export interface isTournamentFinsihedProps {
   tournamentOver: boolean | null;
   setIsTourneyFinished: Dispatch<SetStateAction<boolean>>;
 }
+
+export interface WhoWonModalProps {
+  open: boolean;
+  teams: { A: Team; B: Team } | null;
+  selectedWinner: Team | null;
+  onSelect: (team: Team) => void;
+  onOk: () => void;
+  onCancel: () => void;
+}

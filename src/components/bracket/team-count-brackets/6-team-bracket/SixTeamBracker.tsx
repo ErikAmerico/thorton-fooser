@@ -1,10 +1,11 @@
 import { TrophyFilled } from "@ant-design/icons";
-import { Modal, Radio, message } from "antd";
+import { message } from "antd";
 import { useState } from "react";
 import Confetti from "../../confetti";
 import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
+import WhoWonModal from "../../_components/WhoWonModal";
 
 export default function SixTeamBracket({
   teams,
@@ -402,29 +403,14 @@ export default function SixTeamBracket({
           </span>
         </div>
       </div>
-      <Modal
-        title="Who Won?"
+      <WhoWonModal
         open={isModalOpen}
+        teams={modalTeams}
+        selectedWinner={selectedWinner}
+        onSelect={setSelectedWinner}
         onOk={handleOk}
         onCancel={handleCancel}
-        closable={false}
-        okText="Submit Winner"
-        okButtonProps={{ disabled: !selectedWinner }}
-        style={{ textAlign: "center" }}
-      >
-        <Radio.Group
-          onChange={(e) => setSelectedWinner(e.target.value)}
-          value={selectedWinner}
-          style={{ display: "flex", flexDirection: "column", gap: 8 }}
-        >
-          {modalTeams && (
-            <>
-              <Radio value={modalTeams.A}>{renderTeamName(modalTeams.A)}</Radio>
-              <Radio value={modalTeams.B}>{renderTeamName(modalTeams.B)}</Radio>
-            </>
-          )}
-        </Radio.Group>
-      </Modal>
+      />
       {!needsReset && grandWinner && <Confetti />}
       {resetWinner && <Confetti />}
     </div>
