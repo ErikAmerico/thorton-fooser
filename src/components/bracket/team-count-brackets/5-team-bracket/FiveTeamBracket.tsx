@@ -1,37 +1,23 @@
 import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Confetti from "../../confetti";
-
-interface PlayerFromDB {
-  id: string;
-  name: string;
-  score: number;
-  hint: string;
-}
-
-interface FiveTeamBracketProps {
-  teams: [PlayerFromDB, PlayerFromDB][] | null;
-  matchResults: MatchResult[];
-  onChange: (newResults: MatchResult[]) => void;
-}
-
-interface MatchResult {
-  winner: string | null;
-  loser: string | null;
-}
+import { Team, BracketProps } from "../../../../types";
+import renderTeamName from "../../_helpers/renderTeamName";
 
 export default function FiveTeamBracket({
   teams,
   matchResults,
   onChange,
-}: FiveTeamBracketProps) {
+  setIsTourneyFinished,
+}: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
-  const [selectedWinner, setSelectedWinner] = useState<string | null>(null);
-  const [modalTeams, setModalTeams] = useState<{ A: string; B: string } | null>(
-    null
-  );
+  const [selectedWinner, setSelectedWinner] = useState<Team | null>(null);
+  const [modalTeams, setModalTeams] = useState<{
+    A: Team;
+    B: Team;
+  } | null>(null);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
 
@@ -39,17 +25,16 @@ export default function FiveTeamBracket({
     console.log("teams in 5teamsgracket", teams);
   }
 
-  const team1 = `${teams[0][0]} & ${teams[0][1]}`;
-  const team2 = `${teams[1][0]} & ${teams[1][1]}`;
-  const team3 = `${teams[2][0]} & ${teams[2][1]}`;
-  const team4 = `${teams[3][0]} & ${teams[3][1]}`;
-  const team5 = `${teams[4][0]} & ${teams[4][1]}`;
+  const team1 = teams[0];
+  const team2 = teams[1];
+  const team3 = teams[2];
+  const team4 = teams[3];
+  const team5 = teams[4];
 
   // Helper to open modal for any match
   const showModal = (matchNum: number) => {
     // determine the two competing teams
-    let A = "",
-      B = "";
+    let A: Team, B: Team;
     switch (matchNum) {
       case 1:
         A = team4;
@@ -134,7 +119,7 @@ export default function FiveTeamBracket({
       const newResults = [...matchResults];
       newResults[currentMatch] = { winner: selectedWinner, loser };
       onChange(newResults);
-      // console.log("selectedWinner", selectedWinner);
+      console.log("selectedWinner", selectedWinner);
     }
     setIsModalOpen(false);
     setCurrentMatch(null);
@@ -151,6 +136,12 @@ export default function FiveTeamBracket({
   const tournamentOver = grandWinner && !needsReset;
   const resetWinner = matchResults[9].winner;
 
+  useEffect(() => {
+    if (tournamentOver || resetWinner) {
+      setIsTourneyFinished(true);
+    }
+  }, [tournamentOver, resetWinner, setIsTourneyFinished]);
+
   return (
     <div className="bracket-shell">
       {/* Top row headers */}
@@ -164,8 +155,16 @@ export default function FiveTeamBracket({
       {/* Top row matches */}
       <div className="match-row top-row ">
         <div className="match-cell lower-match-col upper-line">
-          <input className="team-input" value={team4} readOnly />
-          <input className="team-input" value={team5} readOnly />
+          <input
+            className="team-input"
+            value={renderTeamName(team4)}
+            readOnly
+          />
+          <input
+            className="team-input"
+            value={renderTeamName(team5)}
+            readOnly
+          />
           <span className="match-number">
             Match 1 <TrophyFilled onClick={() => showModal(1)} />
           </span>
@@ -174,11 +173,15 @@ export default function FiveTeamBracket({
         {/* round 2 */}
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input className="team-input" value={team1} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team1)}
+              readOnly
+            />
             <input
               className="team-input"
               placeholder="Winner of 1"
-              value={matchResults[1].winner ?? ""}
+              value={renderTeamName(matchResults[1].winner)}
               readOnly
             />
             <span className="match-number">
@@ -187,8 +190,16 @@ export default function FiveTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input className="team-input" value={team2} readOnly />
-            <input className="team-input" value={team3} readOnly />
+            <input
+              className="team-input"
+              value={renderTeamName(team2)}
+              readOnly
+            />
+            <input
+              className="team-input"
+              value={renderTeamName(team3)}
+              readOnly
+            />
             <span className="match-number">
               Match 2 <TrophyFilled onClick={() => showModal(2)} />
             </span>
@@ -199,13 +210,13 @@ export default function FiveTeamBracket({
           <input
             className="team-input"
             placeholder="Winner of 3"
-            value={matchResults[3].winner ?? ""}
+            value={renderTeamName(matchResults[3].winner)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of 2"
-            value={matchResults[2].winner ?? ""}
+            value={renderTeamName(matchResults[2].winner)}
             readOnly
           />
           <span className="match-number">
@@ -217,13 +228,13 @@ export default function FiveTeamBracket({
           <input
             className="team-input"
             placeholder="Winner of 6"
-            value={matchResults[6].winner ?? ""}
+            value={renderTeamName(matchResults[6].winner)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of losers"
-            value={matchResults[7].winner ?? ""}
+            value={renderTeamName(matchResults[7].winner)}
             readOnly
           />
           <span className="match-number">
@@ -234,7 +245,9 @@ export default function FiveTeamBracket({
         {tournamentOver ? (
           <div className="match-row final-row">
             <div className="match-cell lower-match-col2 champ-cell no-dash">
-              <div className="champion-text">{grandWinner} won!</div>
+              <div className="champion-text">
+                {renderTeamName(grandWinner)} won!
+              </div>
             </div>
           </div>
         ) : needsReset ? (
@@ -242,13 +255,13 @@ export default function FiveTeamBracket({
             <div className="match-cell lower-match-col2">
               <input
                 className="team-input"
-                value={matchResults[8].winner ?? ""}
+                value={renderTeamName(matchResults[8].winner)}
                 placeholder="Winner of 8"
                 readOnly
               />
               <input
                 className="team-input"
-                value={matchResults[8].loser ?? ""}
+                value={renderTeamName(matchResults[8].loser)}
                 placeholder="Loser of 8 (if necessary)"
                 readOnly
               />
@@ -259,7 +272,9 @@ export default function FiveTeamBracket({
             {resetWinner && (
               <div className="match-row final-row">
                 <div className="match-cell lower-match-col2 no-dash">
-                  <div className="champion-text">{resetWinner} won!</div>
+                  <div className="champion-text">
+                    {renderTeamName(resetWinner)} won!
+                  </div>
                 </div>
               </div>
             )}
@@ -287,13 +302,13 @@ export default function FiveTeamBracket({
           <input
             className="team-input"
             placeholder="Loser of 2"
-            value={matchResults[2].loser ?? ""}
+            value={renderTeamName(matchResults[2].loser)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Loser of 1"
-            value={matchResults[1].loser ?? ""}
+            value={renderTeamName(matchResults[1].loser)}
             readOnly
           />
           <span className="match-number">
@@ -306,13 +321,13 @@ export default function FiveTeamBracket({
           <input
             className="team-input"
             placeholder="Loser of 3"
-            value={matchResults[3].loser ?? ""}
+            value={renderTeamName(matchResults[3].loser)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of 4"
-            value={matchResults[4].winner ?? ""}
+            value={renderTeamName(matchResults[4].winner)}
             readOnly
           />
           <span className="match-number">
@@ -324,13 +339,13 @@ export default function FiveTeamBracket({
           <input
             className="team-input"
             placeholder="Loser of 6"
-            value={matchResults[6].loser ?? ""}
+            value={renderTeamName(matchResults[6].loser)}
             readOnly
           />
           <input
             className="team-input"
             placeholder="Winner of 5"
-            value={matchResults[5].winner ?? ""}
+            value={renderTeamName(matchResults[5].winner)}
             readOnly
           />
           <span className="match-number">
@@ -355,8 +370,8 @@ export default function FiveTeamBracket({
         >
           {modalTeams && (
             <>
-              <Radio value={modalTeams.A}>{modalTeams.A}</Radio>
-              <Radio value={modalTeams.B}>{modalTeams.B}</Radio>
+              <Radio value={modalTeams.A}>{renderTeamName(modalTeams.A)}</Radio>
+              <Radio value={modalTeams.B}>{renderTeamName(modalTeams.B)}</Radio>
             </>
           )}
         </Radio.Group>
