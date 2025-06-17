@@ -1,6 +1,15 @@
 import "./bracket.css";
-import { Space, Button, message, Checkbox } from "antd";
+import { Space, Button, message } from "antd";
 import { useState, useEffect } from "react";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import CancelGameModal from "./_components/CancelGameModal";
+import SubmitResultsModal from "./_components/SubmitResultsModal";
+import InfoModal from "./_components/InfoModal";
+import PlayerPicker from "./_components/PlayerPicker";
+import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
+import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
+import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
+import { mockPlayers } from "../../data/mockData";
 import TwoTeamBracket from "./team-count-brackets/2-team-bracket/TwoTeamBracket";
 import ThreeTeamBracket from "./team-count-brackets/3-team-bracket/ThreeTeamBracket";
 import FourTeamBracket from "./team-count-brackets/4-team-bracket/FourTeamBracket";
@@ -8,19 +17,11 @@ import FiveTeamBracket from "./team-count-brackets/5-team-bracket/FiveTeamBracke
 import SixTeamBracket from "./team-count-brackets/6-team-bracket/SixTeamBracker";
 import SevenTeamBracket from "./team-count-brackets/7-team-bracket/SevenTeamBracket";
 import EightTeamBracket from "./team-count-brackets/8-team-bracket/EightTeamBracket";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
-import { mockPlayers } from "../../data/mockData";
-import CancelGameModal from "./_components/CancelGameModal";
-import SubmitResultsModal from "./_components/SubmitResultsModal";
-import InfoModal from "./_components/InfoModal";
-import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
-import PlayerPicker from "./_components/PlayerPicker";
 
 const MAX_PLAYERS = 14;
-const STORAGE_KEY = "bracketState"; //local stroage key
+const STORAGE_KEY = "bracketState"; //will eventually be in .env file
 
-const initialState = {
+const initialState: StoredState = {
   selected: [],
   teams: null,
   matchResults: null,
@@ -31,16 +32,10 @@ export default function Bracket() {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   // const [players, setPlayers] = useState<PlayerFromDB[]>([]);
-  const [bracketState, setBracketState] = useState<StoredState>(() => {
-    try {
-      const json = localStorage.getItem(STORAGE_KEY);
-      if (json) return JSON.parse(json);
-    } catch {}
-    return initialState;
-  });
+  const [bracketState, setBracketState] = useLocalStorageBracketState();
   const [isTourneyFinished, setIsTourneyFinished] = useState(false);
   const { selected, teams, matchResults } = bracketState;
-  const API = "http://localhost:3000";
+  const API = "http://localhost:3000"; //eventually go to .env
 
   useEffect(() => {
     console.log("tournament over?", isTourneyFinished);
@@ -79,10 +74,6 @@ export default function Bracket() {
   const showInfoModal = () => {
     setIsInfoModalOpen(true);
   };
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bracketState));
-  }, [bracketState]);
 
   // const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
 
@@ -191,7 +182,7 @@ export default function Bracket() {
               teams={teams}
               matchResults={matchResults!}
               onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
+                setBracketState({ ...bracketState, matchResults: newResults })
               }
               setIsTourneyFinished={setIsTourneyFinished}
             />
@@ -201,7 +192,7 @@ export default function Bracket() {
               teams={teams}
               matchResults={matchResults!}
               onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
+                setBracketState({ ...bracketState, matchResults: newResults })
               }
               setIsTourneyFinished={setIsTourneyFinished}
             />
@@ -211,7 +202,7 @@ export default function Bracket() {
               teams={teams}
               matchResults={matchResults!}
               onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
+                setBracketState({ ...bracketState, matchResults: newResults })
               }
               setIsTourneyFinished={setIsTourneyFinished}
             />
@@ -221,7 +212,7 @@ export default function Bracket() {
               teams={teams}
               matchResults={matchResults!}
               onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
+                setBracketState({ ...bracketState, matchResults: newResults })
               }
               setIsTourneyFinished={setIsTourneyFinished}
             />
@@ -231,7 +222,7 @@ export default function Bracket() {
               teams={teams}
               matchResults={matchResults!}
               onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
+                setBracketState({ ...bracketState, matchResults: newResults })
               }
               setIsTourneyFinished={setIsTourneyFinished}
             />
@@ -241,7 +232,7 @@ export default function Bracket() {
               teams={teams}
               matchResults={matchResults!}
               onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
+                setBracketState({ ...bracketState, matchResults: newResults })
               }
               setIsTourneyFinished={setIsTourneyFinished}
             />
