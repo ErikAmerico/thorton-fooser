@@ -6,17 +6,11 @@ import CancelGameModal from "./_components/CancelGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/InfoModal";
 import PlayerPicker from "./_components/PlayerPicker";
+import { RenderBracket } from "./_components/BracketRenderer";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
 import { mockPlayers } from "../../data/mockData";
-import TwoTeamBracket from "./team-count-brackets/2-team-bracket/TwoTeamBracket";
-import ThreeTeamBracket from "./team-count-brackets/3-team-bracket/ThreeTeamBracket";
-import FourTeamBracket from "./team-count-brackets/4-team-bracket/FourTeamBracket";
-import FiveTeamBracket from "./team-count-brackets/5-team-bracket/FiveTeamBracket";
-import SixTeamBracket from "./team-count-brackets/6-team-bracket/SixTeamBracker";
-import SevenTeamBracket from "./team-count-brackets/7-team-bracket/SevenTeamBracket";
-import EightTeamBracket from "./team-count-brackets/8-team-bracket/EightTeamBracket";
 
 const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //will eventually be in .env file
@@ -81,8 +75,6 @@ export default function Bracket() {
     a.name.localeCompare(b.name)
   ); //getting players from mockData
 
-  // console.log(allPlayers);
-
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
       return message.error(`Max ${MAX_PLAYERS} players`);
@@ -90,8 +82,6 @@ export default function Bracket() {
     const newSelected = checked
       ? [...selected, player]
       : selected.filter((plyr) => plyr.id !== player.id);
-
-    // console.log(newSelected);
 
     // reset any existing bracket if players change
     setBracketState({
@@ -177,67 +167,14 @@ export default function Bracket() {
         )}
 
         <div className="bracket-scroll-content">
-          {teams && teamCount === 2 && (
-            <TwoTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState({ ...bracketState, matchResults: newResults })
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 3 && (
-            <ThreeTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState({ ...bracketState, matchResults: newResults })
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 4 && (
-            <FourTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState({ ...bracketState, matchResults: newResults })
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 5 && (
-            <FiveTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState({ ...bracketState, matchResults: newResults })
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 6 && (
-            <SixTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState({ ...bracketState, matchResults: newResults })
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 7 && (
-            <SevenTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState({ ...bracketState, matchResults: newResults })
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
+          {teams &&
+            RenderBracket(teamCount, {
+              teams,
+              matchResults: matchResults!,
+              onChange: (newResults) =>
+                setBracketState({ ...bracketState, matchResults: newResults }),
+              setIsTourneyFinished,
+            })}
         </div>
       </Space>
       <CancelGameModal
