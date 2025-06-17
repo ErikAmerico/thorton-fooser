@@ -2,8 +2,16 @@ import { TrophyFilled } from "@ant-design/icons";
 import { Modal, Radio, message } from "antd";
 import { useState } from "react";
 import Confetti from "../../confetti";
+
+interface PlayerFromDB {
+  id: string;
+  name: string;
+  score: number;
+  hint: string;
+}
+
 interface FourTeamBracketProps {
-  teams: [string, string][] | null;
+  teams: [PlayerFromDB, PlayerFromDB][] | null;
   matchResults: MatchResult[];
   onChange: (newResults: MatchResult[]) => void;
 }
