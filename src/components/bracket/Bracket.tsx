@@ -2,35 +2,19 @@ import "./bracket.css";
 import { Space, Button, message, Checkbox, Modal } from "antd";
 import { useState, useEffect } from "react";
 
-import TwoTeamBracket from "./team-count-bracket-shells/2-team-bracket/TwoTeamBracket";
-import ThreeTeamBracket from "./team-count-bracket-shells/3-team-bracket/ThreeTeamBracket";
-import FourTeamBracket from "./team-count-bracket-shells/4-team-bracket/FourTeamBracket";
-import FiveTeamBracket from "./team-count-bracket-shells/5-team-bracket/FiveTeamBracket";
-import SixTeamBracket from "./team-count-bracket-shells/6-team-bracket/SixTeamBracker";
-import SevenTeamBracket from "./team-count-bracket-shells/7-team-bracket/SevenTeamBracket";
-import EightTeamBracket from "./team-count-bracket-shells/8-team-bracket/EightTeamBracket";
+import TwoTeamBracket from "./team-count-brackets/2-team-bracket/TwoTeamBracket";
+import ThreeTeamBracket from "./team-count-brackets/3-team-bracket/ThreeTeamBracket";
+import FourTeamBracket from "./team-count-brackets/4-team-bracket/FourTeamBracket";
+import FiveTeamBracket from "./team-count-brackets/5-team-bracket/FiveTeamBracket";
+import SixTeamBracket from "./team-count-brackets/6-team-bracket/SixTeamBracker";
+import SevenTeamBracket from "./team-count-brackets/7-team-bracket/SevenTeamBracket";
+import EightTeamBracket from "./team-count-brackets/8-team-bracket/EightTeamBracket";
 import { TrophyFilled, InfoCircleOutlined } from "@ant-design/icons";
+import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
+import { mockPlayers } from "../../data/mockData";
 
 const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //local stroage key
-
-interface StoredState {
-  selected: PlayerFromDB[];
-  teams: [PlayerFromDB, PlayerFromDB][] | null;
-  matchResults?: MatchResult[] | null;
-}
-
-interface MatchResult {
-  winner: string | null;
-  loser: string | null;
-}
-
-interface PlayerFromDB {
-  id: string;
-  name: string;
-  score: number;
-  hint: string;
-}
 
 const initialState = {
   selected: [],
@@ -53,6 +37,13 @@ export default function Bracket() {
   const [isTourneyFinished, setIsTourneyFinished] = useState(false);
   const { selected, teams, matchResults } = bracketState;
   const API = "http://localhost:3000";
+
+  useEffect(() => {
+    console.log("tournament over?", isTourneyFinished);
+    if (isTourneyFinished) {
+      console.log("calculate results!");
+    }
+  }, [isTourneyFinished]);
 
   useEffect(() => {
     fetch(`${API}/players`)
@@ -89,8 +80,13 @@ export default function Bracket() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bracketState));
   }, [bracketState]);
 
-  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name));
-  // console.log(allPlayers);
+  // const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
+
+  const allPlayers = [...mockPlayers].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  ); //getting players from mockData
+
+  console.log(allPlayers);
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
@@ -124,7 +120,7 @@ export default function Bracket() {
       return message.error("Select an even number of players (≥2).");
     }
     const plyrs: PlayerFromDB[] = shuffle([...selected]);
-    const pairs: [PlayerFromDB, PlayerFromDB][] = [];
+    const pairs: Team[] = [];
     for (let i = 0; i < plyrs.length; i += 2) {
       pairs.push([plyrs[i], plyrs[i + 1]]);
     }
@@ -235,6 +231,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 4 && (
@@ -244,6 +241,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 5 && (
@@ -253,6 +251,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 6 && (
@@ -262,6 +261,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {teams && teamCount === 7 && (
@@ -271,6 +271,7 @@ export default function Bracket() {
               onChange={(newResults) =>
                 setBracketState((st) => ({ ...st, matchResults: newResults }))
               }
+              setIsTourneyFinished={setIsTourneyFinished}
             />
           )}
           {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
