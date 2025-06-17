@@ -1,22 +1,21 @@
 import "./bracket.css";
-import { Space, Button, message, Checkbox, Modal } from "antd";
+import { Space, message } from "antd";
 import { useState, useEffect } from "react";
-
-import TwoTeamBracket from "./team-count-brackets/2-team-bracket/TwoTeamBracket";
-import ThreeTeamBracket from "./team-count-brackets/3-team-bracket/ThreeTeamBracket";
-import FourTeamBracket from "./team-count-brackets/4-team-bracket/FourTeamBracket";
-import FiveTeamBracket from "./team-count-brackets/5-team-bracket/FiveTeamBracket";
-import SixTeamBracket from "./team-count-brackets/6-team-bracket/SixTeamBracker";
-import SevenTeamBracket from "./team-count-brackets/7-team-bracket/SevenTeamBracket";
-import EightTeamBracket from "./team-count-brackets/8-team-bracket/EightTeamBracket";
-import { TrophyFilled, InfoCircleOutlined } from "@ant-design/icons";
+import CancelGameModal from "./_components/CancelGameModal";
+import SubmitResultsModal from "./_components/SubmitResultsModal";
+import InfoModal from "./_components/InfoModal";
+import PlayerPicker from "./_components/PlayerPicker";
+import { RenderBracket } from "./_components/BracketRenderer";
+import BracketControls from "./_components/BracketControls";
+import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
+import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
 import { mockPlayers } from "../../data/mockData";
 
 const MAX_PLAYERS = 14;
-const STORAGE_KEY = "bracketState"; //local stroage key
+const STORAGE_KEY = "bracketState"; //will eventually be in .env file
 
-const initialState = {
+const initialState: StoredState = {
   selected: [],
   teams: null,
   matchResults: null,
@@ -27,16 +26,10 @@ export default function Bracket() {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   // const [players, setPlayers] = useState<PlayerFromDB[]>([]);
-  const [bracketState, setBracketState] = useState<StoredState>(() => {
-    try {
-      const json = localStorage.getItem(STORAGE_KEY);
-      if (json) return JSON.parse(json);
-    } catch {}
-    return initialState;
-  });
+  const [bracketState, setBracketState] = useLocalStorageBracketState();
   const [isTourneyFinished, setIsTourneyFinished] = useState(false);
   const { selected, teams, matchResults } = bracketState;
-  const API = "http://localhost:3000";
+  const API = "http://localhost:3000"; //eventually go to .env
 
   useEffect(() => {
     console.log("tournament over?", isTourneyFinished);
@@ -76,17 +69,11 @@ export default function Bracket() {
     setIsInfoModalOpen(true);
   };
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bracketState));
-  }, [bracketState]);
-
   // const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
 
   const allPlayers = [...mockPlayers].sort((a, b) =>
     a.name.localeCompare(b.name)
   ); //getting players from mockData
-
-  console.log(allPlayers);
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
@@ -96,8 +83,6 @@ export default function Bracket() {
       ? [...selected, player]
       : selected.filter((plyr) => plyr.id !== player.id);
 
-    // console.log(newSelected);
-
     // reset any existing bracket if players change
     setBracketState({
       selected: newSelected,
@@ -106,26 +91,19 @@ export default function Bracket() {
     });
   };
 
-  //fisher-yates shuffle
-  const shuffle = (arr: any[]) => {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
+  console.log(bracketState);
 
   const buildBracket = () => {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
-    const plyrs: PlayerFromDB[] = shuffle([...selected]);
+    const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
     const pairs: Team[] = [];
     for (let i = 0; i < plyrs.length; i += 2) {
       pairs.push([plyrs[i], plyrs[i + 1]]);
     }
 
-    // initialize one result-slot per match
+    // initialize one result-slot per match - skipping index 0.
     const emptyResults: MatchResult[] = Array(pairs.length * 2 + 1)
       .fill(null)
       .map(() => ({ winner: null, loser: null }));
@@ -143,7 +121,7 @@ export default function Bracket() {
   //   //will just add to dummy data for now.
   // };
 
-  const deleteGame = () => {
+  const cancelGame = () => {
     localStorage.removeItem(STORAGE_KEY);
     setBracketState(initialState);
     setIsModalOpen(false);
@@ -161,165 +139,45 @@ export default function Bracket() {
     <div className="bracket-scroll-wrapper">
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         {!teams && (
-          <>
-            <h3 style={{ color: "#fff", fontFamily: "sans-serif" }}>
-              Who is playing?
-            </h3>
-            <div className="player-grid">
-              {allPlayers.map((player: PlayerFromDB) => (
-                <Checkbox
-                  key={player.id}
-                  checked={bracketState.selected.some(
-                    (p) => p.id === player.id
-                  )}
-                  disabled={
-                    !bracketState.selected.some((p) => p.id === player.id) &&
-                    bracketState.selected.length >= MAX_PLAYERS
-                  }
-                  onChange={(e) => onCheck(player, e.target.checked)}
-                >
-                  {player.name}
-                </Checkbox>
-              ))}
-            </div>
-            <Button
-              type="primary"
-              disabled={selected.length < 4 || selected.length % 2 !== 0}
-              onClick={buildBracket}
-              className="generate-bracket-button"
-            >
-              Generate {selected.length / 2}-Team Bracket
-            </Button>
-          </>
+          <PlayerPicker
+            players={allPlayers}
+            selected={selected}
+            maxPlayers={MAX_PLAYERS}
+            onToggle={onCheck}
+            onGenerate={buildBracket}
+          />
         )}
 
         {teams && (
-          <div>
-            <div className="bracket-controls">
-              <Button className="cancel-tourney-btn" onClick={showModal}>
-                Cancel Game
-              </Button>
-
-              <Button className="submit-results-btn" onClick={showSubmitModal}>
-                Submit Results
-              </Button>
-
-              <InfoCircleOutlined
-                onClick={showInfoModal}
-                className="infoCircle"
-                style={{ color: "white" }}
-              />
-            </div>
-          </div>
+          <BracketControls
+            onCancelGame={showModal}
+            onSubmitResults={showSubmitModal}
+            onShowInfo={showInfoModal}
+          />
         )}
 
         <div className="bracket-scroll-content">
-          {teams && teamCount === 2 && (
-            <TwoTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 3 && (
-            <ThreeTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 4 && (
-            <FourTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 5 && (
-            <FiveTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 6 && (
-            <SixTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {teams && teamCount === 7 && (
-            <SevenTeamBracket
-              teams={teams}
-              matchResults={matchResults!}
-              onChange={(newResults) =>
-                setBracketState((st) => ({ ...st, matchResults: newResults }))
-              }
-              setIsTourneyFinished={setIsTourneyFinished}
-            />
-          )}
-          {/* {teams && teamCount === 8 && <EightTeamBracket />} */}
+          {teams &&
+            RenderBracket(teamCount, {
+              teams,
+              matchResults: matchResults!,
+              onChange: (newResults) =>
+                setBracketState({ ...bracketState, matchResults: newResults }),
+              setIsTourneyFinished,
+            })}
         </div>
       </Space>
-      <Modal
-        title="Are you sure?"
+      <CancelGameModal
         open={isModalOpen}
-        onOk={deleteGame}
+        onOk={cancelGame}
         onCancel={handleCancel}
-        closable={false}
-        okText="Confirm"
-        style={{ textAlign: "center" }}
-      >
-        Canceling this game will lose all progress. It will be like it never
-        existed.
-      </Modal>
-      <Modal
-        title="Submit Results"
+      />
+      <SubmitResultsModal
         open={isSubmitModalOpen}
         onOk={submitResults}
         onCancel={handleCancel}
-        closable={false}
-        okText="Submit"
-        style={{ textAlign: "center" }}
-      >
-        In the near future - submitted results will be saved to a database and
-        every players score will update in the rankings.
-      </Modal>
-      <Modal
-        title=""
-        open={isInfoModalOpen}
-        onOk={handleCancel}
-        closable={false}
-        cancelButtonProps={{ style: { display: "none" } }}
-        okText="Got It."
-        style={{ textAlign: "center" }}
-      >
-        <div>
-          <span className="">
-            ? <span className="">= Reset Match (if needed)</span>
-          </span>{" "}
-          <br />
-          <span className="">
-            <TrophyFilled /> <span className="">= Report Winner</span>
-          </span>
-        </div>
-      </Modal>
+      />
+      <InfoModal open={isInfoModalOpen} onOk={handleCancel} />
     </div>
   );
 }

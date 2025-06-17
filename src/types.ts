@@ -26,3 +26,58 @@ export interface StoredState {
   teams: Team[] | null;
   matchResults?: MatchResult[] | null;
 }
+
+export interface isTournamentFinsihedProps {
+  resetWinner: Team | null;
+  tournamentOver: boolean | null;
+  setIsTourneyFinished: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface WhoWonModalProps {
+  open: boolean;
+  teams: { A: Team; B: Team } | null;
+  selectedWinner: Team | null;
+  onSelect: (team: Team) => void;
+  onOk: () => void;
+  onCancel: () => void;
+}
+
+export interface ConfirmWinnerArgs {
+  currentMatch: number | null;
+  selectedWinner: Team | null;
+  modalTeams: { A: Team; B: Team } | null;
+  matchResults: MatchResult[];
+  onChange: (newResults: MatchResult[]) => void;
+  closeModal: () => void;
+}
+
+export interface CancelGameProps {
+  open: boolean;
+  onOk: () => void;
+  onCancel: () => void;
+}
+
+export interface SubmitResultsProps {
+  open: boolean;
+  onOk: () => void;
+  onCancel: () => void;
+}
+
+export interface InfoModalProps {
+  open: boolean;
+  onOk: () => void;
+}
+
+export interface PlayerPickerProps {
+  players: PlayerFromDB[];
+  selected: PlayerFromDB[];
+  maxPlayers: number;
+  onToggle: (player: PlayerFromDB, checked: boolean) => void;
+  onGenerate: () => void;
+}
+
+export interface BracketControlsProps {
+  onCancelGame: () => void;
+  onSubmitResults: () => void;
+  onShowInfo: () => void;
+}

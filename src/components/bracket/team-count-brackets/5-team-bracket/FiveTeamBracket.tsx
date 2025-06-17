@@ -1,9 +1,12 @@
 import { TrophyFilled } from "@ant-design/icons";
-import { Modal, Radio, message } from "antd";
-import { useState, useEffect } from "react";
+import { message } from "antd";
+import { useState } from "react";
 import Confetti from "../../confetti";
 import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
+import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
+import WhoWonModal from "../../_components/WhoWonModal";
+import confirmWinner from "../../_helpers/confirmWinner";
 
 export default function FiveTeamBracket({
   teams,
@@ -109,21 +112,17 @@ export default function FiveTeamBracket({
     setIsModalOpen(true);
   };
 
-  // Handle clicking "Submit Winner"
-  const handleOk = () => {
-    if (currentMatch && selectedWinner && modalTeams) {
-      const loser =
-        selectedWinner === modalTeams.A ? modalTeams.B : modalTeams.A;
-      const newResults = [...matchResults];
-      newResults[currentMatch] = { winner: selectedWinner, loser };
-      onChange(newResults);
-      console.log("selectedWinner", selectedWinner);
-    }
-    setIsModalOpen(false);
-    setCurrentMatch(null);
-  };
+  const handleOk = () =>
+    confirmWinner({
+      currentMatch,
+      selectedWinner,
+      modalTeams,
+      matchResults,
+      onChange,
+      closeModal,
+    });
 
-  const handleCancel = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
     setCurrentMatch(null);
   };
@@ -134,11 +133,11 @@ export default function FiveTeamBracket({
   const tournamentOver = grandWinner && !needsReset;
   const resetWinner = matchResults[9].winner;
 
-  useEffect(() => {
-    if (tournamentOver || resetWinner) {
-      setIsTourneyFinished(true);
-    }
-  }, [tournamentOver, resetWinner, setIsTourneyFinished]);
+  isTournamentFinsihed({
+    resetWinner,
+    tournamentOver,
+    setIsTourneyFinished,
+  });
 
   return (
     <div className="bracket-shell">
@@ -351,29 +350,14 @@ export default function FiveTeamBracket({
           </span>
         </div>
       </div>
-      <Modal
-        title="Who Won?"
+      <WhoWonModal
         open={isModalOpen}
+        teams={modalTeams}
+        selectedWinner={selectedWinner}
+        onSelect={setSelectedWinner}
         onOk={handleOk}
-        onCancel={handleCancel}
-        closable={false}
-        okText="Submit Winner"
-        okButtonProps={{ disabled: !selectedWinner }}
-        style={{ textAlign: "center" }}
-      >
-        <Radio.Group
-          onChange={(e) => setSelectedWinner(e.target.value)}
-          value={selectedWinner}
-          style={{ display: "flex", flexDirection: "column", gap: 8 }}
-        >
-          {modalTeams && (
-            <>
-              <Radio value={modalTeams.A}>{renderTeamName(modalTeams.A)}</Radio>
-              <Radio value={modalTeams.B}>{renderTeamName(modalTeams.B)}</Radio>
-            </>
-          )}
-        </Radio.Group>
-      </Modal>
+        onCancel={closeModal}
+      />
       {!needsReset && grandWinner && <Confetti />}
       {resetWinner && <Confetti />}
     </div>
