@@ -6,6 +6,7 @@ import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
+import confirmWinner from "../../_helpers/confirmWinner";
 
 export default function TwoTeamBracket({
   teams,
@@ -63,21 +64,17 @@ export default function TwoTeamBracket({
     setIsModalOpen(true);
   };
 
-  // "Submit Winner"
-  const handleOk = () => {
-    if (currentMatch && selectedWinner && modalTeams) {
-      const loser =
-        selectedWinner === modalTeams.A ? modalTeams.B : modalTeams.A;
-      const newResults = [...matchResults];
-      newResults[currentMatch] = { winner: selectedWinner, loser };
-      onChange(newResults);
-      console.log("selectedWinner", selectedWinner);
-    }
-    setIsModalOpen(false);
-    setCurrentMatch(null);
-  };
+  const handleOk = () =>
+    confirmWinner({
+      currentMatch,
+      selectedWinner,
+      modalTeams,
+      matchResults,
+      onChange,
+      closeModal,
+    });
 
-  const handleCancel = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
     setCurrentMatch(null);
   };
@@ -192,7 +189,7 @@ export default function TwoTeamBracket({
         selectedWinner={selectedWinner}
         onSelect={setSelectedWinner}
         onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={closeModal}
       />
       {!needsReset && grandWinner && <Confetti />}
       {resetWinner && <Confetti />}

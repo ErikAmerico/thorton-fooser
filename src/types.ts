@@ -41,3 +41,12 @@ export interface WhoWonModalProps {
   onOk: () => void;
   onCancel: () => void;
 }
+
+export interface ConfirmWinnerArgs {
+  currentMatch: number | null;
+  selectedWinner: Team | null;
+  modalTeams: { A: Team; B: Team } | null;
+  matchResults: MatchResult[];
+  onChange: (newResults: MatchResult[]) => void;
+  closeModal: () => void;
+}
