@@ -1,7 +1,6 @@
 import "./bracket.css";
-import { Space, Button, message, Checkbox, Modal } from "antd";
+import { Space, Button, message, Checkbox } from "antd";
 import { useState, useEffect } from "react";
-
 import TwoTeamBracket from "./team-count-brackets/2-team-bracket/TwoTeamBracket";
 import ThreeTeamBracket from "./team-count-brackets/3-team-bracket/ThreeTeamBracket";
 import FourTeamBracket from "./team-count-brackets/4-team-bracket/FourTeamBracket";
@@ -15,6 +14,7 @@ import { mockPlayers } from "../../data/mockData";
 import CancelGameModal from "./_components/CancelGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/InfoModal";
+import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 
 const MAX_PLAYERS = 14;
 const STORAGE_KEY = "bracketState"; //local stroage key
@@ -109,20 +109,11 @@ export default function Bracket() {
     });
   };
 
-  //fisher-yates shuffle
-  const shuffle = (arr: any[]) => {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
   const buildBracket = () => {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
-    const plyrs: PlayerFromDB[] = shuffle([...selected]);
+    const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
     const pairs: Team[] = [];
     for (let i = 0; i < plyrs.length; i += 2) {
       pairs.push([plyrs[i], plyrs[i + 1]]);
