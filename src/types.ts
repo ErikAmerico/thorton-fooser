@@ -4,7 +4,6 @@ export interface PlayerFromDB {
   id: string;
   name: string;
   score: number;
-  hint: string;
 }
 
 export type Team = [PlayerFromDB, PlayerFromDB];
@@ -59,7 +58,7 @@ export interface CancelGameProps {
 
 export interface SubmitResultsProps {
   open: boolean;
-  onOk: () => void;
+  onOk: (secretCode: string) => void;
   onCancel: () => void;
 }
 
@@ -80,4 +79,10 @@ export interface BracketControlsProps {
   onCancelGame: () => void;
   onSubmitResults: () => void;
   onShowInfo: () => void;
+  isTourneyFinished: boolean;
+}
+
+export interface AddPlayerModalProps {
+  open: boolean;
+  onCancel: () => void;
 }
