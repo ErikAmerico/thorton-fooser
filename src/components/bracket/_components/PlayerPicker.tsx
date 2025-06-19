@@ -16,7 +16,7 @@ export default function PlayerPicker({
     return (
       <div
         style={{
-          backgroundColor: "#1d1d1d;",
+          backgroundColor: "#1d1d1d",
           height: "100%",
           width: "100%",
         }}
