@@ -1,4 +1,4 @@
-const API = "http://localhost:3000";
+import { API } from "../data/constants";
 
 export async function fetchPlayers() {
   const res = await fetch(`${API}/players`);

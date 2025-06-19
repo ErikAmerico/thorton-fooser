@@ -8,3 +8,5 @@ export const initialState: StoredState = {
   teams: null,
   matchResults: null,
 };
+
+export const API = "http://localhost:3000";
