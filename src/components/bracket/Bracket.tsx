@@ -9,47 +9,54 @@ import { RenderBracket } from "./_components/BracketRenderer";
 import BracketControls from "./_components/BracketControls";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
-import { MatchResult, PlayerFromDB, Team, StoredState } from "../../types";
+import { MatchResult, PlayerFromDB, Team } from "../../types";
+import { MAX_PLAYERS, STORAGE_KEY, initialState } from "../../data/constants";
+import { calculateScores } from "./_helpers/calculateScores";
+import { batchUpdateScores } from "../../api/matches";
+import { fetchPlayers } from "../../api/players";
 import { mockPlayers } from "../../data/mockData";
-
-const MAX_PLAYERS = 14;
-const STORAGE_KEY = "bracketState"; //will eventually be in .env file
-
-const initialState: StoredState = {
-  selected: [],
-  teams: null,
-  matchResults: null,
-};
 
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  // const [players, setPlayers] = useState<PlayerFromDB[]>([]);
+  const [players, setPlayers] = useState<PlayerFromDB[]>([]);
   const [bracketState, setBracketState] = useLocalStorageBracketState();
-  const [isTourneyFinished, setIsTourneyFinished] = useState(false);
   const { selected, teams, matchResults } = bracketState;
-  const API = "http://localhost:3000"; //eventually go to .env
+  const [isTourneyFinished, setIsTourneyFinished] = useState<boolean>(() => {
+    const stored = localStorage.getItem("tourneyFinished");
+    return stored ? JSON.parse(stored) : false;
+  });
+  const [hasSubmittedResults, setHasSubmittedResults] = useState<boolean>(
+    () => {
+      const s = localStorage.getItem("hasSubmittedResults");
+      return s ? JSON.parse(s) : false;
+    }
+  );
 
   useEffect(() => {
-    console.log("tournament over?", isTourneyFinished);
-    if (isTourneyFinished) {
-      console.log("calculate results!");
-    }
+    console.log(isTourneyFinished);
+    localStorage.setItem("tourneyFinished", JSON.stringify(isTourneyFinished));
   }, [isTourneyFinished]);
 
-  // useEffect(() => {
-  //   fetch(`${API}/players`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       // console.log("fetched players", data);
-  //       setPlayers(data);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Failed to load players:", err);
-  //       message.error("Couldn't load players");
-  //     });
-  // }, []);
+  useEffect(() => {
+    localStorage.setItem(
+      "hasSubmittedResults",
+      JSON.stringify(hasSubmittedResults)
+    );
+  }, [hasSubmittedResults]);
+
+  useEffect(() => {
+    fetchPlayers()
+      .then((data) => {
+        // console.log("fetched players", data);
+        setPlayers(data);
+      })
+      .catch((err) => {
+        console.error("Failed to load players", err);
+        message.error("Couldn't load players");
+      });
+  }, []);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -69,11 +76,11 @@ export default function Bracket() {
     setIsInfoModalOpen(true);
   };
 
-  // const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
+  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
 
-  const allPlayers = [...mockPlayers].sort((a, b) =>
-    a.name.localeCompare(b.name)
-  ); //getting players from mockData
+  // const allPlayers = [...mockPlayers].sort((a, b) =>
+  //   a.name.localeCompare(b.name)
+  // ); //getting players from mockData
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
@@ -91,9 +98,9 @@ export default function Bracket() {
     });
   };
 
-  console.log(bracketState);
-
   const buildBracket = () => {
+    setIsTourneyFinished(false);
+    setHasSubmittedResults(false);
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
@@ -115,21 +122,24 @@ export default function Bracket() {
     });
   };
 
-  // const addPlayer = () => {
-  //   // console.log("adding player");
-  //   //add player to database.
-  //   //will just add to dummy data for now.
-  // };
-
   const cancelGame = () => {
     localStorage.removeItem(STORAGE_KEY);
     setBracketState(initialState);
     setIsModalOpen(false);
   };
 
-  const submitResults = () => {
-    // console.log("results submitted");
-    setIsSubmitModalOpen(false);
+  const submitResults = async (secretCode: string) => {
+    const finalScores = calculateScores(matchResults, isTourneyFinished);
+    try {
+      await batchUpdateScores(finalScores, secretCode);
+
+      message.success("Results saved!");
+      setIsSubmitModalOpen(false);
+      //So we can't submit the results repeatedly
+      setHasSubmittedResults(true);
+    } catch (error: any) {
+      message.error("Failed to submit: " + error.message);
+    }
   };
 
   // how many teams did we get?
@@ -153,6 +163,7 @@ export default function Bracket() {
             onCancelGame={showModal}
             onSubmitResults={showSubmitModal}
             onShowInfo={showInfoModal}
+            isTourneyFinished={isTourneyFinished && !hasSubmittedResults}
           />
         )}
 
