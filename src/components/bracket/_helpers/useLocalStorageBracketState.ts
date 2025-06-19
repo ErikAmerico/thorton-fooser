@@ -1,7 +1,7 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { StoredState } from "../../../types";
+import { STORAGE_KEY } from "../../../data/keys";
 
-const STORAGE_KEY = "bracketState"; //eventually be in .env file
 const initialState: StoredState = {
   selected: [],
   teams: null,
