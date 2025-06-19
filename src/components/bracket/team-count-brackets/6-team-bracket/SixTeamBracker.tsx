@@ -7,6 +7,7 @@ import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { isSameTeam } from "../../_helpers/isSameTeam";
 
 export default function SixTeamBracket({
   teams,
@@ -23,10 +24,6 @@ export default function SixTeamBracket({
   } | null>(null);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
-
-  if (teams) {
-    console.log("teams in 6teamsgracket", teams);
-  }
 
   const team1 = teams[0];
   const team2 = teams[1];
@@ -138,11 +135,13 @@ export default function SixTeamBracket({
     setCurrentMatch(null);
   };
 
-  // Determine champion if tournament ended
-  const grandWinner = matchResults[10].winner;
-  const needsReset = grandWinner && grandWinner !== matchResults[8].winner;
-  const tournamentOver = grandWinner && !needsReset;
-  const resetWinner = matchResults[11].winner;
+  const semiWinner = matchResults[8]?.winner;
+  const grandWinner = matchResults[10]?.winner;
+  const resetWinner = matchResults[11]?.winner;
+  const tournamentOver = Boolean(
+    grandWinner && semiWinner && isSameTeam(grandWinner, semiWinner)
+  );
+  const needsReset = Boolean(grandWinner && !tournamentOver);
 
   isTournamentFinsihed({
     resetWinner,

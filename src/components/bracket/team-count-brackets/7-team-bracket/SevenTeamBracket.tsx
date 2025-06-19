@@ -7,6 +7,7 @@ import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { isSameTeam } from "../../_helpers/isSameTeam";
 
 export default function SevenTeamBracket({
   teams,
@@ -23,10 +24,6 @@ export default function SevenTeamBracket({
   } | null>(null);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
-
-  if (teams) {
-    console.log("teams in 7teamsgracket", teams);
-  }
 
   const team1 = teams[0];
   const team2 = teams[1];
@@ -155,11 +152,13 @@ export default function SevenTeamBracket({
     setCurrentMatch(null);
   };
 
-  // Determine champion if tournament ended
-  const grandWinner = matchResults[12].winner;
-  const needsReset = grandWinner && grandWinner !== matchResults[10].winner;
-  const tournamentOver = grandWinner && !needsReset;
-  const resetWinner = matchResults[13].winner;
+  const semiWinner = matchResults[10]?.winner;
+  const grandWinner = matchResults[12]?.winner;
+  const resetWinner = matchResults[13]?.winner;
+  const tournamentOver = Boolean(
+    grandWinner && semiWinner && isSameTeam(grandWinner, semiWinner)
+  );
+  const needsReset = Boolean(grandWinner && !tournamentOver);
 
   isTournamentFinsihed({
     resetWinner,
