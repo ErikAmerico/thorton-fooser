@@ -11,9 +11,11 @@ export default function CancelGameModal({
       title="Are you sure?"
       open={open}
       onOk={onOk}
+      okButtonProps={{ danger: true }}
       onCancel={onCancel}
+      cancelText="Nevermind"
       closable={false}
-      okText="Confirm"
+      okText="Cancel"
       style={{ textAlign: "center" }}
     >
       Canceling this game will lose all progress. It will be like it never
