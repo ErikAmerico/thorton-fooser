@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { StoredState } from "../../../types";
-import { STORAGE_KEY } from "../../../data/keys";
-
-const initialState: StoredState = {
-  selected: [],
-  teams: null,
-  matchResults: null,
-};
+import { STORAGE_KEY, initialState } from "../../../data/constants";
 
 export function useLocalStorageBracketState() {
   const [bracketState, setBracketState] = useState<StoredState>(() => {
