@@ -76,11 +76,11 @@ export default function Bracket() {
     setIsInfoModalOpen(true);
   };
 
-  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
+  // const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
 
-  // const allPlayers = [...mockPlayers].sort((a, b) =>
-  //   a.name.localeCompare(b.name)
-  // ); //getting players from mockData
+  const allPlayers = [...mockPlayers].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  ); //getting players from mockData
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
