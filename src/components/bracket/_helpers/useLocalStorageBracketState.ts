@@ -1,12 +1,6 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { StoredState } from "../../../types";
-
-const STORAGE_KEY = "bracketState"; //eventually be in .env file
-const initialState: StoredState = {
-  selected: [],
-  teams: null,
-  matchResults: null,
-};
+import { STORAGE_KEY, initialState } from "../../../data/constants";
 
 export function useLocalStorageBracketState() {
   const [bracketState, setBracketState] = useState<StoredState>(() => {

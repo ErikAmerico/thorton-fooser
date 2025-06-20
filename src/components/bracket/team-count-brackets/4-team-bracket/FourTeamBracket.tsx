@@ -7,6 +7,7 @@ import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { isSameTeam } from "../../_helpers/isSameTeam";
 
 export default function FourTeamBracket({
   teams,
@@ -23,10 +24,6 @@ export default function FourTeamBracket({
   } | null>(null);
 
   if (!teams) return <h2 style={{ color: "white" }}>Waiting on teams...</h2>;
-
-  if (teams) {
-    console.log("teams in 4teamsgracket", teams);
-  }
 
   const team1 = teams[0];
   const team2 = teams[1];
@@ -110,11 +107,13 @@ export default function FourTeamBracket({
     setCurrentMatch(null);
   };
 
-  // Determine champion if tournament ended
-  const grandWinner = matchResults[6].winner;
-  const needsReset = grandWinner && grandWinner !== matchResults[4].winner;
-  const tournamentOver = grandWinner && !needsReset;
-  const resetWinner = matchResults[7].winner;
+  const semiWinner = matchResults[4]?.winner;
+  const grandWinner = matchResults[6]?.winner;
+  const resetWinner = matchResults[7]?.winner;
+  const tournamentOver = Boolean(
+    grandWinner && semiWinner && isSameTeam(grandWinner, semiWinner)
+  );
+  const needsReset = Boolean(grandWinner && !tournamentOver);
 
   isTournamentFinsihed({
     resetWinner,
