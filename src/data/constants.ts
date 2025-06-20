@@ -9,4 +9,5 @@ export const initialState: StoredState = {
   matchResults: null,
 };
 
-export const API = "http://localhost:3000";
+// export const API = "http://localhost:3000"; //DEVELOPMENT
+export const API = "https://thornton-fooser-api.onrender.com"; //PRODUCTION
