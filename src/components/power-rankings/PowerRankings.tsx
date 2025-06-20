@@ -48,18 +48,18 @@ const sortAndRankData = (data: PlayerFromDB[]): RankedPlayer[] => {
 export default function PowerRankings() {
   const [players, setPlayers] = useState<PlayerFromDB[]>([]);
 
-  // useEffect(() => {
-  //   fetchPlayers()
-  //     .then((data) => setPlayers(data))
-  //     .catch((err) => {
-  //       console.error("Failed to load players", err);
-  //       message.error("Couldn't load players");
-  //     });
-  // }, []);
-
   useEffect(() => {
-    setPlayers(mockPlayers);
+    fetchPlayers()
+      .then((data) => setPlayers(data))
+      .catch((err) => {
+        console.error("Failed to load players", err);
+        message.error("Couldn't load players");
+      });
   }, []);
+
+  // useEffect(() => {
+  //   setPlayers(mockPlayers);
+  // }, []);
 
   if (players.length === 0) {
     return (
