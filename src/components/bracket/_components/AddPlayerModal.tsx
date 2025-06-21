@@ -49,7 +49,7 @@ export default function AddPlayerModal({
       <div>
         <Input
           placeholder="Enter Secret Access Code"
-          type="text"
+          type="password"
           value={secretCode}
           onChange={(e) => setSecretCode(e.target.value)}
           style={{ width: "205px" }}
