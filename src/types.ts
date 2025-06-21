@@ -86,3 +86,8 @@ export interface AddPlayerModalProps {
   open: boolean;
   onCancel: () => void;
 }
+
+export interface OutletContext {
+  players: PlayerFromDB[];
+  reloadPlayers: () => void;
+}

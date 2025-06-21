@@ -1,8 +1,7 @@
-import { Table, message } from "antd";
+import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { PlayerFromDB } from "../../types";
-import { fetchPlayers } from "../../api/players";
-import { useState, useEffect } from "react";
+import { PlayerFromDB, OutletContext } from "../../types";
+import { useOutletContext } from "react-router-dom";
 import { mockPlayers } from "../../data/mockData";
 import "./powerRankings.css";
 
@@ -46,16 +45,7 @@ const sortAndRankData = (data: PlayerFromDB[]): RankedPlayer[] => {
 };
 
 export default function PowerRankings() {
-  const [players, setPlayers] = useState<PlayerFromDB[]>([]);
-
-  useEffect(() => {
-    fetchPlayers()
-      .then((data) => setPlayers(data))
-      .catch((err) => {
-        console.error("Failed to load players", err);
-        message.error("Couldn't load players");
-      });
-  }, []);
+  const { players } = useOutletContext<OutletContext>();
 
   // useEffect(() => {
   //   setPlayers(mockPlayers);

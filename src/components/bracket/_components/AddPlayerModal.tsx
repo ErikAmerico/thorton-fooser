@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { AddPlayerModalProps } from "../../../types";
+import { AddPlayerModalProps, OutletContext } from "../../../types";
 import { Modal, Input, message } from "antd";
 import { addPlayer } from "../../../api/players";
+import { useOutletContext } from "react-router-dom";
 
 export default function AddPlayerModal({
   open,
@@ -9,6 +10,7 @@ export default function AddPlayerModal({
 }: AddPlayerModalProps) {
   const [playerName, setPlayerName] = useState("");
   const [secretCode, setSecretCode] = useState("");
+  const { reloadPlayers } = useOutletContext<OutletContext>();
 
   let isDisabled = !playerName || !secretCode;
 
@@ -19,6 +21,7 @@ export default function AddPlayerModal({
       setPlayerName("");
       setSecretCode("");
       onCancel();
+      reloadPlayers();
     } catch (err: any) {
       message.error(err.message || "Could not add player");
     }
