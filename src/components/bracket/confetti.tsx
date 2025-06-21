@@ -40,7 +40,7 @@ export default function Confetti() {
           angle: 270,
           gravity: 1,
           startVelocity: 5,
-          colors: ["#3d80ba", "#FFD700", "#FFFFFF"],
+          colors: ["#ababab", "#FFD700", "#FFFFFF"],
         })}
       />
     </div>
