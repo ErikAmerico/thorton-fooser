@@ -41,7 +41,7 @@ export default function AddPlayerModal({
       okText="Add Player"
       okButtonProps={{
         style: {
-          backgroundColor: isDisabled ? "rgb(113, 144, 172)" : "green",
+          backgroundColor: isDisabled ? "#ababab" : "green",
           color: "white",
         },
         disabled: isDisabled,

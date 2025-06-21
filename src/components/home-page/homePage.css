@@ -1,24 +1,114 @@
-.reigning-champ-container {
-  background-color: rgba(128, 128, 128, 0.2);
-  border-radius: 15px;
+.page {
+  font-family: sans-serif;
+  min-height: 100vh;
+
+  background: linear-gradient(
+    52.5deg,
+    #c09700 0%,
+    #c09700 49.675%,
+    #000 49.7%,
+    #000 49.8%,
+    white 49.825%,
+    white 50%,
+    #000 50.225%,
+    #000 100%
+  );
+
+  position: relative;
+  z-index: 0;
 }
 
-.reigning-champ-image {
-  background-image: url("/assets/ofirRachelPNG.png");
-  background-size: cover;
-  background-position: top;
-  height: 35rem;
+.hero {
+  color: #c09700;
+  padding: 10px 5px;
+  position: relative;
+}
+.hero-content {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.champs {
+  margin-top: -5px;
+  padding-bottom: 25px;
+}
+
+.champs-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.champs-title {
+  font-size: 2.5rem;
+  margin-bottom: -12.5px;
+  color: #c09700;
+  -webkit-text-stroke: 0.4px rgb(255, 255, 255);
+}
+.champs-teams {
+  font-size: 1.25rem;
+  color: #ababab;
+  margin-bottom: 10px;
+}
+.champs-image {
   width: 100%;
-  border-radius: 15px;
+  height: 600px !important;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 
-.reigning-champ-title {
-  color: rgb(175, 149, 1);
-  -webkit-text-stroke: 0.2px black;
+.page > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1920px) {
+  .page {
+    background: linear-gradient(
+      51deg,
+      #c09700 0%,
+      #c09700 49.675%,
+      #000 49.7%,
+      #000 49.8%,
+      white 49.825%,
+      white 50%,
+      #000 50.225%,
+      #000 100%
+    );
+  }
+}
+
+/* Responsive tweak */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .champs-title {
+    font-size: 2rem;
+  }
+  .champs-image {
+    height: 20rem;
+  }
+
+  .page {
+    background: linear-gradient(
+      57deg,
+      #c09700 0%,
+      #c09700 49.675%,
+      #000 49.7%,
+      #000 49.8%,
+      white 49.825%,
+      white 50%,
+      #000 50.225%,
+      #000 100%
+    );
+  }
 }
 
 @media (min-width: 375px) and (max-width: 991px) {
-  .reigning-champ-image {
+  .champs-image {
     background-position: top;
   }
 }

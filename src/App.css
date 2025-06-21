@@ -26,33 +26,11 @@ body,
 
 .app-content {
   flex: 1;
-  margin-top: 64px;
+  margin-top: 45px;
 }
 
 .main-container {
   max-width: 600px;
   margin: 0 auto;
   position: relative;
-}
-
-.main-container::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: calc((100vw - 600px) / 2);
-  background: linear-gradient(to right, #aedfff, white);
-  z-index: 0;
-  left: 0;
-}
-
-.main-container::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: calc((100vw - 600px) / 2);
-  background: linear-gradient(to left, #aedfff, white);
-  z-index: 0;
-  right: 0;
 }

@@ -52,6 +52,7 @@ export default function PlayerPicker({
             onChange={(e) => {
               onToggle(player, e.target.checked);
             }}
+            style={{ color: "black" }}
           >
             {player.name}
           </Checkbox>

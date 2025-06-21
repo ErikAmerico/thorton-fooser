@@ -28,8 +28,8 @@ export default function SubmitResultsModal({
       okButtonProps={{
         disabled: isDisabled,
         style: {
-          backgroundColor: isDisabled ? "gray" : "green",
-          borderColor: isDisabled ? "gray" : "green",
+          backgroundColor: isDisabled ? "#ababab" : "green",
+          borderColor: isDisabled ? "#ababab" : "green",
           color: isDisabled ? "black" : "white",
         },
       }}

@@ -4,8 +4,6 @@
   -webkit-overflow-scrolling: touch;
   background: #1d1d1d;
   height: calc(100vh);
-  margin-top: -18.75px;
-  margin-bottom: -18.75px;
 }
 
 .bracket-scroll-content {
@@ -53,7 +51,7 @@
   position: relative;
   min-height: 64px;
   max-height: 85px;
-  box-shadow: 0 0 5px 0.01px rgb(61, 128, 186);
+  box-shadow: 0 0 5px 0.01px #c09700;
 }
 
 .lower-match-col {
@@ -170,8 +168,15 @@
   justify-content: space-around;
   gap: 8px;
   margin-bottom: 16px;
-  background-color: rgb(61, 128, 186);
-  box-shadow: 0 0 5px 10px rgb(61, 128, 186);
+  border: 1px solid black;
+  background: linear-gradient(
+    50.6deg,
+    #c0960073 0%,
+    #c09700 60%,
+    #ababab 60%,
+    #ababab82 100%
+  );
+  border-radius: 7.5px;
 }
 
 .generate-bracket-button.ant-btn-primary {
@@ -182,8 +187,8 @@
 
 .generate-bracket-button.ant-btn-disabled,
 .generate-bracket-button:disabled {
-  background-color: #888 !important;
-  border-color: #888 !important;
+  background-color: #ababab !important;
+  border-color: #ababab !important;
   color: #fff !important;
   opacity: 1 !important;
   text-decoration: line-through;
@@ -191,7 +196,7 @@
 }
 
 .anticon.anticon-trophy {
-  color: gold;
+  color: #c09700;
   cursor: pointer;
   font-size: 14px;
 }
@@ -209,7 +214,7 @@
 
 .champion-text {
   margin-top: 25px;
-  color: rgb(186, 158, 0);
+  color: #c09700;
 }
 
 .bracket-controls {
@@ -220,15 +225,15 @@
 }
 
 .cancel-tourney-btn {
-  background-color: rgb(61, 128, 186);
-  border: 1px solid rgb(61, 128, 186);
+  background-color: rgb(168, 0, 0);
+  border: 1px solid rgb(168, 0, 0);
   color: white;
 }
 
 .cancel-tourney-btn:hover {
   background-color: rgb(168, 0, 0) !important;
-  border: 1px solid rgb(168, 0, 0) !important;
-  color: white !important;
+  border: 1px solid #c09700 !important;
+  color: #c09700 !important;
 }
 
 .submit-results-btn {
@@ -238,14 +243,13 @@
 }
 
 .submit-results-btn:hover {
-  background-color: rgb(61, 128, 186) !important;
-  border: 1px solid rgb(61, 128, 186) !important;
-  color: white !important;
+  border: 1px solid #c09700 !important;
+  color: #c09700 !important;
 }
 
 .submit-results-btn[disabled] {
-  background-color: rgb(113, 144, 172) !important;
-  border-color: rgb(113, 144, 172) !important;
+  background-color: #ababab !important;
+  border-color: #ababab !important;
   color: #fff !important;
   cursor: not-allowed;
 }
@@ -261,12 +265,13 @@
 }
 
 .infoCircle:hover {
-  color: rgb(61, 128, 186) !important;
+  color: #c09700 !important;
 }
 
 #add-player-button {
-  background-color: rgb(61, 128, 186);
-  border: 1px solid rgb(61, 128, 186);
+  background-color: #000;
+  border: 1px solid #c09700;
+  color: white;
 }
 
 #add-player-button:hover {
