@@ -9,18 +9,16 @@ import { RenderBracket } from "./_components/BracketRenderer";
 import BracketControls from "./_components/BracketControls";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
-import { MatchResult, PlayerFromDB, Team } from "../../types";
+import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
 import { MAX_PLAYERS, STORAGE_KEY, initialState } from "../../data/constants";
 import { calculateScores } from "./_helpers/calculateScores";
 import { batchUpdateScores } from "../../api/matches";
-import { fetchPlayers } from "../../api/players";
-import { mockPlayers } from "../../data/mockData";
+import { useOutletContext } from "react-router-dom";
 
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [players, setPlayers] = useState<PlayerFromDB[]>([]);
   const [bracketState, setBracketState] = useLocalStorageBracketState();
   const { selected, teams, matchResults } = bracketState;
   const [isTourneyFinished, setIsTourneyFinished] = useState<boolean>(() => {
@@ -33,6 +31,7 @@ export default function Bracket() {
       return s ? JSON.parse(s) : false;
     }
   );
+  const { players, reloadPlayers } = useOutletContext<OutletContext>();
 
   useEffect(() => {
     console.log(isTourneyFinished);
@@ -45,18 +44,6 @@ export default function Bracket() {
       JSON.stringify(hasSubmittedResults)
     );
   }, [hasSubmittedResults]);
-
-  useEffect(() => {
-    fetchPlayers()
-      .then((data) => {
-        // console.log("fetched players", data);
-        setPlayers(data);
-      })
-      .catch((err) => {
-        console.error("Failed to load players", err);
-        message.error("Couldn't load players");
-      });
-  }, []);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -76,11 +63,7 @@ export default function Bracket() {
     setIsInfoModalOpen(true);
   };
 
-  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
-
-  // const allPlayers = [...mockPlayers].sort((a, b) =>
-  //   a.name.localeCompare(b.name)
-  // ); //getting players from mockData
+  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name));
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {
@@ -137,6 +120,7 @@ export default function Bracket() {
       setIsSubmitModalOpen(false);
       //So we can't submit the results repeatedly
       setHasSubmittedResults(true);
+      reloadPlayers();
     } catch (error: any) {
       message.error("Failed to submit: " + error.message);
     }
