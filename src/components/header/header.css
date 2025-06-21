@@ -19,29 +19,32 @@
   height: 45px;
   z-index: 1000;
 
-  background-color: rgb(61, 128, 186);
-  border-radius: 5px;
+  background-color: #000;
   display: flex;
   justify-content: center;
-  box-shadow: 0px 0px 1px 1px rgb(61, 128, 186);
+  box-shadow: 0px 0px 1px 1px #c09700;
   font-weight: 600;
 }
 
 .ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
-  color: rgba(253, 253, 253, 0.639) !important;
-  background-color: rgb(61, 128, 186) !important;
+  color: #c09700 !important;
+  background-color: #000 !important;
 }
 
 .ant-menu-submenu-title {
   color: white !important;
 }
 
+.ant-menu-horizontal .ant-menu-item {
+  color: #ababab;
+}
+
 .ant-menu-horizontal .ant-menu-item:hover {
-  color: rgba(253, 253, 253, 0.639) !important;
+  color: #c09700 !important;
 }
 
 .ant-menu-overflow-item.ant-menu-overflow-item-rest.ant-menu-submenu.ant-menu-submenu-horizontal.ant-menu-submenu-active::after {
-  border-bottom-color: rgb(61, 128, 186) !important;
+  border-bottom-color: #000 !important;
 }
 
 .header-menu .ant-menu-overflow-item-rest {
