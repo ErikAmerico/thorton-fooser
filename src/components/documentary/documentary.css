@@ -20,14 +20,8 @@
   z-index: 0;
 }
 
-#doc-container {
-  background-color: #c09700;
-  border-radius: 15px;
-  border: 1px solid #000;
-}
-
 #doc-title {
-  color: #000;
+  color: white;
   margin-top: 0px;
   font-family: "Roboto", sans-serif;
   padding: 10px;
@@ -41,7 +35,6 @@ video {
   height: auto;
   border-radius: 15px;
   box-shadow: 0 5px 25px black;
-  margin-bottom: -10px;
 }
 
 @media (max-width: 370px) {
