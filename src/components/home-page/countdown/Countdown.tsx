@@ -14,7 +14,7 @@ interface TimeLeft {
 const calculateTimeLeft = (): TimeLeft => {
   const now: Moment = moment();
   const targetDate: Moment = moment.tz(
-    "2025-06-13 09:00:00",
+    "2025-08-13 09:00:00",
     "America/New_York"
   );
 
