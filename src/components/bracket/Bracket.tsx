@@ -14,7 +14,6 @@ import { MAX_PLAYERS, STORAGE_KEY, initialState } from "../../data/constants";
 import { calculateScores } from "./_helpers/calculateScores";
 import { batchUpdateScores } from "../../api/matches";
 import { useOutletContext } from "react-router-dom";
-import { mockPlayers } from "../../data/mockData";
 
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,11 +63,7 @@ export default function Bracket() {
     setIsInfoModalOpen(true);
   };
 
-  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name)); //getting player from api
-
-  // const allPlayers = [...mockPlayers].sort((a, b) =>
-  //   a.name.localeCompare(b.name)
-  // ); //getting players from mockData
+  const allPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name));
 
   const onCheck = (player: PlayerFromDB, checked: boolean) => {
     if (checked && selected.length >= MAX_PLAYERS) {

@@ -2,7 +2,6 @@ import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlayerFromDB, OutletContext } from "../../types";
 import { useOutletContext } from "react-router-dom";
-import { mockPlayers } from "../../data/mockData";
 import "./powerRankings.css";
 
 interface RankedPlayer extends PlayerFromDB {
@@ -46,10 +45,6 @@ const sortAndRankData = (data: PlayerFromDB[]): RankedPlayer[] => {
 
 export default function PowerRankings() {
   const { players } = useOutletContext<OutletContext>();
-
-  // useEffect(() => {
-  //   setPlayers(mockPlayers);
-  // }, []);
 
   if (players.length === 0) {
     return (
