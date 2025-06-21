@@ -64,15 +64,17 @@ export default function PowerRankings() {
   }
 
   return (
-    <div className="main-container">
-      <div className="powerrankings-container">
-        <h1 className="powerrankings-title">Rankings</h1>
-        <Table
-          rowKey="id"
-          columns={columns}
-          dataSource={sortAndRankData(players)}
-          pagination={false}
-        />
+    <div className="powerrankings-page">
+      <div className="main-container">
+        <div className="powerrankings-container">
+          <h1 className="powerrankings-title">Rankings</h1>
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={sortAndRankData(players)}
+            pagination={false}
+          />
+        </div>
       </div>
     </div>
   );
