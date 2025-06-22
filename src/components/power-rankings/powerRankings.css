@@ -1,6 +1,6 @@
 .powerrankings-container {
   background-color: #c09700;
-  border-radius: 15px 15px 0 0;
+  border-radius: 15px;
   border: 1px solid #000;
 }
 
@@ -106,6 +106,16 @@
 
 .ant-table-tbody > tr > td {
   border-bottom: none !important;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-container {
+  border-radius: 15px !important;
+  overflow: hidden;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper .ant-table {
+  border-radius: 15px !important;
 }
 
 @media (max-width: 727px) {
