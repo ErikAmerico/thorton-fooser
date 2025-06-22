@@ -14,18 +14,20 @@ const columns: ColumnsType<PlayerFromDB> = [
     dataIndex: "name",
     key: "name",
     render: (name: string) => <span className="glass">{name}</span>,
+    align: "center",
   },
   {
     title: "Rank",
     dataIndex: "rank",
     key: "rank",
     render: (rank: number) => <span className="rank-badge">{rank}</span>,
+    align: "center",
   },
   {
     title: "Score",
     dataIndex: "score",
     key: "score",
-
+    align: "center",
     render: (score) => <span className="glass">{score}</span>,
   },
 ];
@@ -56,7 +58,7 @@ export default function PowerRankings() {
           <h1 className="powerrankings-title">Rankings</h1>
           <div
             style={{
-              backgroundColor: "white",
+              backgroundColor: "black",
               height: "100vh",
               width: "100%",
             }}
@@ -77,6 +79,7 @@ export default function PowerRankings() {
             dataSource={sortAndRankData(players)}
             pagination={false}
             rowClassName={() => "power-row"}
+            rowHoverable={false}
           />
         </div>
       </div>

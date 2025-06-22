@@ -55,7 +55,57 @@
   > tr
   > th,
 :where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper .ant-table-cell {
-  padding: 12px 12px !important;
+  padding: 10px 10px !important;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th:nth-child(1),
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td:nth-child(1) {
+  width: 45% !important;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th:nth-child(2),
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td:nth-child(2) {
+  width: 10% !important;
+}
+
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th:nth-child(3),
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td:nth-child(3) {
+  width: 45% !important;
+}
+
+/* Prevent selecting text in rows */
+:where(.css-dev-only-do-not-override-mc1tut).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td {
+  user-select: none;
+}
+
+.ant-table-thead > tr > th {
+  position: static !important;
+  border-bottom: none !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: none !important;
 }
 
 @media (max-width: 727px) {
@@ -73,7 +123,7 @@
 
   .ant-table-tbody {
     background: linear-gradient(
-      68deg,
+      66.35deg,
       #c09700 0%,
       #c09700 49.675%,
       #000 49.7%,
