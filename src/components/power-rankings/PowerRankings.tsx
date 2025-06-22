@@ -13,17 +13,20 @@ const columns: ColumnsType<PlayerFromDB> = [
     title: "Name",
     dataIndex: "name",
     key: "name",
-    render: (text: string) => <a>{text}</a>,
+    render: (name: string) => <span className="glass">{name}</span>,
   },
   {
     title: "Rank",
     dataIndex: "rank",
     key: "rank",
+    render: (rank: number) => <span className="rank-badge">{rank}</span>,
   },
   {
     title: "Score",
     dataIndex: "score",
     key: "score",
+
+    render: (score) => <span className="glass">{score}</span>,
   },
 ];
 
@@ -73,6 +76,7 @@ export default function PowerRankings() {
             columns={columns}
             dataSource={sortAndRankData(players)}
             pagination={false}
+            rowClassName={() => "power-row"}
           />
         </div>
       </div>
