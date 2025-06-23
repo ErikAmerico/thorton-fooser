@@ -1,6 +1,6 @@
 import { StoredState } from "../types";
 
-export const MAX_PLAYERS = 14;
+export const MAX_PLAYERS = 18;
 export const STORAGE_KEY = "bracketState";
 
 export const initialState: StoredState = {
