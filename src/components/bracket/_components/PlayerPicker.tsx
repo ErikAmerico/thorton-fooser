@@ -37,7 +37,7 @@ export default function PlayerPicker({
   );
   return (
     <>
-      <h3 style={{ color: "#fff", fontFamily: "sans-serif" }}>
+      <h3 style={{ fontFamily: "sans-serif" }} className="whoPlaying-title">
         Who is playing?
       </h3>
       <div className="player-grid main-container">
