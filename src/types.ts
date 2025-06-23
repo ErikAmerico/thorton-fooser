@@ -20,6 +20,13 @@ export interface BracketProps {
   setIsTourneyFinished: Dispatch<SetStateAction<boolean>>;
 }
 
+export interface HistoryTournament {
+  id: number;
+  createdAt: string;
+  teams: Team[];
+  results: MatchResult[];
+}
+
 export interface StoredState {
   selected: PlayerFromDB[];
   teams: Team[] | null;
@@ -90,4 +97,11 @@ export interface AddPlayerModalProps {
 export interface OutletContext {
   players: PlayerFromDB[];
   reloadPlayers: () => void;
+}
+
+export interface Tournament {
+  id: number;
+  createdAt: string;
+  teams: Team;
+  results: MatchResult;
 }
