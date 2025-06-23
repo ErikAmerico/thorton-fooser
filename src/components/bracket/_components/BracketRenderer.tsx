@@ -21,6 +21,8 @@ export function RenderBracket(teamCount: number, props: BracketProps) {
       return <SixTeamBracket {...props} />;
     case 7:
       return <SevenTeamBracket {...props} />;
+    case 8:
+      return <EightTeamBracket {...props} />;
     default:
       return null;
   }
