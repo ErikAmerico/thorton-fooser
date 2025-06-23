@@ -24,7 +24,20 @@ export default function History() {
     return <Alert type="error" message={error} />;
   }
   if (!history) {
-    return <Spin tip="Loading tournament history…" />;
+    return (
+      <div
+        className="bracket-scroll-wrapper"
+        style={{
+          backgroundColor: "black",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Spin />
+      </div>
+    );
   }
 
   const current = history[idx];
