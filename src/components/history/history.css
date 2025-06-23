@@ -1,0 +1,33 @@
+.tourney-date {
+  color: #c09700;
+  margin-top: 0px;
+  font-family: "Roboto", sans-serif;
+  padding: 10px;
+  padding-bottom: 0px;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.history-header .tourney-date {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 2.5rem;
+  color: #c09700;
+}
+
+.history-header button {
+  height: 30px;
+  padding: 0;
+  background-color: white;
+  color: #c09700;
+  border: none;
+  margin-top: 7px;
+}
