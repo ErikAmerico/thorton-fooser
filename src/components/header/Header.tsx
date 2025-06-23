@@ -23,6 +23,10 @@ const items = [
     label: "Champs",
   },
   {
+    key: "history",
+    label: "History",
+  },
+  {
     key: "doc",
     label: "Documentary",
   },
@@ -44,6 +48,8 @@ const Header = () => {
       navigate("/documentary");
     } else if (e.key === "champs") {
       navigate("/champs");
+    } else if (e.key === "history") {
+      navigate("/history");
     }
   };
 

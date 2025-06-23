@@ -12,7 +12,7 @@ import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketSt
 import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
 import { MAX_PLAYERS, STORAGE_KEY, initialState } from "../../data/constants";
 import { calculateScores } from "./_helpers/calculateScores";
-import { batchUpdateScores } from "../../api/matches";
+import { batchUpdateScoresAndSendTournamentData } from "../../api/matches";
 import { useOutletContext } from "react-router-dom";
 
 export default function Bracket() {
@@ -88,6 +88,9 @@ export default function Bracket() {
       return message.error("Select an even number of players (≥2).");
     }
     const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
+    ////used to control building teams - for testing
+    // const plyrs: PlayerFromDB[] = selected;
+
     const pairs: Team[] = [];
     for (let i = 0; i < plyrs.length; i += 2) {
       pairs.push([plyrs[i], plyrs[i + 1]]);
@@ -112,9 +115,19 @@ export default function Bracket() {
   };
 
   const submitResults = async (secretCode: string) => {
+    if (!teams || !matchResults) {
+      //avoiding typescript null error. This will never be null.
+      return message.error("Cannot submit: no bracket has been generated yet");
+    }
+
     const finalScores = calculateScores(matchResults, isTourneyFinished);
     try {
-      await batchUpdateScores(finalScores, secretCode);
+      await batchUpdateScoresAndSendTournamentData(
+        finalScores,
+        teams,
+        matchResults,
+        secretCode
+      );
 
       message.success("Results saved!");
       setIsSubmitModalOpen(false);

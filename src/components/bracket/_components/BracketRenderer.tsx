@@ -6,6 +6,7 @@ import FiveTeamBracket from "../team-count-brackets/5-team-bracket/FiveTeamBrack
 import SixTeamBracket from "../team-count-brackets/6-team-bracket/SixTeamBracker";
 import SevenTeamBracket from "../team-count-brackets/7-team-bracket/SevenTeamBracket";
 import EightTeamBracket from "../team-count-brackets/8-team-bracket/EightTeamBracket";
+import NineTeamBracket from "../team-count-brackets/9-team-bracket/NineTeamBracket";
 
 export function RenderBracket(teamCount: number, props: BracketProps) {
   switch (teamCount) {
@@ -21,6 +22,10 @@ export function RenderBracket(teamCount: number, props: BracketProps) {
       return <SixTeamBracket {...props} />;
     case 7:
       return <SevenTeamBracket {...props} />;
+    case 8:
+      return <EightTeamBracket {...props} />;
+    case 9:
+      return <NineTeamBracket {...props} />;
     default:
       return null;
   }
