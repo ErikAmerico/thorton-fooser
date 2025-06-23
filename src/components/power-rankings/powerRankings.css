@@ -167,3 +167,19 @@
     font-weight: bold;
   }
 }
+
+@media (max-width: 500px) {
+  .ant-table-tbody {
+    background: linear-gradient(
+      71.5deg,
+      #c09700 0%,
+      #c09700 49.675%,
+      #000 49.7%,
+      #000 49.8%,
+      white 49.825%,
+      white 50%,
+      #000 50.225%,
+      #000 100%
+    );
+  }
+}
