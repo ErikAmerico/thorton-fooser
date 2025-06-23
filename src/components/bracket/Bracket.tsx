@@ -12,7 +12,7 @@ import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketSt
 import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
 import { MAX_PLAYERS, STORAGE_KEY, initialState } from "../../data/constants";
 import { calculateScores } from "./_helpers/calculateScores";
-import { batchUpdateScores } from "../../api/matches";
+import { batchUpdateScoresAndSendTournamentData } from "../../api/matches";
 import { useOutletContext } from "react-router-dom";
 
 export default function Bracket() {
@@ -122,7 +122,12 @@ export default function Bracket() {
 
     const finalScores = calculateScores(matchResults, isTourneyFinished);
     try {
-      await batchUpdateScores(finalScores, teams, matchResults, secretCode);
+      await batchUpdateScoresAndSendTournamentData(
+        finalScores,
+        teams,
+        matchResults,
+        secretCode
+      );
 
       message.success("Results saved!");
       setIsSubmitModalOpen(false);

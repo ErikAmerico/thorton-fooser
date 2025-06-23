@@ -1,7 +1,7 @@
 import { API } from "../data/constants";
 import { MatchResult, Team, HistoryTournament } from "../types";
 
-export async function batchUpdateScores(
+export async function batchUpdateScoresAndSendTournamentData(
   finalScores: Record<string, number>,
   teams: Team[],
   matchResults: MatchResult[],
