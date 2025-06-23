@@ -10,4 +10,5 @@ export const initialState: StoredState = {
 };
 
 // export const API = "http://localhost:3000"; //DEVELOPMENT
-export const API = "https://thornton-fooser-api.onrender.com"; //PRODUCTION
+export const API = "http://10.0.0.151:3000";
+// export const API = "https://thornton-fooser-api.onrender.com"; //PRODUCTION
