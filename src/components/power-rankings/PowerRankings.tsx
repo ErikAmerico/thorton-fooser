@@ -1,36 +1,12 @@
-import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlayerFromDB, OutletContext } from "../../types";
 import { useOutletContext } from "react-router-dom";
 import "./powerRankings.css";
+import { useEffect } from "react";
 
 interface RankedPlayer extends PlayerFromDB {
   rank: number;
 }
-
-const columns: ColumnsType<PlayerFromDB> = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (name: string) => <span className="glass">{name}</span>,
-    align: "center",
-  },
-  {
-    title: "Rank",
-    dataIndex: "rank",
-    key: "rank",
-    render: (rank: number) => <span className="rank-badge">{rank}</span>,
-    align: "center",
-  },
-  {
-    title: "Score",
-    dataIndex: "score",
-    key: "score",
-    align: "center",
-    render: (score) => <span className="glass">{score}</span>,
-  },
-];
 
 const sortAndRankData = (data: PlayerFromDB[]): RankedPlayer[] => {
   // copy + sort by descending score
@@ -72,15 +48,31 @@ export default function PowerRankings() {
     <div className="powerrankings-page">
       <div className="main-container">
         <div className="powerrankings-container">
-          <h1 className="powerrankings-title">Rankings</h1>
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={sortAndRankData(players)}
-            pagination={false}
-            rowClassName={() => "power-row"}
-            rowHoverable={false}
-          />
+          <h1 className="powerrankings-title">Power Rankings</h1>
+          <table className="power-table">
+            <thead className="power-table-thead">
+              <tr className="power-head-row">
+                <th className="power-table-cell">Name</th>
+                <th className="power-table-cell">Rank</th>
+                <th className="power-table-cell">Score</th>
+              </tr>
+            </thead>
+            <tbody className="power-table-tbody">
+              {sortAndRankData(players).map((p) => (
+                <tr key={p.id} className="power-row">
+                  <td className="power-table-cell">
+                    <span className="power-glass">{p.name}</span>
+                  </td>
+                  <td className="power-table-cell">
+                    <span className="rank-badge">{p.rank}</span>
+                  </td>
+                  <td className="power-table-cell">
+                    <span className="power-glass">{p.score}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
