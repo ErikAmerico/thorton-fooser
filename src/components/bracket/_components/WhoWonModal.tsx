@@ -11,6 +11,7 @@ export default function WhoWonModal({
   onOk,
   onCancel,
 }: WhoWonModalProps) {
+  let isDisabled = !selectedWinner;
   return (
     <Modal
       title="Who Won?"
@@ -19,8 +20,17 @@ export default function WhoWonModal({
       onCancel={onCancel}
       closable={false}
       okText="Submit Winner"
-      okButtonProps={{ disabled: !selectedWinner }}
+      okButtonProps={{
+        disabled: isDisabled,
+        style: {
+          backgroundColor: isDisabled ? "#aaa" : "green",
+          borderColor: isDisabled ? "#aaa" : "green",
+        },
+      }}
       style={{ textAlign: "center" }}
+      cancelButtonProps={{
+        className: "cancel-nvrmind-btn",
+      }}
     >
       <Radio.Group
         onChange={(e) => onSelect(e.target.value as Team)}

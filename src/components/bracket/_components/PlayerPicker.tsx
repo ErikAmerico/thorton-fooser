@@ -40,7 +40,7 @@ export default function PlayerPicker({
       <h3 style={{ color: "#fff", fontFamily: "sans-serif" }}>
         Who is playing?
       </h3>
-      <div className="player-grid">
+      <div className="player-grid main-container">
         {sortedPlayers.map((player: PlayerFromDB) => (
           <Checkbox
             key={player.id}
@@ -52,9 +52,9 @@ export default function PlayerPicker({
             onChange={(e) => {
               onToggle(player, e.target.checked);
             }}
-            style={{ color: "black" }}
+            style={{ color: "white" }}
           >
-            {player.name}
+            <div className="picker-glass">{player.name}</div>
           </Checkbox>
         ))}
       </div>

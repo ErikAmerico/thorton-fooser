@@ -47,6 +47,9 @@ export default function AddPlayerModal({
         disabled: isDisabled,
       }}
       style={{ textAlign: "center" }}
+      cancelButtonProps={{
+        className: "cancel-nvrmind-btn",
+      }}
     >
       <h2>Who is joining us?</h2>
       <div>

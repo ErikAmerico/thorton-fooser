@@ -34,6 +34,9 @@ export default function SubmitResultsModal({
         },
       }}
       onCancel={cancel}
+      cancelButtonProps={{
+        className: "cancel-nvrmind-btn",
+      }}
       closable={false}
       okText="Submit"
       style={{ textAlign: "center" }}

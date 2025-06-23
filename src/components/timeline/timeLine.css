@@ -37,9 +37,84 @@
   border-radius: 15px 15px 0 0;
 }
 
-.timeline {
+.champions-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
   border-radius: 15px;
-  background-color: aliceblue;
-  padding-top: 15px;
-  padding-bottom: 15px;
+}
+
+.champions-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px 8px;
+  font-size: 14px;
+}
+
+.champions-table td:nth-child(1) {
+  width: 45%;
+  text-align: center;
+}
+.champions-table td:nth-child(3) {
+  width: 45%;
+  text-align: center;
+}
+.champions-table td:nth-child(2) {
+  width: 10%;
+  text-align: center;
+}
+
+.champ-trophy {
+  color: #000 !important;
+}
+
+.trophy-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c09700;
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 727px) {
+  .timeline-page {
+    background: black;
+  }
+
+  #history-container {
+    background-color: black;
+  }
+
+  .champ-title {
+    color: #c09700;
+  }
+
+  .champions-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: linear-gradient(
+      42deg,
+      #c09700 0%,
+      #c09700 49.675%,
+      #000 49.7%,
+      #000 49.8%,
+      white 49.825%,
+      white 50%,
+      #000 50.225%,
+      #000 100%
+    );
+    border-radius: 15px !important;
+  }
+
+  .champ-glass {
+    display: inline-block;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-weight: bold;
+  }
 }

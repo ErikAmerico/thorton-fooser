@@ -20,7 +20,7 @@ const items = [
   },
   {
     key: "champs",
-    label: "Champions",
+    label: "Champs",
   },
   {
     key: "doc",
