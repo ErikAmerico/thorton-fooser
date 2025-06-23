@@ -2,7 +2,8 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  background: #1d1d1d;
+  background: linear-gradient(#000 0%, #1d1d1d 50%, #000 100%);
+  background-color: black;
   height: calc(100vh);
 }
 
@@ -11,7 +12,7 @@
 }
 
 .bracket-shell {
-  background: #1d1d1d;
+  background-color: transparent;
   color: #ddd;
   padding: 24px;
   font-family: sans-serif;
