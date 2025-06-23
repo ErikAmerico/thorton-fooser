@@ -7,6 +7,7 @@ import TimeLine from "./components/timeline/TimeLine";
 import PowerRankings from "./components/power-rankings/PowerRankings";
 import Documentary from "./components/documentary/Documentary";
 import Bracket from "./components/bracket/Bracket";
+import History from "./components/history/History";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
@@ -18,6 +19,7 @@ root.render(
         <Route path="rankings" element={<PowerRankings />} />
         <Route path="documentary" element={<Documentary />} />
         <Route path="champs" element={<TimeLine />} />
+        <Route path="history" element={<History />} />
       </Route>
     </Routes>
   </Router>
