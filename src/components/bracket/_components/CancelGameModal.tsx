@@ -41,6 +41,9 @@ export default function CancelGameModal({
       closable={false}
       okText="Cancel"
       style={{ textAlign: "center" }}
+      cancelButtonProps={{
+        className: "cancel-nvrmind-btn",
+      }}
     >
       Canceling this game will lose all progress. It will be like it never
       existed.

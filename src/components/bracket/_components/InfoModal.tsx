@@ -11,6 +11,9 @@ export default function InfoModal({ open, onOk }: InfoModalProps) {
       closable={false}
       cancelButtonProps={{ style: { display: "none" } }}
       okText="Got It."
+      okButtonProps={{
+        className: "got-it-btn",
+      }}
       style={{ textAlign: "center" }}
     >
       <div>
