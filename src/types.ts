@@ -46,6 +46,7 @@ export interface WhoWonModalProps {
   onSelect: (team: Team) => void;
   onOk: () => void;
   onCancel: () => void;
+  okDisabled: boolean;
 }
 
 export interface ConfirmWinnerArgs {

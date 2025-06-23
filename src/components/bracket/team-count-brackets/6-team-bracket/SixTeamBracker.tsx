@@ -406,6 +406,9 @@ export default function SixTeamBracket({
         onSelect={setSelectedWinner}
         onOk={handleOk}
         onCancel={closeModal}
+        okDisabled={
+          currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
+        }
       />
       {!needsReset && grandWinner && <Confetti />}
       {resetWinner && <Confetti />}
