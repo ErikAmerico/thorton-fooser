@@ -122,9 +122,15 @@ const TimeLine = () => {
       </div>
       <Modal
         className="custom-modal"
+        key={selected?.date}
+        destroyOnHidden
         centered
         open={isOpen}
         onOk={closeModal}
+        okButtonProps={{
+          className: "got-it-btn",
+        }}
+        okText="Lookin Good!"
         closable={false}
         cancelButtonProps={{ style: { display: "none" } }}
       >
