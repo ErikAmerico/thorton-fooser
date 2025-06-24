@@ -48,7 +48,7 @@ export default function PowerRankings() {
     <div className="powerrankings-page">
       <div className="main-container">
         <div className="powerrankings-container">
-          <h1 className="powerrankings-title">Power Rankings</h1>
+          <h1 className="powerrankings-title">Rankings</h1>
           <table className="power-table">
             <thead className="power-table-thead">
               <tr className="power-head-row">

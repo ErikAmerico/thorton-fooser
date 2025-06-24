@@ -68,6 +68,15 @@
   color: #000 !important;
 }
 
+.champ-trophy {
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.champ-trophy:hover {
+  transform: scale(1.2);
+}
+
 .trophy-wrapper {
   display: inline-flex;
   align-items: center;
@@ -77,6 +86,15 @@
   border-radius: 50%;
   width: 24px;
   height: 24px;
+}
+
+.custom-modal .ant-modal-content {
+  background-color: black;
+  box-shadow: 0px 0px 10px #c09700;
+}
+.custom-modal .ant-modal-body {
+  padding: 0;
+  text-align: center;
 }
 
 @media (max-width: 727px) {

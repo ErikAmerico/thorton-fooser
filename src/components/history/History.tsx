@@ -2,14 +2,25 @@ import { useEffect, useState } from "react";
 import { fetchTournamentHistory } from "../../api/matches";
 import { HistoryTournament } from "../../types";
 import { RenderBracket } from "../bracket/_components/BracketRenderer";
-import { Spin, Alert, Button } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { Spin, Alert, Button, Modal } from "antd";
+
+import {
+  LeftOutlined,
+  RightOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
+
 import "./history.css";
 
 export default function History() {
   const [history, setHistory] = useState<HistoryTournament[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [idx, setIdx] = useState(0);
+  const [showLookingForModal, setShowLookingForModal] = useState(false);
+
+  const openModal = () => {
+    setShowLookingForModal(true);
+  };
 
   useEffect(() => {
     fetchTournamentHistory()
@@ -62,6 +73,11 @@ export default function History() {
           onClick={next}
           disabled={idx === history.length - 1}
         />
+        <InfoCircleOutlined
+          onClick={openModal}
+          className="infoCircle history-info"
+          style={{ color: "white" }}
+        />
       </div>
 
       <div className="history-bracket">
@@ -73,6 +89,26 @@ export default function History() {
           fireConfetti: false,
         })}
       </div>
+      <Modal
+        open={showLookingForModal}
+        onOk={() => setShowLookingForModal(false)}
+        closable={false}
+        cancelButtonProps={{ style: { display: "none" } }}
+        okText="I'll keep an eye out."
+        okButtonProps={{
+          className: "got-it-btn",
+        }}
+        style={{ textAlign: "center" }}
+      >
+        <div className="missing-info">
+          Missing data of Tournament Brackets from: <br />
+          <span className="missing-info-content">
+            10/14/2023 <br /> 11/4/2023 <br /> 12/10/2023 <br /> 1/13/2024{" "}
+            <br /> 3/23/2024 <br /> <br />
+          </span>
+          Do you have a picture of one?
+        </div>
+      </Modal>
     </div>
   );
 }
