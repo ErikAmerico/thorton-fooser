@@ -68,6 +68,15 @@
   color: #000 !important;
 }
 
+.champ-trophy {
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.champ-trophy:hover {
+  transform: scale(1.2);
+}
+
 .trophy-wrapper {
   display: inline-flex;
   align-items: center;
