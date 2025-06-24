@@ -1,9 +1,7 @@
-import type { ColumnsType } from "antd/es/table";
 import { PlayerFromDB, OutletContext } from "../../types";
 import { useOutletContext } from "react-router-dom";
 import "./powerRankings.css";
-import { useEffect } from "react";
-
+import { TrophyCell } from "./RenderTrophies";
 interface RankedPlayer extends PlayerFromDB {
   rank: number;
 }
@@ -55,6 +53,7 @@ export default function PowerRankings() {
                 <th className="power-table-cell">Name</th>
                 <th className="power-table-cell">Rank</th>
                 <th className="power-table-cell">Score</th>
+                <th>Titles</th>
               </tr>
             </thead>
             <tbody className="power-table-tbody">
@@ -69,6 +68,7 @@ export default function PowerRankings() {
                   <td className="power-table-cell">
                     <span className="power-glass">{p.score}</span>
                   </td>
+                  <TrophyCell count={p.championships} />
                 </tr>
               ))}
             </tbody>
