@@ -88,6 +88,10 @@
   height: 24px;
 }
 
+.custom-modal {
+  min-height: 400px;
+}
+
 .custom-modal .ant-modal-content {
   background-color: black;
   box-shadow: 0px 0px 10px #c09700;

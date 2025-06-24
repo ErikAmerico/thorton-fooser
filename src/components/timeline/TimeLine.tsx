@@ -1,6 +1,6 @@
 import "./timeLine.css";
 import { TrophyFilled } from "@ant-design/icons";
-import { Modal, message } from "antd";
+import { Modal, message, Spin } from "antd";
 import { useState } from "react";
 
 interface Champion {
@@ -134,6 +134,7 @@ const TimeLine = () => {
         closable={false}
         cancelButtonProps={{ style: { display: "none" } }}
       >
+        {!selected && <Spin />}
         {selected?.photo || <p>No photo available</p>}
       </Modal>
     </div>
