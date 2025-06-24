@@ -14,6 +14,7 @@ export default function TwoTeamBracket({
   matchResults,
   onChange,
   setIsTourneyFinished,
+  fireConfetti,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -193,8 +194,8 @@ export default function TwoTeamBracket({
           currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
         }
       />
-      {!needsReset && grandWinner && <Confetti />}
-      {resetWinner && <Confetti />}
+      {fireConfetti && !needsReset && grandWinner && <Confetti />}
+      {fireConfetti && resetWinner && <Confetti />}
     </div>
   );
 }

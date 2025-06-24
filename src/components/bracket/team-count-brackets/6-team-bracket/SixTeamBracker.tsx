@@ -14,6 +14,7 @@ export default function SixTeamBracket({
   matchResults,
   onChange,
   setIsTourneyFinished,
+  fireConfetti,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -410,8 +411,8 @@ export default function SixTeamBracket({
           currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
         }
       />
-      {!needsReset && grandWinner && <Confetti />}
-      {resetWinner && <Confetti />}
+      {fireConfetti && !needsReset && grandWinner && <Confetti />}
+      {fireConfetti && resetWinner && <Confetti />}
     </div>
   );
 }

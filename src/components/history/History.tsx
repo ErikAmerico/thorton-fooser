@@ -70,6 +70,7 @@ export default function History() {
           matchResults: current.results,
           onChange: () => {},
           setIsTourneyFinished: () => {},
+          fireConfetti: false,
         })}
       </div>
     </div>

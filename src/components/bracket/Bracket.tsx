@@ -34,7 +34,7 @@ export default function Bracket() {
   const { players, reloadPlayers } = useOutletContext<OutletContext>();
 
   useEffect(() => {
-    console.log(isTourneyFinished);
+    // console.log(isTourneyFinished);
     localStorage.setItem("tourneyFinished", JSON.stringify(isTourneyFinished));
   }, [isTourneyFinished]);
 
@@ -172,6 +172,7 @@ export default function Bracket() {
               onChange: (newResults) =>
                 setBracketState({ ...bracketState, matchResults: newResults }),
               setIsTourneyFinished,
+              fireConfetti: true,
             })}
         </div>
       </Space>

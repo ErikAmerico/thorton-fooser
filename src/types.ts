@@ -18,6 +18,7 @@ export interface BracketProps {
   matchResults: MatchResult[];
   onChange: (newResults: MatchResult[]) => void;
   setIsTourneyFinished: Dispatch<SetStateAction<boolean>>;
+  fireConfetti: boolean;
 }
 
 export interface HistoryTournament {
