@@ -6,9 +6,14 @@ import { useEffect, useState } from "react";
 import { fetchPlayers } from "./api/players";
 import { PlayerFromDB } from "./types";
 import { message } from "antd";
+import useStartPageAtTop from "./utils/startPageAtTop";
 
 function App() {
   const [players, setPlayers] = useState<PlayerFromDB[]>([]);
+
+  // Ensures that we start at the top of the page when the route changes
+  // instead of staying at the same scroll position
+  useStartPageAtTop();
 
   const reloadPlayers = () => {
     fetchPlayers()

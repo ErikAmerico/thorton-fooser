@@ -14,6 +14,7 @@ export default function SevenTeamBracket({
   matchResults,
   onChange,
   setIsTourneyFinished,
+  fireConfetti,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -439,7 +440,7 @@ export default function SevenTeamBracket({
       {/* Bottom row matches */}
       <div className="match-row bottom-row">
         {/* Losers Round 1 */}
-        <div className="match-cell lower-match-col2 upper-line">
+        <div className="match-cell lower-match-col3 upper-line">
           <input
             className="team-input"
             placeholder="Loser of 2"
@@ -596,8 +597,8 @@ export default function SevenTeamBracket({
           currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
         }
       />
-      {!needsReset && grandWinner && <Confetti />}
-      {resetWinner && <Confetti />}
+      {fireConfetti && !needsReset && grandWinner && <Confetti />}
+      {fireConfetti && resetWinner && <Confetti />}
     </div>
   );
 }
