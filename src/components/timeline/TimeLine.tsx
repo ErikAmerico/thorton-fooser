@@ -122,8 +122,6 @@ const TimeLine = () => {
       </div>
       <Modal
         className="custom-modal"
-        key={selected?.date}
-        destroyOnHidden
         centered
         open={isOpen}
         onOk={closeModal}
@@ -134,7 +132,6 @@ const TimeLine = () => {
         closable={false}
         cancelButtonProps={{ style: { display: "none" } }}
       >
-        {!selected && <Spin />}
         {selected?.photo || <p>No photo available</p>}
       </Modal>
     </div>
