@@ -440,7 +440,7 @@ export default function SevenTeamBracket({
       {/* Bottom row matches */}
       <div className="match-row bottom-row">
         {/* Losers Round 1 */}
-        <div className="match-cell lower-match-col2 upper-line">
+        <div className="match-cell lower-match-col3 upper-line">
           <input
             className="team-input"
             placeholder="Loser of 2"
