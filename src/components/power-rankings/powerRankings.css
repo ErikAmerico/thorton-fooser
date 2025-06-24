@@ -64,16 +64,26 @@
   font-size: 15px;
 }
 
+.trophy-table-cell {
+  padding: 0px 0px;
+  /* white-space: nowrap; */
+}
+
+.trophy-image-power {
+  width: 16px;
+  /* margin-right: 4px; */
+}
+
 .power-table > thead > tr > th:nth-child(1),
 .power-table > tbody > tr > td:nth-child(1),
 .power-table > thead > tr > th:nth-child(3),
 .power-table > tbody > tr > td:nth-child(3) {
-  width: 45%;
+  width: 25%;
 }
 
 .power-table > thead > tr > th:nth-child(2),
 .power-table > tbody > tr > td:nth-child(2) {
-  width: 10%;
+  width: 25%;
 }
 
 .power-table-thead > tr > th {
