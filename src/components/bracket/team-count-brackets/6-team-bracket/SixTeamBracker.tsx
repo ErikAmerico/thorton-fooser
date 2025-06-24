@@ -168,11 +168,13 @@ export default function SixTeamBracket({
               className="team-input"
               value={renderTeamName(team4)}
               readOnly
+              title="4 Seed"
             />
             <input
               className="team-input"
               value={renderTeamName(team5)}
               readOnly
+              title="5 Seed"
             />
             <span className="match-number">
               Match 1 <TrophyFilled onClick={() => showModal(1)} />
@@ -184,11 +186,13 @@ export default function SixTeamBracket({
               className="team-input"
               value={renderTeamName(team3)}
               readOnly
+              title="3 Seed"
             />
             <input
               className="team-input"
               value={renderTeamName(team6)}
               readOnly
+              title="6 Seed"
             />
             <span className="match-number">
               Match 2 <TrophyFilled onClick={() => showModal(2)} />
@@ -203,12 +207,18 @@ export default function SixTeamBracket({
               className="team-input"
               value={renderTeamName(team1)}
               readOnly
+              title="1 Seed"
             />
             <input
               className="team-input"
               placeholder="Winner of 1"
               value={renderTeamName(matchResults[1].winner)}
               readOnly
+              title={
+                renderTeamName(matchResults[1].winner)
+                  ? "Winner of 1"
+                  : undefined
+              }
             />
             <span className="match-number">
               Match 3 <TrophyFilled onClick={() => showModal(3)} />
@@ -220,12 +230,18 @@ export default function SixTeamBracket({
               className="team-input"
               value={renderTeamName(team2)}
               readOnly
+              title="2 Seed"
             />
             <input
               className="team-input"
               placeholder="Winner of 2"
               value={renderTeamName(matchResults[2].winner)}
               readOnly
+              title={
+                renderTeamName(matchResults[2].winner)
+                  ? "Winner of 2"
+                  : undefined
+              }
             />
             <span className="match-number">
               Match 4 <TrophyFilled onClick={() => showModal(4)} />
@@ -239,12 +255,18 @@ export default function SixTeamBracket({
             placeholder="Winner of 3"
             value={renderTeamName(matchResults[3].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[3].winner) ? "Winner of 3" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of 4"
             value={renderTeamName(matchResults[4].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[4].winner) ? "Winner of 4" : undefined
+            }
           />
           <span className="match-number">
             Match 8 <TrophyFilled onClick={() => showModal(8)} />
@@ -257,12 +279,20 @@ export default function SixTeamBracket({
             placeholder="Winner of 8"
             value={renderTeamName(matchResults[8].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[8].winner) ? "Winner of 8" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of losers"
             value={renderTeamName(matchResults[9].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[9].winner)
+                ? "Winner of Losers"
+                : undefined
+            }
           />
           <span className="match-number">
             Match 10 <TrophyFilled onClick={() => showModal(10)} />
@@ -285,12 +315,22 @@ export default function SixTeamBracket({
                 value={renderTeamName(matchResults[10].winner)}
                 placeholder="Winner of 10"
                 readOnly
+                title={
+                  renderTeamName(matchResults[10].winner)
+                    ? "Winner of 10"
+                    : undefined
+                }
               />
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[10].loser)}
                 placeholder="Loser of 10 (if necessary)"
                 readOnly
+                title={
+                  renderTeamName(matchResults[10].loser)
+                    ? "Loser of 10"
+                    : undefined
+                }
               />
               <span className="match-number">
                 Match 11 <TrophyFilled onClick={() => showModal(11)} />
@@ -332,12 +372,18 @@ export default function SixTeamBracket({
               placeholder="Loser of 4"
               value={renderTeamName(matchResults[4].loser)}
               readOnly
+              title={
+                renderTeamName(matchResults[4].loser) ? "loser of 4" : undefined
+              }
             />
             <input
               className="team-input"
               placeholder="Loser of 1"
               value={renderTeamName(matchResults[1].loser)}
               readOnly
+              title={
+                renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
+              }
             />
             <span className="match-number">
               Match 6 <TrophyFilled onClick={() => showModal(6)} />
@@ -350,12 +396,18 @@ export default function SixTeamBracket({
               placeholder="Loser of 3"
               value={renderTeamName(matchResults[3].loser)}
               readOnly
+              title={
+                renderTeamName(matchResults[3].loser) ? "loser of 3" : undefined
+              }
             />
             <input
               className="team-input"
               placeholder="Loser of 2"
               value={renderTeamName(matchResults[2].loser)}
               readOnly
+              title={
+                renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
+              }
             />
             <span className="match-number">
               Match 5 <TrophyFilled onClick={() => showModal(5)} />
@@ -370,12 +422,18 @@ export default function SixTeamBracket({
             placeholder="Winner of 6"
             value={renderTeamName(matchResults[6].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[6].winner) ? "Winner of 6" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of 5"
             value={renderTeamName(matchResults[5].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[5].winner) ? "Winner of 5" : undefined
+            }
           />
           <span className="match-number">
             Match 7 <TrophyFilled onClick={() => showModal(7)} />
@@ -388,12 +446,18 @@ export default function SixTeamBracket({
             placeholder="Loser of 8"
             value={renderTeamName(matchResults[8].loser)}
             readOnly
+            title={
+              renderTeamName(matchResults[8].loser) ? "loser of 8" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of 7"
             value={renderTeamName(matchResults[7].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[7].winner) ? "Winner of 7" : undefined
+            }
           />
           <span className="match-number">
             Match 9 <TrophyFilled onClick={() => showModal(9)} />

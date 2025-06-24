@@ -36,11 +36,11 @@ export default function FourTeamBracket({
     switch (matchNum) {
       case 1:
         A = team1;
-        B = team2;
+        B = team4;
         break;
       case 2:
-        A = team3;
-        B = team4;
+        A = team2;
+        B = team3;
         break;
       case 3:
         if (!matchResults[1].loser || !matchResults[2].loser) {
@@ -139,12 +139,15 @@ export default function FourTeamBracket({
               className="team-input"
               value={renderTeamName(team1)}
               readOnly
+              title="1 Seed"
             />
             <input
               className="team-input"
-              value={renderTeamName(team2)}
+              value={renderTeamName(team4)}
               readOnly
+              title="4 Seed"
             />
+
             <span className="match-number">
               Match 1 <TrophyFilled onClick={() => showModal(1)} />{" "}
             </span>
@@ -152,14 +155,17 @@ export default function FourTeamBracket({
           <div className="match-cell upper-line">
             <input
               className="team-input"
-              value={renderTeamName(team3)}
+              value={renderTeamName(team2)}
               readOnly
+              title="2 Seed"
             />
             <input
               className="team-input"
-              value={renderTeamName(team4)}
+              value={renderTeamName(team3)}
               readOnly
+              title="3 Seed"
             />
+
             <span className="match-number">
               Match 2 <TrophyFilled onClick={() => showModal(2)} />
             </span>
@@ -173,12 +179,18 @@ export default function FourTeamBracket({
             placeholder="Winner of 1"
             value={renderTeamName(matchResults[1].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[1].winner) ? "Winner of 1" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of 2"
             value={renderTeamName(matchResults[2].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[2].winner) ? "Winner of 2" : undefined
+            }
           />
           <span className="match-number">
             Match 4 <TrophyFilled onClick={() => showModal(4)} />
@@ -192,12 +204,18 @@ export default function FourTeamBracket({
             placeholder="Winner of 4"
             value={renderTeamName(matchResults[4].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[4].winner) ? "Winner of 4" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of Losers"
             value={renderTeamName(matchResults[5].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[5].winner) ? "Winner of 5" : undefined
+            }
           />
           <span className="match-number">
             Match 6 <TrophyFilled onClick={() => showModal(6)} />
@@ -220,12 +238,22 @@ export default function FourTeamBracket({
                 value={renderTeamName(matchResults[6].winner)}
                 placeholder="winner of 6"
                 readOnly
+                title={
+                  renderTeamName(matchResults[6].winner)
+                    ? "Winner of 6"
+                    : undefined
+                }
               />
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[6].loser)}
                 placeholder="loser of 6 (if necessary)"
                 readOnly
+                title={
+                  renderTeamName(matchResults[6].loser)
+                    ? "loser of 6"
+                    : undefined
+                }
               />
               <span className="match-number">
                 Match 7 <TrophyFilled onClick={() => showModal(7)} />
@@ -265,12 +293,18 @@ export default function FourTeamBracket({
             placeholder="Loser of 1"
             value={renderTeamName(matchResults[1].loser)}
             readOnly
+            title={
+              renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Loser of 2"
             value={renderTeamName(matchResults[2].loser)}
             readOnly
+            title={
+              renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
+            }
           />
           <span className="match-number">
             Match 3 <TrophyFilled onClick={() => showModal(3)} />
@@ -284,12 +318,18 @@ export default function FourTeamBracket({
             placeholder="Loser of 4"
             value={renderTeamName(matchResults[4].loser)}
             readOnly
+            title={
+              renderTeamName(matchResults[4].loser) ? "loser of 4" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Winner of 3"
             value={renderTeamName(matchResults[3].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[3].winner) ? "Winner of 3" : undefined
+            }
           />
           <span className="match-number">
             Match 5 <TrophyFilled onClick={() => showModal(5)} />

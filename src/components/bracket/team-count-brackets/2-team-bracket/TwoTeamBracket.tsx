@@ -107,11 +107,13 @@ export default function TwoTeamBracket({
               className="team-input"
               value={renderTeamName(team1)}
               readOnly
+              title="1 Seed"
             />
             <input
               className="team-input"
               value={renderTeamName(team2)}
               readOnly
+              title="2 Seed"
             />
             <span className="match-number">
               Match 1 <TrophyFilled onClick={() => showModal(1)} />
@@ -126,12 +128,18 @@ export default function TwoTeamBracket({
             placeholder=""
             value={renderTeamName(matchResults[1].winner)}
             readOnly
+            title={
+              renderTeamName(matchResults[1].winner) ? "Winner of 1" : undefined
+            }
           />
           <input
             className="team-input"
             placeholder="Loser of 1"
             value={renderTeamName(matchResults[1].loser)}
             readOnly
+            title={
+              renderTeamName(matchResults[1].loser) ? "Loser of 1" : undefined
+            }
           />
           <span className="match-number">
             Match 2 <TrophyFilled onClick={() => showModal(2)} />
@@ -154,12 +162,22 @@ export default function TwoTeamBracket({
                 value={renderTeamName(matchResults[2].winner)}
                 placeholder="winner of 2"
                 readOnly
+                title={
+                  renderTeamName(matchResults[2].winner)
+                    ? "Winner of 2"
+                    : undefined
+                }
               />
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[2].loser)}
                 placeholder="loser of 2 (if necessary)"
                 readOnly
+                title={
+                  renderTeamName(matchResults[2].loser)
+                    ? "loser of 2"
+                    : undefined
+                }
               />
               <span className="match-number">
                 Match 3 <TrophyFilled onClick={() => showModal(3)} />
