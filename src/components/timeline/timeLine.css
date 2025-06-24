@@ -79,6 +79,15 @@
   height: 24px;
 }
 
+.custom-modal .ant-modal-content {
+  background-color: black;
+  box-shadow: 0px 0px 10px #c09700;
+}
+.custom-modal .ant-modal-body {
+  padding: 0;
+  text-align: center;
+}
+
 @media (max-width: 727px) {
   .timeline-page {
     background: black;
