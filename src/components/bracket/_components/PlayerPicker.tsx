@@ -1,4 +1,4 @@
-import { Checkbox, Button } from "antd";
+import { Checkbox, Button, Spin } from "antd";
 import { PlayerFromDB, PlayerPickerProps } from "../../../types";
 import { useState } from "react";
 import AddPlayerModal from "./AddPlayerModal";
@@ -15,12 +15,17 @@ export default function PlayerPicker({
   if (players.length === 0) {
     return (
       <div
+        className="bracket-scroll-wrapper"
         style={{
-          backgroundColor: "#1d1d1d",
-          height: "100%",
-          width: "100%",
+          backgroundColor: "black",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-      ></div>
+      >
+        <Spin />
+      </div>
     );
   }
 
