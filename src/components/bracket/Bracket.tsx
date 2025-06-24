@@ -87,9 +87,9 @@ export default function Bracket() {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
-    // const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
-    //used to control building teams - for testing
-    const plyrs: PlayerFromDB[] = selected;
+    const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
+    // //used to control building teams - for testing
+    // const plyrs: PlayerFromDB[] = selected;
 
     const pairs: Team[] = [];
     for (let i = 0; i < plyrs.length; i += 2) {
