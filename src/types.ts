@@ -4,6 +4,7 @@ export interface PlayerFromDB {
   id: string;
   name: string;
   score: number;
+  championships: number;
 }
 
 export type Team = [PlayerFromDB, PlayerFromDB];
