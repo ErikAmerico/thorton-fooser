@@ -140,3 +140,14 @@
     font-weight: bold;
   }
 }
+
+@media (max-width: 400px) {
+  .champions-table td:nth-child(1) {
+    width: 50%;
+    text-align: center;
+  }
+  .champions-table td:nth-child(3) {
+    width: 40%;
+    text-align: center;
+  }
+}
