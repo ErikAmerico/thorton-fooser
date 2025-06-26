@@ -16,6 +16,15 @@ export default function History() {
   const { history } = useOutletContext<OutletContext>();
   const [idx, setIdx] = useState(0);
   const [showLookingForModal, setShowLookingForModal] = useState(false);
+  const [showHm, setShowHm] = useState(false);
+
+  //I am adding results to tournament history for tournaments we don't have the full data on.
+  //We know the winner. So I am making it a 1 match tournament with a null loser and the known winner.
+  //I do not want to display that on the History page. - Well, We can't display it on the history page
+  // RenderBracket would throw an error.
+  //so filter out the tournaments where the results array.length is 1
+  const validHistory =
+    history?.filter((tournament) => tournament.results.length > 1) ?? [];
 
   const openModal = () => {
     setShowLookingForModal(true);
@@ -26,6 +35,13 @@ export default function History() {
       setIdx(0);
     }
   }, [history]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowHm(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!history) {
     return (
@@ -39,15 +55,35 @@ export default function History() {
           justifyContent: "center",
         }}
       >
-        <Spin />
+        <Spin style={{ margin: "auto" }} />
+        {showHm && <h2 style={{ color: "gray", marginLeft: "10px" }}>hm.</h2>}
       </div>
     );
   }
 
-  const current = history[idx];
+  if (!validHistory.length) {
+    return (
+      <div
+        className="bracket-scroll-wrapper"
+        style={{
+          backgroundColor: "black",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Spin style={{}} />
+        {showHm && <h2 style={{ color: "gray", marginLeft: "10px" }}>hm.</h2>}
+      </div>
+    );
+  }
+
+  const currentIdx = Math.min(idx, validHistory.length - 1);
+  const current = validHistory[currentIdx];
 
   const prev = () => setIdx((i) => Math.max(0, i - 1));
-  const next = () => setIdx((i) => Math.min(history.length - 1, i + 1));
+  const next = () => setIdx((i) => Math.min(validHistory.length - 1, i + 1));
 
   return (
     <div className="bracket-scroll-wrapper">
@@ -64,7 +100,7 @@ export default function History() {
         <Button
           icon={<RightOutlined />}
           onClick={next}
-          disabled={idx === history.length - 1}
+          disabled={currentIdx === validHistory.length - 1}
         />
         <InfoCircleOutlined
           onClick={openModal}
