@@ -31,7 +31,8 @@ export default function Bracket() {
       return s ? JSON.parse(s) : false;
     }
   );
-  const { players, reloadPlayers } = useOutletContext<OutletContext>();
+  const { players, reloadPlayers, reloadTournamentHistory } =
+    useOutletContext<OutletContext>();
 
   useEffect(() => {
     // console.log(isTourneyFinished);
@@ -134,6 +135,7 @@ export default function Bracket() {
       //So we can't submit the results repeatedly
       setHasSubmittedResults(true);
       reloadPlayers();
+      reloadTournamentHistory();
     } catch (error: any) {
       message.error("Failed to submit: " + error.message);
     }

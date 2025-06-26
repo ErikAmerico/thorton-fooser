@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchTournamentHistory } from "../../api/matches";
-import { HistoryTournament } from "../../types";
+import { OutletContext } from "../../types";
+import { useOutletContext } from "react-router-dom";
 import { RenderBracket } from "../bracket/_components/BracketRenderer";
 import { Spin, Alert, Button, Modal } from "antd";
 
@@ -13,8 +13,7 @@ import {
 import "./history.css";
 
 export default function History() {
-  const [history, setHistory] = useState<HistoryTournament[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { history } = useOutletContext<OutletContext>();
   const [idx, setIdx] = useState(0);
   const [showLookingForModal, setShowLookingForModal] = useState(false);
 
@@ -23,17 +22,11 @@ export default function History() {
   };
 
   useEffect(() => {
-    fetchTournamentHistory()
-      .then((data) => {
-        setHistory(data);
-        setIdx(0);
-      })
-      .catch((err) => setError(err.message));
-  }, []);
+    if (history && history.length > 0) {
+      setIdx(0);
+    }
+  }, [history]);
 
-  if (error) {
-    return <Alert type="error" message={error} />;
-  }
   if (!history) {
     return (
       <div
