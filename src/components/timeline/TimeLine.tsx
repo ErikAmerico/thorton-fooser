@@ -1,7 +1,9 @@
 import "./timeLine.css";
 import { TrophyFilled } from "@ant-design/icons";
-import { Modal, message, Spin } from "antd";
-import { useState } from "react";
+import { Modal, Spin, message } from "antd";
+import { useState, useEffect } from "react";
+import { OutletContext, HistoryTournament } from "../../types";
+import { useOutletContext } from "react-router-dom";
 
 interface Champion {
   name: string;
@@ -12,69 +14,84 @@ interface Champion {
 const TimeLine = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<Champion | null>(null);
+  const { history } = useOutletContext<OutletContext>();
+  const [showHm, setShowHm] = useState(false);
+  const [validSlugs, setValidSlugs] = useState<Set<string>>(new Set());
 
-  const items = [
-    { name: "TBD", date: "TBD" },
-    {
-      name: "Rachel & Ofir",
-      date: "6/7/2025",
-      photo: (
-        <img src="assets/ofirRachelPNG.png" alt="" style={{ width: "300px" }} />
-      ),
-    },
-    {
-      name: "Ofir & Erik",
-      date: "6/21/2024",
-      photo: (
-        <img src="assets/ofir&erik.png" alt="" style={{ width: "300px" }} />
-      ),
-    },
-    {
-      name: "Brittany & Michelle",
-      date: "5/18/2024",
-      photo: (
-        <img
-          src="assets/brittany&michelle.png"
-          alt=""
-          style={{ width: "300px" }}
-        />
-      ),
-    },
-    {
-      name: "Brittany & Erik",
-      date: "4/20/2024",
-      photo: (
-        <img src="assets/erik_britt.png" alt="" style={{ width: "300px" }} />
-      ),
-    },
-    {
-      name: "Brittany & Zach",
-      date: "3/23/2024",
-      photo: (
-        <img src="assets/britt&zach.png" alt="" style={{ width: "300px" }} />
-      ),
-    },
-    {
-      name: "Ofir & Michelle",
-      date: "2/17/2024",
-    },
-    {
-      name: "Erik & Anna",
-      date: "1/13/2024",
+  const getChampions = (results: HistoryTournament["results"]) => {
+    for (let i = results.length - 1; i >= 0; i--) {
+      const { winner } = results[i];
+      if (winner) {
+        return `${winner[0].name} & ${winner[1].name}`;
+      }
+    }
+    return "";
+  };
 
-      photo: <img src="assets/1-13.png" alt="" style={{ width: "300px" }} />,
-    },
-    { name: "Ofir & Michelle", date: "12/10/2023" },
-    {
-      name: "Ofir & Michelle",
-      date: "11/4/2023",
-      photo: <img src="assets/11-4.png" alt="" style={{ width: "300px" }} />,
-    },
-    {
-      name: "Ofir & Michelle",
-      date: "10/14/2023",
-    },
-  ];
+  const makeItems = (historyArr: HistoryTournament[] | null): Champion[] => {
+    if (!historyArr) return [];
+    return historyArr
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      .map((tourn) => {
+        const tourneyDate = new Date(tourn.createdAt);
+        const month = tourneyDate.getUTCMonth() + 1;
+        const day = tourneyDate.getUTCDate();
+        const year = tourneyDate.getUTCFullYear();
+
+        const date = `${month}/${day}/${year}`;
+
+        const slug = `${month}-${day}-${year}`;
+
+        const photo = validSlugs.has(slug) ? (
+          <img
+            src={`/assets/${slug}.png`}
+            alt={`Champions on ${date}`}
+            style={{ width: "300px" }}
+          />
+        ) : undefined;
+
+        const name = getChampions(tourn.results) || "TBD";
+
+        return { name, date, photo };
+      });
+  };
+
+  useEffect(() => {
+    if (!history) return;
+    history.forEach((tourn) => {
+      const tourneyDate = new Date(tourn.createdAt);
+      const slug = `${
+        tourneyDate.getUTCMonth() + 1
+      }-${tourneyDate.getUTCDate()}-${tourneyDate.getUTCFullYear()}`;
+      const img = new Image();
+      img.src = `/assets/${slug}.png`;
+      img.onload = () => {
+        setValidSlugs((prev) => new Set(prev).add(slug));
+      };
+    });
+  }, [history]);
+
+  const items = makeItems(history);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowHm(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (history === null || items.length === 0) {
+    return (
+      <div className="timeline-page">
+        <Spin style={{ margin: "auto", display: "block" }} />
+        {showHm && <h2 style={{ color: "gray" }}>hm.</h2>}
+      </div>
+    );
+  }
 
   const openModal = (item: Champion) => {
     if (!item.photo) {
@@ -98,8 +115,8 @@ const TimeLine = () => {
           <h2 className="champ-title">Past Champions</h2>
           <table className="champions-table">
             <tbody>
-              {items.map((item) => (
-                <tr key={item.date}>
+              {items.map((item, index) => (
+                <tr key={index}>
                   <td>
                     <span className="champ-glass">{item.name}</span>
                   </td>

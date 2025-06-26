@@ -31,7 +31,8 @@ export default function Bracket() {
       return s ? JSON.parse(s) : false;
     }
   );
-  const { players, reloadPlayers } = useOutletContext<OutletContext>();
+  const { players, reloadPlayers, reloadTournamentHistory } =
+    useOutletContext<OutletContext>();
 
   useEffect(() => {
     // console.log(isTourneyFinished);
@@ -87,9 +88,9 @@ export default function Bracket() {
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
-    const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
-    // //used to control building teams - for testing
-    // const plyrs: PlayerFromDB[] = selected;
+    // const plyrs: PlayerFromDB[] = shufflePlayerFromDB([...selected]);
+    //used to control building teams - for testing
+    const plyrs: PlayerFromDB[] = selected;
 
     const pairs: Team[] = [];
     for (let i = 0; i < plyrs.length; i += 2) {
@@ -134,6 +135,7 @@ export default function Bracket() {
       //So we can't submit the results repeatedly
       setHasSubmittedResults(true);
       reloadPlayers();
+      reloadTournamentHistory();
     } catch (error: any) {
       message.error("Failed to submit: " + error.message);
     }

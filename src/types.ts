@@ -100,6 +100,8 @@ export interface AddPlayerModalProps {
 export interface OutletContext {
   players: PlayerFromDB[];
   reloadPlayers: () => void;
+  history: HistoryTournament[] | null;
+  reloadTournamentHistory: () => void;
 }
 
 export interface Tournament {
