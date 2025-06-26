@@ -13,11 +13,11 @@ export function calculateScores(
     if (!match.winner || !match.loser) return;
 
     match.winner.forEach((player) => {
-      winnerMap[player.id] = (winnerMap[player.id] || 0) + 0;
+      winnerMap[player.id] = (winnerMap[player.id] || 0) + 1;
     });
 
     match.loser.forEach((player) => {
-      loserMap[player.id] = (loserMap[player.id] || 0) + 0;
+      loserMap[player.id] = (loserMap[player.id] || 0) + 0.25;
     });
   });
 
@@ -31,7 +31,7 @@ export function calculateScores(
   allIds.forEach((id) => {
     const wins = winnerMap[id] || 0;
     const losses = loserMap[id] || 0;
-    finalScores[id] = wins - losses + 0;
+    finalScores[id] = wins - losses + 3;
   });
 
   return finalScores;
