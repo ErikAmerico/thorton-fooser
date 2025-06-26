@@ -31,32 +31,6 @@ function App() {
     reloadPlayers();
   }, []);
 
-  useEffect(() => {
-    function scheduleNightlyReload(hour = 3, minute = 0) {
-      console.log("3 am schedule?");
-      const now = new Date();
-      const next = new Date();
-      next.setHours(hour, minute, 0, 0);
-      if (next <= now) next.setDate(next.getDate() + 1);
-      const ms = next.getTime() - now.getTime();
-      setTimeout(() => {
-        window.location.replace(
-          `${window.location.origin}${window.location.pathname}?t=${Date.now()}`
-        );
-        setInterval(
-          () =>
-            window.location.replace(
-              `${window.location.origin}${
-                window.location.pathname
-              }?t=${Date.now()}`
-            ),
-          24 * 60 * 60 * 1000
-        );
-      }, ms);
-    }
-    scheduleNightlyReload(3, 0);
-  }, []);
-
   return (
     <div className="app">
       <Header />
