@@ -2,8 +2,8 @@ import { useRef, useState, useLayoutEffect } from "react";
 
 interface TrophyCellProps {
   count: number;
-  gap?: number; // px between each icon
-  maxIconWidth?: number; // your default 16px
+  gap?: number;
+  maxIconWidth?: number;
 }
 
 export function TrophyCell({
