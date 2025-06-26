@@ -16,7 +16,7 @@ const HomePage = () => {
           <h3 className="champs-teams">Rachel &amp; Ofir</h3>
           <div
             className="champs-image"
-            style={{ backgroundImage: `url(/assets/ofirRachelPNG.png)` }}
+            style={{ backgroundImage: `url(/assets/6-7-2025.png)` }}
           />
         </div>
       </section>
