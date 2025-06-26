@@ -121,11 +121,13 @@ const TimeLine = () => {
                     <span className="champ-glass">{item.name}</span>
                   </td>
                   <td>
-                    <span className="trophy-wrapper">
-                      <TrophyFilled
-                        onClick={() => openModal(item)}
-                        className="champ-trophy"
-                      />
+                    <span
+                      className={`trophy-wrapper ${
+                        item.photo ? "attention" : ""
+                      }`}
+                      onClick={() => openModal(item)}
+                    >
+                      <TrophyFilled className="champ-trophy" />
                     </span>
                   </td>
                   <td>
