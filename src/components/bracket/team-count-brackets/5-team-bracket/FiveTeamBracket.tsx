@@ -156,12 +156,16 @@ export default function FiveTeamBracket({
             className="team-input"
             value={renderTeamName(team4)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title="4 Seed"
           />
           <input
             className="team-input"
             value={renderTeamName(team5)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title="5 Seed"
           />
           <span className="match-number">
@@ -176,6 +180,8 @@ export default function FiveTeamBracket({
               className="team-input"
               value={renderTeamName(team1)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="1 Seed"
             />
             <input
@@ -183,6 +189,8 @@ export default function FiveTeamBracket({
               placeholder="Winner of 1"
               value={renderTeamName(matchResults[1].winner)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title={
                 renderTeamName(matchResults[1].winner)
                   ? "Winner of 1"
@@ -199,12 +207,16 @@ export default function FiveTeamBracket({
               className="team-input"
               value={renderTeamName(team2)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="2 Seed"
             />
             <input
               className="team-input"
               value={renderTeamName(team3)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="3 Seed"
             />
             <span className="match-number">
@@ -219,6 +231,8 @@ export default function FiveTeamBracket({
             placeholder="Winner of 3"
             value={renderTeamName(matchResults[3].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[3].winner) ? "Winner of 3" : undefined
             }
@@ -228,6 +242,8 @@ export default function FiveTeamBracket({
             placeholder="Winner of 2"
             value={renderTeamName(matchResults[2].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[2].winner) ? "Winner of 2" : undefined
             }
@@ -243,6 +259,8 @@ export default function FiveTeamBracket({
             placeholder="Winner of 6"
             value={renderTeamName(matchResults[6].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[6].winner) ? "Winner of 6" : undefined
             }
@@ -252,6 +270,8 @@ export default function FiveTeamBracket({
             placeholder="Winner of losers"
             value={renderTeamName(matchResults[7].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[7].winner)
                 ? "Winner of Losers"
@@ -279,6 +299,8 @@ export default function FiveTeamBracket({
                 value={renderTeamName(matchResults[8].winner)}
                 placeholder="Winner of 8"
                 readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[8].winner)
                     ? "Winner of 8"
@@ -290,6 +312,8 @@ export default function FiveTeamBracket({
                 value={renderTeamName(matchResults[8].loser)}
                 placeholder="Loser of 8 (if necessary)"
                 readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[8].loser)
                     ? "loser of 8"
@@ -335,6 +359,8 @@ export default function FiveTeamBracket({
             placeholder="Loser of 2"
             value={renderTeamName(matchResults[2].loser)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
             }
@@ -344,6 +370,8 @@ export default function FiveTeamBracket({
             placeholder="Loser of 1"
             value={renderTeamName(matchResults[1].loser)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
             }
@@ -360,6 +388,8 @@ export default function FiveTeamBracket({
             placeholder="Loser of 3"
             value={renderTeamName(matchResults[3].loser)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[3].loser) ? "loser of 3" : undefined
             }
@@ -369,6 +399,8 @@ export default function FiveTeamBracket({
             placeholder="Winner of 4"
             value={renderTeamName(matchResults[4].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[4].winner) ? "Winner of 4" : undefined
             }
@@ -384,6 +416,8 @@ export default function FiveTeamBracket({
             placeholder="Loser of 6"
             value={renderTeamName(matchResults[6].loser)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[6].loser) ? "loser of 6" : undefined
             }
@@ -393,6 +427,8 @@ export default function FiveTeamBracket({
             placeholder="Winner of 5"
             value={renderTeamName(matchResults[5].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[5].winner) ? "Winner of 5" : undefined
             }

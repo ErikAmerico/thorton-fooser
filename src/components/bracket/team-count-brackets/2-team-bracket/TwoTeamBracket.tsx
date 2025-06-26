@@ -107,12 +107,16 @@ export default function TwoTeamBracket({
               className="team-input"
               value={renderTeamName(team1)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="1 Seed"
             />
             <input
               className="team-input"
               value={renderTeamName(team2)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="2 Seed"
             />
             <span className="match-number">
@@ -128,6 +132,8 @@ export default function TwoTeamBracket({
             placeholder=""
             value={renderTeamName(matchResults[1].winner)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[1].winner) ? "Winner of 1" : undefined
             }
@@ -137,6 +143,8 @@ export default function TwoTeamBracket({
             placeholder="Loser of 1"
             value={renderTeamName(matchResults[1].loser)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[1].loser) ? "Loser of 1" : undefined
             }
@@ -162,6 +170,8 @@ export default function TwoTeamBracket({
                 value={renderTeamName(matchResults[2].winner)}
                 placeholder="winner of 2"
                 readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[2].winner)
                     ? "Winner of 2"
@@ -173,6 +183,8 @@ export default function TwoTeamBracket({
                 value={renderTeamName(matchResults[2].loser)}
                 placeholder="loser of 2 (if necessary)"
                 readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[2].loser)
                     ? "loser of 2"

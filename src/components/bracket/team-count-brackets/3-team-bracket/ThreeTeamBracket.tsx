@@ -123,12 +123,16 @@ export default function ThreeTeamBracket({
               className="team-input"
               value={renderTeamName(team2)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="2 Seed"
             />
             <input
               className="team-input"
               value={renderTeamName(team3)}
               readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
               title="3 Seed"
             />
             <span className="match-number">
@@ -143,6 +147,8 @@ export default function ThreeTeamBracket({
             className="team-input"
             value={renderTeamName(team1)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title="1 Seed"
           />
           <input
@@ -150,6 +156,8 @@ export default function ThreeTeamBracket({
             value={renderTeamName(matchResults[1].winner)}
             placeholder="Winner of 1"
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[1].winner) ? "Winner of 1" : undefined
             }
@@ -167,6 +175,8 @@ export default function ThreeTeamBracket({
             value={renderTeamName(matchResults[2].winner)}
             placeholder="Winner of 2"
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[2].winner) ? "Winner of 2" : undefined
             }
@@ -176,6 +186,8 @@ export default function ThreeTeamBracket({
             value={renderTeamName(matchResults[3].winner)}
             placeholder="Winner of Losers"
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[3].winner)
                 ? "Winner of Losers"
@@ -203,6 +215,8 @@ export default function ThreeTeamBracket({
                 value={renderTeamName(matchResults[4].winner)}
                 placeholder="winner of 4"
                 readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[4].winner)
                     ? "Winner of 4"
@@ -214,6 +228,8 @@ export default function ThreeTeamBracket({
                 value={renderTeamName(matchResults[4].loser)}
                 placeholder="loser of 4 (if necessary)"
                 readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[4].loser)
                     ? "loser of 4"
@@ -226,7 +242,7 @@ export default function ThreeTeamBracket({
             </div>
             {resetWinner && (
               <div className="match-row final-row">
-                <div className="match-cell lower-match-col2 no-dash">
+                <div className="match-cell lower-match-col no-dash">
                   <div className="champion-text">
                     {renderTeamName(resetWinner)} won!
                   </div>
@@ -260,6 +276,8 @@ export default function ThreeTeamBracket({
             placeholder="Loser of 2"
             value={renderTeamName(matchResults[2].loser)}
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
             }
@@ -269,6 +287,8 @@ export default function ThreeTeamBracket({
             value={renderTeamName(matchResults[1].loser)}
             placeholder="Loser of 1"
             readOnly
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
             title={
               renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
             }
