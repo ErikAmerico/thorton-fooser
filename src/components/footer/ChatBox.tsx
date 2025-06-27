@@ -213,42 +213,27 @@ const ChatBox: React.FC<ChatBoxProps> = ({ open, onClose }) => {
         }
       }}
     >
-      {token ? (
-        <div className="messages-container">
-          {msgs.map((m, i) => {
-            const isMine = m.userId === userId;
-            return (
-              <div
-                key={i}
-                style={{ marginTop: "5px", marginBottom: "5px" }}
-                className={`
+      <div className="messages-container">
+        {msgs.map((m, i) => {
+          const isMine = m.userId === userId;
+          return (
+            <div
+              key={i}
+              style={{ marginTop: "5px", marginBottom: "5px" }}
+              className={`
                 chat-message
                 ${isMine ? "chat-message-outgoing" : "chat-message-incoming"}
             `}
-              >
-                <div className="chat-message-bubble">
-                  <span className="chat-message-author">{m.name}</span>
-                  <div className="chat-message-text">{m.text}</div>
-                </div>
+            >
+              <div className="chat-message-bubble">
+                <span className="chat-message-author">{m.name}</span>
+                <div className="chat-message-text">{m.text}</div>
               </div>
-            );
-          })}
-          <div ref={bottomRef} />
-        </div>
-      ) : (
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "1rem",
-            color: "#666",
-          }}
-        >
-          Please log in to continue.
-        </div>
-      )}
+            </div>
+          );
+        })}
+        <div ref={bottomRef} />
+      </div>
     </Drawer>
   );
 };
