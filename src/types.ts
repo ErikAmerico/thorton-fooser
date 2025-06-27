@@ -110,3 +110,15 @@ export interface Tournament {
   teams: Team;
   results: MatchResult;
 }
+
+export interface ChatBoxProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export interface Message {
+  userId: string;
+  name: string;
+  text: string;
+  ts: number;
+}
