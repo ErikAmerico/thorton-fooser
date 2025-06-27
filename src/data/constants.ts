@@ -9,6 +9,6 @@ export const initialState: StoredState = {
   matchResults: null,
 };
 
-// export const API = "http://localhost:3000"; //DEVELOPMENT
-// export const API = "http://10.0.0.151:3000";
-export const API = "https://thornton-fooser-api.onrender.com"; //PRODUCTION
+export const API = import.meta.env.VITE_API_BASE_URL;
+export const PUSHER_KEY = import.meta.env.VITE_PUSHER_KEY;
+export const PUSHER_CLUSTER = import.meta.env.VITE_PUSHER_CLUSTER;
