@@ -43,19 +43,21 @@ const ChatBox: React.FC<ChatBoxProps> = ({ open, onClose }) => {
   });
 
   useEffect(() => {
-    if (!token) return;
-
-    (async () => {
-      const res = await fetch(`${API}/chat/history`, {
+    if (open && token) {
+      fetch(`${API}/chat/history`, {
         headers: { Authorization: "Bearer " + token },
-      });
-      if (res.status === 401) {
-        logout();
-        return;
-      }
-      const hist: Message[] = await res.json();
-      setMsgs(hist);
-    })();
+      })
+        .then((r) => {
+          if (r.status === 401) throw new Error("no auth");
+          return r.json();
+        })
+        .then((hist: Message[]) => setMsgs(hist))
+        .catch(() => logout());
+    }
+  }, [open, token]);
+
+  useEffect(() => {
+    if (!open || !token) return;
 
     const p = new Pusher(PUSHER_KEY, {
       cluster: PUSHER_CLUSTER,
@@ -66,8 +68,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ open, onClose }) => {
     const channel = p.subscribe("presence-chat");
     channel.bind("message", (m: Message) => setMsgs((ms) => [...ms, m]));
 
-    return () => p.disconnect();
-  }, [token]);
+    return () => {
+      channel.unbind_all();
+      p.unsubscribe("presence-chat");
+      p.disconnect();
+    };
+  }, [open, token]);
 
   const logout = () => {
     localStorage.removeItem("chat_token");
