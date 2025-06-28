@@ -4,17 +4,21 @@
   align-items: center;
   padding: 10px 20px;
 
-  background: #ababab;
+  /* background: #ababab; */
   backdrop-filter: blur(1px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
   border-radius: 8px;
-  box-shadow: 0 1px 10px #c09700;
+  /* box-shadow: 0 1px 10px #c09700; */
   font-family: sans-serif;
   font-size: 1.5em;
   font-weight: 600;
   color: #000000;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+.nt-date {
+  color: #c09700;
 }
 /* 
 @media (max-width: 450px) {
