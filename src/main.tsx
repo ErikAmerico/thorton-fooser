@@ -11,21 +11,26 @@ import Documentary from "./components/documentary/Documentary";
 import Bracket from "./components/bracket/Bracket";
 import History from "./components/history/History";
 
-const root = ReactDOM.createRoot(document.getElementById("root")!);
-root.render(
-  <Router>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="bracket" element={<Bracket />} />
-        <Route path="rankings" element={<PowerRankings />} />
-        <Route path="documentary" element={<Documentary />} />
-        <Route path="champs" element={<TimeLine />} />
-        <Route path="history" element={<History />} />
-      </Route>
-    </Routes>
-  </Router>
-);
+const startApp = () => {
+  const root = ReactDOM.createRoot(document.getElementById("root")!);
+  root.render(
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<HomePage />} />
+          <Route path="bracket" element={<Bracket />} />
+          <Route path="rankings" element={<PowerRankings />} />
+          <Route path="documentary" element={<Documentary />} />
+          <Route path="champs" element={<TimeLine />} />
+          <Route path="history" element={<History />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+  document.body.classList.add("ready");
+};
+
+startApp();
 
 const updateSW = registerSW({
   onNeedRefresh() {
