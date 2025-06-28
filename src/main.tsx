@@ -40,6 +40,6 @@ const updateSW = registerSW({
     }, 5000);
   },
   onOfflineReady() {
-    message.success("App is installable as a PWA!");
+    message.success("App is installable!");
   },
 });
