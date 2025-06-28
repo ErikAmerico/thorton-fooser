@@ -20,14 +20,20 @@ export default defineConfig({
         theme_color: "black",
         icons: [
           {
-            src: "/192.png",
+            src: "/animate-trophy192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any maskable",
           },
           {
-            src: "/icon512.png",
+            src: "/animate-trophy512.png",
             sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable",
+          },
+          {
+            src: "/animate-trophy1024.png",
+            sizes: "1024x1024",
             type: "image/png",
             purpose: "any maskable",
           },
