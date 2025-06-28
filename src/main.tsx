@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { message } from "antd";
+import { registerSW } from "virtual:pwa-register";
 
 import HomePage from "./components/home-page/HomePage";
 import TimeLine from "./components/timeline/TimeLine";
@@ -24,3 +26,20 @@ root.render(
     </Routes>
   </Router>
 );
+
+// PWA update logic
+const updateSW = registerSW({
+  onNeedRefresh() {
+    message.info({
+      content: "New version available. Refreshing...",
+      duration: 5,
+    });
+
+    setTimeout(() => {
+      updateSW(true); // Force update
+    }, 5000);
+  },
+  onOfflineReady() {
+    message.success("App is installable as a PWA!");
+  },
+});
