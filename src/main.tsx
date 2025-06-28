@@ -11,21 +11,31 @@ import Documentary from "./components/documentary/Documentary";
 import Bracket from "./components/bracket/Bracket";
 import History from "./components/history/History";
 
-const root = ReactDOM.createRoot(document.getElementById("root")!);
-root.render(
-  <Router>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="bracket" element={<Bracket />} />
-        <Route path="rankings" element={<PowerRankings />} />
-        <Route path="documentary" element={<Documentary />} />
-        <Route path="champs" element={<TimeLine />} />
-        <Route path="history" element={<History />} />
-      </Route>
-    </Routes>
-  </Router>
-);
+const isPWA = window.matchMedia("(display-mode: standalone)").matches;
+
+const startApp = () => {
+  const root = ReactDOM.createRoot(document.getElementById("root")!);
+  root.render(
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<HomePage />} />
+          <Route path="bracket" element={<Bracket />} />
+          <Route path="rankings" element={<PowerRankings />} />
+          <Route path="documentary" element={<Documentary />} />
+          <Route path="champs" element={<TimeLine />} />
+          <Route path="history" element={<History />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+};
+
+if (isPWA) {
+  setTimeout(startApp, 1000);
+} else {
+  startApp();
+}
 
 const updateSW = registerSW({
   onNeedRefresh() {
