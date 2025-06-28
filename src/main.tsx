@@ -35,7 +35,7 @@ const updateSW = registerSW({
     }, 5000);
   },
   onOfflineReady() {
-    message.success("App is installable!");
+    console.log("app is installable");
   },
 });
 
