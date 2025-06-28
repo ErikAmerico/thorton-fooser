@@ -12,7 +12,7 @@ const HomePage = () => {
 
       <section className="champs">
         <div className="champs-content">
-          <h1 className="champs-title">Reigning Champzzz</h1>
+          <h1 className="champs-title">Reigning Champs</h1>
           <h3 className="champs-teams">Rachel &amp; Ofir</h3>
           <div
             className="champs-image"
