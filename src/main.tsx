@@ -27,19 +27,20 @@ root.render(
   </Router>
 );
 
-// PWA update logic
 const updateSW = registerSW({
   onNeedRefresh() {
-    message.info({
-      content: "New version available. Refreshing...",
-      duration: 5,
-    });
-
+    message.info("New version available. Refreshing in 5s...");
     setTimeout(() => {
-      updateSW(true); // Force update
+      location.reload();
     }, 5000);
   },
   onOfflineReady() {
     message.success("App is installable!");
   },
+});
+
+window.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    updateSW(); // manually check for update
+  }
 });
