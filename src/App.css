@@ -18,6 +18,20 @@ body,
   margin: 0;
 }
 
+body,
+#root {
+  background-color: black;
+}
+
+#root {
+  opacity: 0;
+  transition: opacity 0.4s ease-in;
+}
+
+body.ready #root {
+  opacity: 1;
+}
+
 .app {
   display: flex;
   flex-direction: column;
