@@ -20,13 +20,13 @@ export default defineConfig({
         theme_color: "black",
         icons: [
           {
-            src: "/assets/fooball-logo-192.png",
+            src: "/192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any maskable",
           },
           {
-            src: "/assets/fooball-logo-512.png",
+            src: "/icon512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",
