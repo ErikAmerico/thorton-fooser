@@ -7,7 +7,16 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      devOptions: {
+        enabled: true,
+      },
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       registerType: "autoUpdate",
+      injectManifest: {
+        swDest: "dist/sw.js",
+      },
       injectRegister: "auto",
       includeAssets: [
         "assets/fooball-logo-192.png",
@@ -18,6 +27,10 @@ export default defineConfig({
         short_name: "Fooser",
         description: "Your foosball rankings and brackets.",
         theme_color: "black",
+        background_color: "black",
+        start_url: "/",
+        display: "standalone",
+        orientation: "portrait",
         icons: [
           {
             src: "/animate-trophy192.png",
@@ -38,48 +51,6 @@ export default defineConfig({
             purpose: "any maskable",
           },
         ],
-      },
-      workbox: {
-        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
-        globPatterns: ["**/*.{js,css,html,svg}"],
-        cleanupOutdatedCaches: true,
-        globIgnores: ["sw.js", "workbox-*.js", "**/*?__WB_REVISION__=*"],
-        navigateFallback: "/index.html",
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) =>
-              url.origin === self.location.origin &&
-              url.pathname.startsWith("/"),
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "api-cache",
-              networkTimeoutSeconds: 5,
-              expiration: {
-                maxEntries: 500,
-                maxAgeSeconds: 60 * 60 * 24,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            urlPattern: ({ url, request }) =>
-              request.destination === "image" &&
-              !url.pathname.startsWith("/assets/"),
-            handler: "CacheFirst",
-            options: {
-              cacheName: "user-uploads",
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 7 * 24 * 60 * 60,
-              },
-            },
-          },
-        ],
-      },
-      devOptions: {
-        enabled: true,
       },
     }),
   ],
