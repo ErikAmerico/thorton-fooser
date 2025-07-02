@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { message } from "antd";
 import { registerSW } from "virtual:pwa-register";
 
 import HomePage from "./components/home-page/HomePage";
@@ -32,20 +31,35 @@ const startApp = () => {
 
 startApp();
 
-const updateSW = registerSW({
+// registerSW({ immediate: true });
+
+const updateServiceWorker = registerSW({
+  immediate: true,
   onNeedRefresh() {
-    message.info("New version available. Refreshing in 5s...");
-    setTimeout(() => {
-      location.reload();
-    }, 5000);
+    // A new SW has been downloaded and is waiting to activate.
+    // Force a reload so the fresh assets take over immediately:
+    console.log("New version available – reloading page.");
+    location.reload();
   },
-  onOfflineReady() {
-    console.log("app is installable");
+  // onOfflineReady() {
+  //   console.log("App is ready to work offline.");
+  // },
+  onRegistered(r) {
+    r && setInterval(() => r.update(), 1000 * 60 * 20);
   },
 });
 
-window.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    updateSW(); // manually check for update
-  }
-});
+updateServiceWorker();
+
+// if ("serviceWorker" in navigator) {
+//   registerSW({
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     onRegistered(r: any) {
+//       r &&
+//         setInterval(() => {
+//           console.log("Updating worker...");
+//           r.update();
+//         }, 1000 * 60 * 20);
+//     },
+//   });
+// }
