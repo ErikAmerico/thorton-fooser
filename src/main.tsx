@@ -31,21 +31,3 @@ const startApp = () => {
 };
 
 startApp();
-
-const updateSW = registerSW({
-  onNeedRefresh() {
-    message.info("New version available. Refreshing in 5s...");
-    setTimeout(() => {
-      location.reload();
-    }, 5000);
-  },
-  onOfflineReady() {
-    console.log("app is installable");
-  },
-});
-
-window.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    updateSW(); // manually check for update
-  }
-});
