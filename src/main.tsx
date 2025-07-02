@@ -31,35 +31,15 @@ const startApp = () => {
 
 startApp();
 
-// registerSW({ immediate: true });
-
 const updateServiceWorker = registerSW({
   immediate: true,
   onNeedRefresh() {
-    // A new SW has been downloaded and is waiting to activate.
-    // Force a reload so the fresh assets take over immediately:
     console.log("New version available – reloading page.");
     location.reload();
   },
-  // onOfflineReady() {
-  //   console.log("App is ready to work offline.");
-  // },
   onRegistered(r) {
     r && setInterval(() => r.update(), 1000 * 60 * 20);
   },
 });
 
 updateServiceWorker();
-
-// if ("serviceWorker" in navigator) {
-//   registerSW({
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     onRegistered(r: any) {
-//       r &&
-//         setInterval(() => {
-//           console.log("Updating worker...");
-//           r.update();
-//         }, 1000 * 60 * 20);
-//     },
-//   });
-// }
