@@ -90,6 +90,8 @@ export interface BracketControlsProps {
   onSubmitResults: () => void;
   onShowInfo: () => void;
   isTourneyFinished: boolean;
+  hasSubmittedResults: boolean;
+  setIsSummaryModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface AddPlayerModalProps {
@@ -121,4 +123,10 @@ export interface Message {
   name: string;
   text: string;
   ts: number;
+}
+
+export interface SummaryModalProps {
+  open: boolean;
+  onClose: () => void;
+  summary: string;
 }
