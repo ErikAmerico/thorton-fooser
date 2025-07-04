@@ -90,6 +90,8 @@ export interface BracketControlsProps {
   onSubmitResults: () => void;
   onShowInfo: () => void;
   isTourneyFinished: boolean;
+  hasSubmittedResults: boolean;
+  setIsSummaryModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface AddPlayerModalProps {

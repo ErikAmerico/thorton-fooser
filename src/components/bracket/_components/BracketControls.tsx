@@ -7,7 +7,10 @@ export default function BracketControls({
   onSubmitResults,
   onShowInfo,
   isTourneyFinished,
-}: BracketControlsProps) {
+  hasSubmittedResults,
+  setIsSummaryModalOpen,
+  onGenerateNewReport,
+}: BracketControlsProps & { onGenerateNewReport: () => void }) {
   return (
     <div className="bracket-controls">
       <Button className="cancel-tourney-btn" onClick={onCancelGame}>
@@ -26,6 +29,19 @@ export default function BracketControls({
         className="infoCircle"
         style={{ color: "white" }}
       />
+      {hasSubmittedResults && (
+        <>
+          <Button
+            className="report-btns"
+            onClick={() => setIsSummaryModalOpen(true)}
+          >
+            View Report
+          </Button>
+          <Button className="report-btns" onClick={onGenerateNewReport}>
+            New Report
+          </Button>
+        </>
+      )}
     </div>
   );
 }
