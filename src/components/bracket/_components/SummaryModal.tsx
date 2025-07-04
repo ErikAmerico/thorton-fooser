@@ -7,32 +7,6 @@ export default function SummaryModal({
   onClose,
   summary,
 }: SummaryModalProps) {
-  const [displayedText, setDisplayedText] = useState("");
-
-  useEffect(() => {
-    if (!open) return;
-
-    setDisplayedText("");
-    let i = 0;
-
-    const startTyping = () => {
-      const interval = setInterval(() => {
-        setDisplayedText((prev) => prev + summary.charAt(i));
-        i++;
-        if (i >= summary.length) clearInterval(interval);
-      }, 50);
-      return interval;
-    };
-
-    const delay = setTimeout(() => {
-      startTyping();
-    }, 200);
-
-    return () => {
-      clearTimeout(delay);
-    };
-  }, [open, summary]);
-
   return (
     <Modal
       open={open}
@@ -48,19 +22,39 @@ export default function SummaryModal({
         <h1
           style={{
             textAlign: "center",
-            fontFamily:
-              "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-            fontSize: "3rem",
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: "2rem",
             textTransform: "uppercase",
             letterSpacing: "1px",
-            color: "#367bca",
+            color: "#00ffcc",
+            marginTop: "-10px",
           }}
         >
-          The Boston Herald
+          The Neural Report
         </h1>
-        <div className="summary-content" style={{ whiteSpace: "pre-wrap" }}>
-          {summary ? displayedText : "Grabbing a pen..."}
-        </div>
+
+        {summary ? (
+          <div className="summary-wrapper">
+            <div
+              className={"summary-content fade-in"}
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {summary}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="loader-container">
+              <div className="loader-text">Thinking...</div>
+              <div className="loader-orbit">
+                <div className="loader-dot">
+                  <div className="loader-trail"></div>
+                  <div className="loader-trail2"></div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </>
     </Modal>
   );
