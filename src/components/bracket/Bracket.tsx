@@ -44,6 +44,11 @@ export default function Bracket() {
   }, [isTourneyFinished]);
 
   useEffect(() => {
+    const storedSummary = localStorage.getItem("tourneySummary");
+    if (storedSummary) setSummaryText(storedSummary);
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem(
       "hasSubmittedResults",
       JSON.stringify(hasSubmittedResults)
@@ -89,6 +94,8 @@ export default function Bracket() {
   const buildBracket = () => {
     setIsTourneyFinished(false);
     setHasSubmittedResults(false);
+    localStorage.removeItem("tourneySummary");
+    setSummaryText("");
     if (selected.length < 2 || selected.length % 2 !== 0) {
       return message.error("Select an even number of players (≥2).");
     }
@@ -140,13 +147,31 @@ export default function Bracket() {
       setHasSubmittedResults(true);
       reloadPlayers();
       reloadTournamentHistory();
-      setSummaryText("");
       setIsSummaryModalOpen(true);
       const summary = await fetchAISummary(matchResults);
       setSummaryText(summary);
+      localStorage.setItem("tourneySummary", summary);
       console.log("AI Summary:", summary);
     } catch (error: any) {
       message.error("Failed to submit: " + error.message);
+    }
+  };
+
+  const generateNewSummary = async () => {
+    if (!matchResults) {
+      return message.error("No match results available to summarize.");
+    }
+
+    setSummaryText("");
+    setIsSummaryModalOpen(true);
+
+    try {
+      const summary = await fetchAISummary(matchResults);
+      setSummaryText(summary);
+      localStorage.setItem("tourneySummary", summary);
+      console.log("New AI Summary:", summary);
+    } catch (error: any) {
+      message.error("Failed to generate summary: " + error.message);
     }
   };
 
@@ -172,6 +197,9 @@ export default function Bracket() {
             onSubmitResults={showSubmitModal}
             onShowInfo={showInfoModal}
             isTourneyFinished={isTourneyFinished && !hasSubmittedResults}
+            hasSubmittedResults={hasSubmittedResults}
+            setIsSummaryModalOpen={setIsSummaryModalOpen}
+            onGenerateNewReport={generateNewSummary}
           />
         )}
 
