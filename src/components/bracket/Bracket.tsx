@@ -7,12 +7,14 @@ import InfoModal from "./_components/InfoModal";
 import PlayerPicker from "./_components/PlayerPicker";
 import { RenderBracket } from "./_components/BracketRenderer";
 import BracketControls from "./_components/BracketControls";
+import SummaryModal from "./_components/SummaryModal";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
 import { MAX_PLAYERS, STORAGE_KEY, initialState } from "../../data/constants";
 import { calculateScores } from "./_helpers/calculateScores";
 import { batchUpdateScoresAndSendTournamentData } from "../../api/matches";
+import { fetchAISummary } from "../../api/summary";
 import { useOutletContext } from "react-router-dom";
 
 export default function Bracket() {
@@ -33,6 +35,8 @@ export default function Bracket() {
   );
   const { players, reloadPlayers, reloadTournamentHistory } =
     useOutletContext<OutletContext>();
+  const [summaryText, setSummaryText] = useState("");
+  const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
 
   useEffect(() => {
     // console.log(isTourneyFinished);
@@ -136,6 +140,11 @@ export default function Bracket() {
       setHasSubmittedResults(true);
       reloadPlayers();
       reloadTournamentHistory();
+      setSummaryText("");
+      setIsSummaryModalOpen(true);
+      const summary = await fetchAISummary(matchResults);
+      setSummaryText(summary);
+      console.log("AI Summary:", summary);
     } catch (error: any) {
       message.error("Failed to submit: " + error.message);
     }
@@ -189,6 +198,11 @@ export default function Bracket() {
         onCancel={handleCancel}
       />
       <InfoModal open={isInfoModalOpen} onOk={handleCancel} />
+      <SummaryModal
+        open={isSummaryModalOpen}
+        onClose={() => setIsSummaryModalOpen(false)}
+        summary={summaryText}
+      />
     </div>
   );
 }

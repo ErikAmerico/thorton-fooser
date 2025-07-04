@@ -353,3 +353,36 @@
   font-size: 40px;
   font-weight: bold;
 }
+
+.summary-modal .ant-modal-content {
+  background-color: #fdf2d7 !important;
+  color: #222 !important;
+  font-family: "Georgia", "Times New Roman", serif !important;
+  line-height: 1.6 !important;
+  padding: 2rem !important;
+  border: 1px solid #ddd !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+
+  background-image: repeating-linear-gradient(
+    45deg,
+    #fefcf7,
+    #fdf2d7 10px,
+    #f9f7f1 10px,
+    #fdf2d7 20px
+  );
+}
+
+.summary-modal .ant-modal-header {
+  background: none;
+  border-bottom: none;
+}
+
+.summary-modal .ant-modal-close {
+  color: #333;
+}
+
+.summary-content {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #222;
+}
