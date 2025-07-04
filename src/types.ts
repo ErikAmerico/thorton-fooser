@@ -122,3 +122,9 @@ export interface Message {
   text: string;
   ts: number;
 }
+
+export interface SummaryModalProps {
+  open: boolean;
+  onClose: () => void;
+  summary: string;
+}
