@@ -3,6 +3,12 @@
 </p>
 
 <br />
+<p>
+  <a href="https://foosball.life">
+    <img src="https://img.shields.io/badge/🌐 Visit%20Live%20Site-0088ff?style=for-the-badge&logo=internet-explorer&logoColor=white" alt="Visit Live Site" />
+  </a>
+</p>
+<br />
 
 The **Thornton Fooser Frontend** is a responsive web app built with React and TypeScript for running foosball tournaments, tracking scores, and keeping player rankings up to date. It's designed to be easy to use, fun, and competitive—perfect for friendly matches and intense rivalries.
 
