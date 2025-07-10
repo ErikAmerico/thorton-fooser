@@ -232,18 +232,6 @@
   border: 1px solid #c09700 !important;
 }
 
-.got-it-btn {
-  background-color: #c09700 !important;
-  border: 1px solid #000 !important;
-  color: #000;
-}
-
-.got-it-btn:hover {
-  background-color: #000 !important;
-  border: 1px solid #c09700 !important;
-  color: #c09700 !important;
-}
-
 .generate-bracket-button.ant-btn-primary {
   background-color: green !important;
   border-color: green !important;

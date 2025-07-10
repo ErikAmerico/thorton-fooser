@@ -1,6 +1,7 @@
-import { InfoModalProps } from "../../../types";
+import { InfoModalProps } from "../../../../types";
 import { Modal } from "antd";
 import { TrophyFilled } from "@ant-design/icons";
+import "./infoModal.css";
 
 export default function InfoModal({ open, onOk }: InfoModalProps) {
   return (

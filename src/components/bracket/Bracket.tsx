@@ -3,7 +3,7 @@ import { Space, message } from "antd";
 import { useState, useEffect } from "react";
 import CancelGameModal from "./_components/CancelGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
-import InfoModal from "./_components/InfoModal";
+import InfoModal from "./_components/info-modal/InfoModal";
 import PlayerPicker from "./_components/PlayerPicker";
 import { RenderBracket } from "./_components/BracketRenderer";
 import BracketControls from "./_components/bracket-controls/BracketControls";
