@@ -226,13 +226,3 @@
 .infoCircle:hover {
   color: #c09700 !important;
 }
-
-.whoPlaying-title {
-  color: #c09700;
-  margin-top: 0px;
-  font-family: "Roboto", sans-serif;
-  padding: 10px;
-  padding-bottom: 0px;
-  font-size: 40px;
-  font-weight: bold;
-}
