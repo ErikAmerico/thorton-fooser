@@ -1,0 +1,50 @@
+.bracket-controls {
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: -20px;
+}
+
+.cancel-tourney-btn {
+  background-color: rgb(168, 0, 0);
+  border: 1px solid rgb(168, 0, 0);
+  color: white;
+}
+
+.cancel-tourney-btn:hover {
+  background-color: rgb(168, 0, 0) !important;
+  border: 1px solid #c09700 !important;
+  color: #c09700 !important;
+}
+
+.submit-results-btn {
+  background-color: green;
+  border: 1px solid green;
+  color: white;
+}
+
+.submit-results-btn:hover {
+  border: 1px solid #c09700 !important;
+  color: #c09700 !important;
+}
+
+.submit-results-btn[disabled] {
+  background-color: #ababab !important;
+  border-color: #ababab !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+
+.report-btns {
+  background-color: black !important;
+  border: 1px solid #00ffcc !important;
+  color: #00ffcc !important;
+  text-shadow: none;
+}
+
+.report-btns:hover {
+  background-color: #007961 !important;
+  border: 1px solid #00ffcc !important;
+  color: black !important;
+  text-shadow: 0 0 3px white;
+}

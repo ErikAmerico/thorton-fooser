@@ -1,6 +1,7 @@
 import { Button } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { BracketControlsProps } from "../../../types";
+import { BracketControlsProps } from "../../../../types";
+import "./bracketControls.css";
 
 export default function BracketControls({
   onCancelGame,

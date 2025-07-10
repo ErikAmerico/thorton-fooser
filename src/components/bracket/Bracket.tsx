@@ -6,7 +6,7 @@ import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/InfoModal";
 import PlayerPicker from "./_components/PlayerPicker";
 import { RenderBracket } from "./_components/BracketRenderer";
-import BracketControls from "./_components/BracketControls";
+import BracketControls from "./_components/bracket-controls/BracketControls";
 import SummaryModal from "./_components/SummaryModal";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
