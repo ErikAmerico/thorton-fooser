@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import CancelGameModal from "./_components/CancelGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/info-modal/InfoModal";
-import PlayerPicker from "./_components/PlayerPicker";
+import PlayerPicker from "./_components/player-picker/PlayerPicker";
 import { RenderBracket } from "./_components/BracketRenderer";
 import BracketControls from "./_components/bracket-controls/BracketControls";
 import SummaryModal from "./_components/SummaryModal";

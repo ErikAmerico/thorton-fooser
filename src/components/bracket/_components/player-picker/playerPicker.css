@@ -1,0 +1,35 @@
+.picker-glass {
+  padding: 0.3em;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-weight: bold;
+}
+
+.generate-bracket-button.ant-btn-primary {
+  background-color: green !important;
+  border-color: green !important;
+  color: #fff !important;
+}
+
+.generate-bracket-button.ant-btn-disabled,
+.generate-bracket-button:disabled {
+  background-color: #ababab !important;
+  border-color: #ababab !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+
+#add-player-button {
+  background-color: #000;
+  border: 1px solid #c09700;
+  color: white;
+}
+
+#add-player-button:hover {
+  background-color: green;
+  border: 1px solid green;
+}
