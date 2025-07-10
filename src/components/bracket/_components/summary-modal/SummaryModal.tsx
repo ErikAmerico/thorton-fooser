@@ -1,6 +1,7 @@
 import { Modal } from "antd";
 import { useEffect, useState } from "react";
-import { SummaryModalProps } from "../../../types";
+import { SummaryModalProps } from "../../../../types";
+import "./summaryModal.css";
 
 export default function SummaryModal({
   open,

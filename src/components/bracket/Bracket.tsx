@@ -7,7 +7,7 @@ import InfoModal from "./_components/info-modal/InfoModal";
 import PlayerPicker from "./_components/player-picker/PlayerPicker";
 import { RenderBracket } from "./_components/BracketRenderer";
 import BracketControls from "./_components/bracket-controls/BracketControls";
-import SummaryModal from "./_components/SummaryModal";
+import SummaryModal from "./_components/summary-modal/SummaryModal";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
