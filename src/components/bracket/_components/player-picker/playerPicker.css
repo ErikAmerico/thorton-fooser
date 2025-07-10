@@ -1,3 +1,25 @@
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-around;
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid black;
+  background: linear-gradient(
+    30deg,
+    #c09700 0%,
+    #c09700 49.675%,
+    #000 49.7%,
+    #000 49.8%,
+    white 49.825%,
+    white 50%,
+    #000 50.225%,
+    #000 100%
+  );
+  border-radius: 7.5px;
+}
+
 .picker-glass {
   padding: 0.3em;
   border-radius: 8px;
