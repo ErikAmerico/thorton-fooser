@@ -1,7 +1,8 @@
 import { Checkbox, Button, Spin } from "antd";
-import { PlayerFromDB, PlayerPickerProps } from "../../../types";
+import { PlayerFromDB, PlayerPickerProps } from "../../../../types";
 import { useState } from "react";
-import AddPlayerModal from "./AddPlayerModal";
+import AddPlayerModal from "../AddPlayerModal";
+import "./playerPicker.css";
 
 export default function PlayerPicker({
   players,
