@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SummaryModalProps } from "../../../../types";
 import "./summaryModal.css";
 
@@ -8,6 +8,34 @@ export default function SummaryModal({
   onClose,
   summary,
 }: SummaryModalProps) {
+  const [displayedText, setDisplayedText] = useState("");
+  const idx = useRef(0);
+  const displayTextRef = useRef("");
+
+  useEffect(() => {
+    if (!open) return;
+
+    idx.current = 0;
+    displayTextRef.current = "";
+    setDisplayedText("");
+
+    const intervalId = setInterval(() => {
+      if (idx.current < summary.length) {
+        displayTextRef.current += summary[idx.current];
+        setDisplayedText(displayTextRef.current);
+        idx.current += 1;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 5);
+
+    return () => {
+      clearInterval(intervalId);
+      idx.current = 0;
+      displayTextRef.current = "";
+    };
+  }, [open, summary]);
+
   return (
     <Modal
       open={open}
@@ -35,13 +63,8 @@ export default function SummaryModal({
         </h1>
 
         {summary ? (
-          <div className="summary-wrapper">
-            <div
-              className={"summary-content fade-in"}
-              style={{ whiteSpace: "pre-wrap" }}
-            >
-              {summary}
-            </div>
+          <div className="summary-content" style={{ whiteSpace: "pre-wrap" }}>
+            {displayedText}
           </div>
         ) : (
           <>
