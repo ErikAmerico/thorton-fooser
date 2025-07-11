@@ -29,13 +29,24 @@
   color: #ffffff;
 }
 
+@keyframes pulse-shadow {
+  0%,
+  100% {
+    text-shadow: 0 1px 1px rgba(0, 255, 204, 0.3);
+  }
+  50% {
+    text-shadow: 0 1px 8px rgba(0, 255, 204, 0.5);
+  }
+}
+
 .summary-content {
   font-size: 17px;
   line-height: 1.6;
-  color: #000000;
-  background-color: rgb(217, 217, 217);
+  color: rgba(255, 255, 255, 0.856);
   border-radius: 5px;
   padding: 5px;
+
+  animation: pulse-shadow 3s ease-in-out infinite;
 }
 
 .fade-in {
