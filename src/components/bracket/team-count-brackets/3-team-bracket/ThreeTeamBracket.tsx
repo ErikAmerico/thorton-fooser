@@ -142,7 +142,7 @@ export default function ThreeTeamBracket({
         </div>
 
         {/* Semifinals */}
-        <div className="match-cell lower-line">
+        <div className="match-cell lower-line" style={{ height: "69px" }}>
           <input
             className="team-input"
             value={renderTeamName(team1)}
