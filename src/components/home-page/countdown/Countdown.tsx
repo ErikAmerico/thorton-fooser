@@ -14,7 +14,7 @@ interface TimeLeft {
 const calculateTimeLeft = (): TimeLeft => {
   const now: Moment = moment();
   const targetDate: Moment = moment.tz(
-    "2025-08-13 09:00:00",
+    "2026-08-01 13:00:00",
     "America/New_York"
   );
 
@@ -80,8 +80,8 @@ const Timer = () => {
     <>
       <NextDate />
       <div id="timer">
-        {/* {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>} */}
-        <span>- - : - -</span>
+        {timerComponents.length ? timerComponents : <span>GAME TIME!!</span>}
+        {/* <span>- - : - -</span> */}
       </div>
     </>
   );
