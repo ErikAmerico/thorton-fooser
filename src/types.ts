@@ -66,6 +66,12 @@ export interface CancelGameProps {
   onCancel: () => void;
 }
 
+export interface EndGameProps {
+  open: boolean;
+  onOk: () => void;
+  onCancel: () => void;
+}
+
 export interface SubmitResultsProps {
   open: boolean;
   onOk: (secretCode: string) => void;
@@ -87,6 +93,7 @@ export interface PlayerPickerProps {
 
 export interface BracketControlsProps {
   onCancelGame: () => void;
+  onEndGame: () => void;
   onSubmitResults: () => void;
   onShowInfo: () => void;
   isTourneyFinished: boolean;

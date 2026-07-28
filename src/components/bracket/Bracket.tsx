@@ -2,6 +2,7 @@ import "./bracket.css";
 import { Space, message } from "antd";
 import { useState, useEffect } from "react";
 import CancelGameModal from "./_components/CancelGameModal";
+import EndGameModal from "./_components/EndGameModal";
 import SubmitResultsModal from "./_components/SubmitResultsModal";
 import InfoModal from "./_components/info-modal/InfoModal";
 import PlayerPicker from "./_components/player-picker/PlayerPicker";
@@ -19,6 +20,7 @@ import { useOutletContext } from "react-router-dom";
 
 export default function Bracket() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [bracketState, setBracketState] = useLocalStorageBracketState();
@@ -57,12 +59,17 @@ export default function Bracket() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setIsEndGameModalOpen(false);
     setIsSubmitModalOpen(false);
     setIsInfoModalOpen(false);
   };
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const showEndGameModal = () => {
+    setIsEndGameModalOpen(true);
   };
 
   const showSubmitModal = () => {
@@ -124,6 +131,16 @@ export default function Bracket() {
     localStorage.removeItem(STORAGE_KEY);
     setBracketState(initialState);
     setIsModalOpen(false);
+  };
+
+  const endGame = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("tourneySummary");
+    setBracketState(initialState);
+    setIsTourneyFinished(false);
+    setHasSubmittedResults(false);
+    setSummaryText("");
+    setIsEndGameModalOpen(false);
   };
 
   const submitResults = async (secretCode: string) => {
@@ -194,6 +211,7 @@ export default function Bracket() {
         {teams && (
           <BracketControls
             onCancelGame={showModal}
+            onEndGame={showEndGameModal}
             onSubmitResults={showSubmitModal}
             onShowInfo={showInfoModal}
             isTourneyFinished={isTourneyFinished && !hasSubmittedResults}
@@ -218,6 +236,11 @@ export default function Bracket() {
       <CancelGameModal
         open={isModalOpen}
         onOk={cancelGame}
+        onCancel={handleCancel}
+      />
+      <EndGameModal
+        open={isEndGameModalOpen}
+        onOk={endGame}
         onCancel={handleCancel}
       />
       <SubmitResultsModal

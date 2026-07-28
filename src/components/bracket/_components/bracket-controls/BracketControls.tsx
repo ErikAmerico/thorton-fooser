@@ -5,6 +5,7 @@ import "./bracketControls.css";
 
 export default function BracketControls({
   onCancelGame,
+  onEndGame,
   onSubmitResults,
   onShowInfo,
   isTourneyFinished,
@@ -14,9 +15,15 @@ export default function BracketControls({
 }: BracketControlsProps & { onGenerateNewReport: () => void }) {
   return (
     <div className="bracket-controls">
-      <Button className="cancel-tourney-btn" onClick={onCancelGame}>
-        Cancel Game
-      </Button>
+      {hasSubmittedResults ? (
+        <Button className="end-tourney-btn" onClick={onEndGame}>
+          End Game
+        </Button>
+      ) : (
+        <Button className="cancel-tourney-btn" onClick={onCancelGame}>
+          Cancel Game
+        </Button>
+      )}
       <Button
         className="submit-results-btn"
         onClick={onSubmitResults}
