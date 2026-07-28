@@ -23,8 +23,16 @@ export default function History() {
   //I do not want to display that on the History page. - Well, We can't display it on the history page
   // RenderBracket would throw an error.
   //so filter out the tournaments where the results array.length is 1
-  const validHistory =
-    history?.filter((tournament) => tournament.results.length > 1) ?? [];
+  // newest first - we open on the most recent tournament and the right
+  // arrow walks back in time
+  const validHistory = (
+    history?.filter((tournament) => tournament.results.length > 1) ?? []
+  )
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
 
   const openModal = () => {
     setShowLookingForModal(true);
