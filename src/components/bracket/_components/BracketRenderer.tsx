@@ -15,6 +15,8 @@ export function RenderBracket(teamCount: number, props: BracketProps) {
     case 3:
       return <ThreeTeamBracket {...props} />;
     case 4:
+      // 7 players restructure this same bracket via props.reserveMode so the
+      // reserve team still gets true double elimination
       return <FourTeamBracket {...props} />;
     case 5:
       return <FiveTeamBracket {...props} />;

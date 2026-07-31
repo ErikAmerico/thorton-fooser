@@ -2,6 +2,7 @@ import { Checkbox, Button, Spin } from "antd";
 import { PlayerFromDB, PlayerPickerProps } from "../../../../types";
 import { useState } from "react";
 import AddPlayerModal from "../AddPlayerModal";
+import { RESERVE_CONFIG } from "../../_helpers/reserveConfig";
 import "./playerPicker.css";
 
 export default function PlayerPicker({
@@ -41,6 +42,12 @@ export default function PlayerPicker({
   const sortedPlayers = [...players].sort((a, b) =>
     a.name.localeCompare(b.name)
   );
+
+  const isOdd = selected.length % 2 === 1;
+  const teamCount = Math.ceil(selected.length / 2);
+  // odd counts ride along as a reserve bracket where a config exists (7+)
+  const oddSupported = Boolean(RESERVE_CONFIG[teamCount]);
+  const canGenerate = selected.length >= 4 && (!isOdd || oddSupported);
   return (
     <>
       <h3 style={{ fontFamily: "sans-serif" }} className="whoPlaying-title">
@@ -66,12 +73,14 @@ export default function PlayerPicker({
       </div>
       <Button
         type="primary"
-        disabled={selected.length < 4 || selected.length % 2 !== 0}
+        disabled={!canGenerate}
         onClick={onGenerate}
         className="generate-bracket-button"
         style={{ marginRight: "5px" }}
       >
-        Generate {selected.length / 2}-Team Bracket
+        {isOdd && oddSupported
+          ? `Generate ${teamCount}-Team Bracket + Reserve`
+          : `Generate ${selected.length / 2}-Team Bracket`}
       </Button>
 
       <Button

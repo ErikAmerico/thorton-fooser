@@ -1,0 +1,71 @@
+.donor-cards {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.donor-card {
+  flex: 1;
+  padding: 24px 12px;
+  font-size: 18px;
+  font-weight: 600;
+  background: #141414;
+  color: white;
+  border: 2px solid #444;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.1s, box-shadow 0.1s, transform 0.1s;
+}
+
+.donor-card:disabled {
+  cursor: default;
+}
+
+.donor-highlight {
+  border-color: #ffd700;
+  color: #ffd700;
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.7);
+}
+
+.donor-picked {
+  border-color: #00ffcc;
+  color: #00ffcc;
+  transform: scale(1.05);
+  animation: donorPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes donorPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(0, 255, 204, 0.95);
+  }
+}
+
+.donor-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.donor-random-btn {
+  background: #c09700;
+  border-color: #c09700;
+  color: black;
+  font-weight: 600;
+}
+
+.donor-confirm-btn {
+  background: green;
+  border-color: green;
+  color: white;
+}
+
+.donor-confirm-btn:disabled {
+  background: #ababab;
+  border-color: #ababab;
+  color: black;
+}

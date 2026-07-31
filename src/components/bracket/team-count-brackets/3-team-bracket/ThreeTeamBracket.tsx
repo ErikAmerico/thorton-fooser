@@ -7,6 +7,7 @@ import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
 
 export default function ThreeTeamBracket({
@@ -15,6 +16,7 @@ export default function ThreeTeamBracket({
   onChange,
   setIsTourneyFinished,
   fireConfetti,
+  hasSubmittedResults,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -31,6 +33,7 @@ export default function ThreeTeamBracket({
   const team3 = teams[2];
 
   const showModal = (matchNum: number) => {
+    if (blockedBySubmission(hasSubmittedResults)) return;
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
@@ -61,9 +64,18 @@ export default function ThreeTeamBracket({
       case 5:
         if (!matchResults[4].winner || !matchResults[4].loser)
           return message.error("Complete Grand Final first.");
-        // if winners-bracket champ wins GF, tournament ends
-        if (matchResults[4].winner === matchResults[2].winner)
-          return message.info("Tournament is over — no reset final needed.");
+        // champion already decided - reopen the deciding match so a
+        // misclicked winner can still be corrected with the lock code
+        if (isSameTeam(matchResults[4].winner, matchResults[2].winner!)) {
+          setModalTeams({
+            A: matchResults[4].winner,
+            B: matchResults[4].loser,
+          });
+          setSelectedWinner(null);
+          setCurrentMatch(4);
+          setIsModalOpen(true);
+          return;
+        }
         // otherwise reset final
         A = matchResults[4].winner!;
         B = matchResults[4].loser!;
@@ -199,17 +211,9 @@ export default function ThreeTeamBracket({
           </span>
         </div>
 
-        {tournamentOver ? (
-          <div className="match-row final-row">
-            <div className="match-cell lower-match-col champ-cell no-dash">
-              <div className="champion-text">
-                {renderTeamName(grandWinner)} won!
-              </div>
-            </div>
-          </div>
-        ) : needsReset ? (
+        {needsReset ? (
           <div className="match-row">
-            <div className="match-cell lower-match-col">
+            <div className="match-cell lower-match-col no-dash">
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[4].winner)}
@@ -240,15 +244,6 @@ export default function ThreeTeamBracket({
                 Match 5 <TrophyFilled onClick={() => showModal(5)} />
               </span>
             </div>
-            {resetWinner && (
-              <div className="match-row final-row">
-                <div className="match-cell lower-match-col no-dash">
-                  <div className="champion-text">
-                    {renderTeamName(resetWinner)} won!
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ) : (
           <div className="match-row">
