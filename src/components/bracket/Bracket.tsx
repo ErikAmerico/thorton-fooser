@@ -252,6 +252,9 @@ export default function Bracket() {
 
   const assignDonor = (donor: PlayerFromDB) => {
     if (!teams || !reserveCfg || !reserveTeam) return;
+    // The donor just joins the reserve team - nothing is reshuffled and the
+    // slot-machine reveal must not replay, so close the reveal window first.
+    setJustGenerated(false);
     const newTeams = teams.map((team, i) =>
       i === reserveCfg.seat ? [...team, donor] : team
     );

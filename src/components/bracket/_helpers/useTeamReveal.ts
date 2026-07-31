@@ -60,18 +60,28 @@ export function useTeamReveal(
   const [spinFrame, setSpinFrame] = useState(0);
   // brief window after the last name lands, so the final team can pop too
   const [finishing, setFinishing] = useState(false);
-  const active = locked >= 0 && locked < slots.length;
+  // Slot count is frozen when the draw starts. The 7-player reserve team gains
+  // a second player mid-tournament, which would otherwise grow slots.length
+  // and make a finished reveal look unfinished - restarting the whole draw.
+  const totalSlots = useRef(0);
+  const active = locked >= 0 && locked < totalSlots.current;
 
-  const startedFor = useRef<Team[] | null>(null);
+  // The reveal runs at most once per bracket. Teams can legitimately change
+  // afterwards - the 7-player reserve gains a donor from the first eliminated
+  // team - and that must NOT restart the draw or reshuffle anything on screen.
+  const hasRun = useRef(false);
 
   useEffect(() => {
-    if (!finalTeams || !enabled || pool.length === 0 || slots.length === 0) {
+    if (!enabled) {
+      // a bracket restored from localStorage, or history
+      hasRun.current = false;
       setLocked(-1);
       return;
     }
-    // only start once per generated bracket
-    if (startedFor.current === finalTeams) return;
-    startedFor.current = finalTeams;
+    if (!finalTeams || pool.length === 0 || slots.length === 0) return;
+    if (hasRun.current) return;
+    hasRun.current = true;
+    totalSlots.current = slots.length;
     setLocked(0);
     setSpinFrame(0);
     setFinishing(false);
@@ -79,11 +89,11 @@ export function useTeamReveal(
 
   // hold the last team's pop briefly before handing back the plain teams
   useEffect(() => {
-    if (locked < 0 || locked < slots.length) return;
+    if (locked < 0 || locked < totalSlots.current) return;
     setFinishing(true);
     const t = setTimeout(() => setFinishing(false), 700);
     return () => clearTimeout(t);
-  }, [locked, slots.length]);
+  }, [locked]);
 
   // The reel reschedules itself with a growing delay so it decelerates into
   // the lock; a separate timeout ends the spin and moves to the next slot.
@@ -109,18 +119,18 @@ export function useTeamReveal(
       clearTimeout(reel);
       clearTimeout(lock);
     };
-  }, [active, locked, slots.length]);
+  }, [active, locked]);
 
   /** Jump straight to the finished teams. */
-  const skip = () => setLocked(slots.length);
+  const skip = () => setLocked(totalSlots.current);
 
   const teams = useMemo(() => {
     if (!finalTeams) return null;
     if (locked < 0) return finalTeams;
 
     // one step past the last slot: every name is in, flash the final team
-    if (locked >= slots.length) {
-      const lastTeam = slots[slots.length - 1]?.team ?? -1;
+    if (locked >= totalSlots.current) {
+      const lastTeam = slots[totalSlots.current - 1]?.team ?? -1;
       if (!finishing) return finalTeams;
       return finalTeams.map((team, t) =>
         t === lastTeam
