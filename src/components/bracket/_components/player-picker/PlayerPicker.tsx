@@ -43,6 +43,12 @@ export default function PlayerPicker({
     a.name.localeCompare(b.name)
   );
 
+  // The grid flows column-first, so it needs an explicit row count - otherwise
+  // every player lands in one long row. Rows are ceil(total / columns), which
+  // fills each column top to bottom before starting the next.
+  const PICKER_COLUMNS = 3;
+  const pickerRows = Math.max(1, Math.ceil(sortedPlayers.length / PICKER_COLUMNS));
+
   const isOdd = selected.length % 2 === 1;
   const teamCount = Math.ceil(selected.length / 2);
   // odd counts ride along as a reserve bracket where a config exists (7+)
@@ -53,7 +59,10 @@ export default function PlayerPicker({
       <h3 style={{ fontFamily: "sans-serif" }} className="whoPlaying-title">
         Who is playing?
       </h3>
-      <div className="player-grid main-container">
+      <div
+        className="player-grid main-container"
+        style={{ gridTemplateRows: `repeat(${pickerRows}, auto)` }}
+      >
         {sortedPlayers.map((player: PlayerFromDB) => (
           <Checkbox
             key={player.id}

@@ -1,6 +1,10 @@
+/* Names read alphabetically DOWN each column, then continue at the top of the
+   next one. grid-auto-flow: column fills column-first, and the row count is
+   set inline from the roster size so the columns stay balanced. */
 .player-grid {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
   justify-content: space-around;
   gap: 8px;
   padding: 10px;
