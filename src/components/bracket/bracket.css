@@ -139,6 +139,8 @@
   transform: translateY(-50%) rotate(-90deg);
 }
 
+/* was a readonly <input>; now a div (see TeamSlot) so the reveal can animate
+   individual names. Keeps the input's metrics so the layout is unchanged. */
 .team-input {
   width: 100%;
   background: #3a3a4a;
@@ -148,8 +150,20 @@
   padding: 4px 8px;
   margin-bottom: 4px;
   font-size: 13px;
+  line-height: 17px;
+  height: 25px;
   box-sizing: border-box;
   cursor: default;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: inherit;
+}
+
+/* inputs grey out their placeholder text; match that */
+.team-input-placeholder {
+  color: #8b8b96;
 }
 
 .team-input:last-child {
@@ -160,6 +174,75 @@
   font-size: 13px;
   display: block;
   cursor: default;
+}
+
+/* ---- slot-machine team reveal ----------------------------------------- */
+
+/* the slot being drawn: gold-lit, with each name sliding up out of view as
+   the next arrives (TeamSlot remounts the span on every value change) */
+.team-input.reel-spinning {
+  background: #494258;
+  color: #ffd700;
+  box-shadow: inset 0 0 0 1px rgba(255, 215, 0, 0.45);
+}
+
+/* only the name being drawn scrolls; its teammate stays put */
+.reel-name {
+  display: inline-block;
+  animation: reelSlide 0.18s cubic-bezier(0.3, 0, 0.4, 1) both;
+}
+
+.reel-landed-name {
+  display: inline-block;
+  animation: reelPop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+@keyframes reelPop {
+  0% {
+    transform: scale(1.18);
+    color: #fff;
+    text-shadow: 0 0 14px rgba(255, 215, 0, 1);
+  }
+  55% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+    color: #fff;
+    text-shadow: none;
+  }
+}
+
+@keyframes reelSlide {
+  0% {
+    transform: translateY(90%);
+    opacity: 0;
+    filter: blur(1.2px);
+  }
+  60% {
+    filter: blur(0.3px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* the cell that just locked flashes gold and fades back */
+.team-input.reel-landed {
+  animation: reelLand 0.6s ease-out both;
+}
+
+@keyframes reelLand {
+  0% {
+    background: #7a6410;
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.85);
+  }
+  100% {
+    background: #3a3a4a;
+    box-shadow: none;
+  }
 }
 
 /* 7-player bracket: a decider game appears as its own box that fades in */

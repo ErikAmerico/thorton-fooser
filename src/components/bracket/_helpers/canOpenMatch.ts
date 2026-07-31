@@ -9,7 +9,12 @@ import { message } from "antd";
  * sent to the backend the match is closed for good, because the scores saved
  * server-side would no longer agree with the bracket.
  */
-export function blockedBySubmission(hasSubmittedResults?: boolean): boolean {
+export function blockedBySubmission(
+  hasSubmittedResults?: boolean,
+  isRevealing?: boolean
+): boolean {
+  // teams are still spinning into place - the names on screen are not final
+  if (isRevealing) return true;
   if (hasSubmittedResults) {
     message.info("Results have been submitted — this bracket is final.");
     return true;

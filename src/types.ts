@@ -27,6 +27,17 @@ export interface BracketProps {
   // once results are sent to the backend, matches can no longer be edited -
   // the saved scores would no longer match the bracket
   hasSubmittedResults?: boolean;
+  // teams are still spinning into place after generation - names are not final
+  isRevealing?: boolean;
+}
+
+export interface TeamSlotProps {
+  value: string;
+  placeholder?: string;
+  title?: string;
+  // slot-machine reveal state (see useTeamReveal)
+  spinning?: boolean;
+  landed?: boolean;
 }
 
 export interface DonorSelectProps {

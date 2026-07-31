@@ -6,6 +6,7 @@ import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
+import TeamSlot from "../../_components/TeamSlot";
 import confirmWinner from "../../_helpers/confirmWinner";
 import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
@@ -17,6 +18,7 @@ export default function TwoTeamBracket({
   setIsTourneyFinished,
   fireConfetti,
   hasSubmittedResults,
+  isRevealing,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -32,7 +34,7 @@ export default function TwoTeamBracket({
   const team2 = teams[1];
 
   const showModal = (matchNum: number) => {
-    if (blockedBySubmission(hasSubmittedResults)) return;
+    if (blockedBySubmission(hasSubmittedResults, isRevealing)) return;
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
@@ -115,20 +117,12 @@ export default function TwoTeamBracket({
       <div className="match-row top-row">
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team1)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="1 Seed"
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team2)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="2 Seed"
             />
             <span className="match-number">
@@ -139,24 +133,16 @@ export default function TwoTeamBracket({
 
         {/* Finals / Championship placeholder */}
         <div className="match-cell lower-match-col">
-          <input
-            className="team-input"
-            placeholder=""
+          <TeamSlot
             value={renderTeamName(matchResults[1].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder=""
             title={
               renderTeamName(matchResults[1].winner) ? "Winner of 1" : undefined
             }
           />
-          <input
-            className="team-input"
-            placeholder="Loser of 1"
+          <TeamSlot
             value={renderTeamName(matchResults[1].loser)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Loser of 1"
             title={
               renderTeamName(matchResults[1].loser) ? "Loser of 1" : undefined
             }
@@ -169,26 +155,18 @@ export default function TwoTeamBracket({
         {needsReset ? (
           <div className="match-row">
             <div className="match-cell lower-match-col no-dash">
-              <input
-                className="team-input"
+              <TeamSlot
                 value={renderTeamName(matchResults[2].winner)}
                 placeholder="winner of 2"
-                readOnly
-                tabIndex={-1}
-                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[2].winner)
                     ? "Winner of 2"
                     : undefined
                 }
               />
-              <input
-                className="team-input"
+              <TeamSlot
                 value={renderTeamName(matchResults[2].loser)}
                 placeholder="loser of 2 (if necessary)"
-                readOnly
-                tabIndex={-1}
-                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[2].loser)
                     ? "loser of 2"

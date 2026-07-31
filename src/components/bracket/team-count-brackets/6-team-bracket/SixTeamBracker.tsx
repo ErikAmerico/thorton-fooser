@@ -6,6 +6,7 @@ import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
+import TeamSlot from "../../_components/TeamSlot";
 import confirmWinner from "../../_helpers/confirmWinner";
 import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
@@ -17,6 +18,7 @@ export default function SixTeamBracket({
   setIsTourneyFinished,
   fireConfetti,
   hasSubmittedResults,
+  isRevealing,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -36,7 +38,7 @@ export default function SixTeamBracket({
   const team6 = teams[5];
 
   const showModal = (matchNum: number) => {
-    if (blockedBySubmission(hasSubmittedResults)) return;
+    if (blockedBySubmission(hasSubmittedResults, isRevealing)) return;
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
@@ -181,20 +183,12 @@ export default function SixTeamBracket({
       <div className="match-row top-row ">
         <div className="round1-column">
           <div className="match-cell lower-match-col upper-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team4)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="4 Seed"
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team5)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="5 Seed"
             />
             <span className="match-number">
@@ -203,20 +197,12 @@ export default function SixTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team3)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="3 Seed"
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team6)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="6 Seed"
             />
             <span className="match-number">
@@ -228,21 +214,13 @@ export default function SixTeamBracket({
         {/* round 2 */}
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team1)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="1 Seed"
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 1"
+            <TeamSlot
               value={renderTeamName(matchResults[1].winner)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
+              placeholder="Winner of 1"
               title={
                 renderTeamName(matchResults[1].winner)
                   ? "Winner of 1"
@@ -255,21 +233,13 @@ export default function SixTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team2)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
               title="2 Seed"
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 2"
+            <TeamSlot
               value={renderTeamName(matchResults[2].winner)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
+              placeholder="Winner of 2"
               title={
                 renderTeamName(matchResults[2].winner)
                   ? "Winner of 2"
@@ -283,24 +253,16 @@ export default function SixTeamBracket({
         </div>
 
         <div className="match-cell lower-line lower-match-col">
-          <input
-            className="team-input"
-            placeholder="Winner of 3"
+          <TeamSlot
             value={renderTeamName(matchResults[3].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of 3"
             title={
               renderTeamName(matchResults[3].winner) ? "Winner of 3" : undefined
             }
           />
-          <input
-            className="team-input"
-            placeholder="Winner of 4"
+          <TeamSlot
             value={renderTeamName(matchResults[4].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of 4"
             title={
               renderTeamName(matchResults[4].winner) ? "Winner of 4" : undefined
             }
@@ -311,24 +273,16 @@ export default function SixTeamBracket({
         </div>
 
         <div className="match-cell lower-match-col2">
-          <input
-            className="team-input"
-            placeholder="Winner of 8"
+          <TeamSlot
             value={renderTeamName(matchResults[8].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of 8"
             title={
               renderTeamName(matchResults[8].winner) ? "Winner of 8" : undefined
             }
           />
-          <input
-            className="team-input"
-            placeholder="Winner of losers"
+          <TeamSlot
             value={renderTeamName(matchResults[9].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of losers"
             title={
               renderTeamName(matchResults[9].winner)
                 ? "Winner of Losers"
@@ -343,26 +297,18 @@ export default function SixTeamBracket({
         {needsReset ? (
           <div className="match-row">
             <div className="match-cell lower-match-col2 no-dash">
-              <input
-                className="team-input"
+              <TeamSlot
                 value={renderTeamName(matchResults[10].winner)}
                 placeholder="Winner of 10"
-                readOnly
-                tabIndex={-1}
-                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[10].winner)
                     ? "Winner of 10"
                     : undefined
                 }
               />
-              <input
-                className="team-input"
+              <TeamSlot
                 value={renderTeamName(matchResults[10].loser)}
                 placeholder="Loser of 10 (if necessary)"
-                readOnly
-                tabIndex={-1}
-                onMouseDown={(e) => e.preventDefault()}
                 title={
                   renderTeamName(matchResults[10].loser)
                     ? "Loser of 10"
@@ -395,24 +341,16 @@ export default function SixTeamBracket({
         {/* Losers Round 1 */}
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input
-              className="team-input"
-              placeholder="Loser of 4"
+            <TeamSlot
               value={renderTeamName(matchResults[4].loser)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
+              placeholder="Loser of 4"
               title={
                 renderTeamName(matchResults[4].loser) ? "loser of 4" : undefined
               }
             />
-            <input
-              className="team-input"
-              placeholder="Loser of 1"
+            <TeamSlot
               value={renderTeamName(matchResults[1].loser)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
+              placeholder="Loser of 1"
               title={
                 renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
               }
@@ -423,24 +361,16 @@ export default function SixTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input
-              className="team-input"
-              placeholder="Loser of 3"
+            <TeamSlot
               value={renderTeamName(matchResults[3].loser)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
+              placeholder="Loser of 3"
               title={
                 renderTeamName(matchResults[3].loser) ? "loser of 3" : undefined
               }
             />
-            <input
-              className="team-input"
-              placeholder="Loser of 2"
+            <TeamSlot
               value={renderTeamName(matchResults[2].loser)}
-              readOnly
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
+              placeholder="Loser of 2"
               title={
                 renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
               }
@@ -453,24 +383,16 @@ export default function SixTeamBracket({
 
         {/* Losers Round 2 */}
         <div className="match-cell lower-match-col upper-line single-cell">
-          <input
-            className="team-input"
-            placeholder="Winner of 6"
+          <TeamSlot
             value={renderTeamName(matchResults[6].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of 6"
             title={
               renderTeamName(matchResults[6].winner) ? "Winner of 6" : undefined
             }
           />
-          <input
-            className="team-input"
-            placeholder="Winner of 5"
+          <TeamSlot
             value={renderTeamName(matchResults[5].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of 5"
             title={
               renderTeamName(matchResults[5].winner) ? "Winner of 5" : undefined
             }
@@ -481,24 +403,16 @@ export default function SixTeamBracket({
         </div>
 
         <div className="match-cell upper-line angle-up65 single-cell">
-          <input
-            className="team-input"
-            placeholder="Loser of 8"
+          <TeamSlot
             value={renderTeamName(matchResults[8].loser)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Loser of 8"
             title={
               renderTeamName(matchResults[8].loser) ? "loser of 8" : undefined
             }
           />
-          <input
-            className="team-input"
-            placeholder="Winner of 7"
+          <TeamSlot
             value={renderTeamName(matchResults[7].winner)}
-            readOnly
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
+            placeholder="Winner of 7"
             title={
               renderTeamName(matchResults[7].winner) ? "Winner of 7" : undefined
             }

@@ -14,6 +14,7 @@ import ChampionBanner from "./_components/champion-banner/ChampionBanner";
 import { getChampion } from "./_helpers/getChampion";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { RESERVE_CONFIG } from "./_helpers/reserveConfig";
+import { useTeamReveal } from "./_helpers/useTeamReveal";
 import {
   RESERVE_RESULT_SLOTS,
   reserveChampion,
@@ -47,6 +48,9 @@ export default function Bracket() {
     useOutletContext<OutletContext>();
   const [summaryText, setSummaryText] = useState("");
   const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
+  // set when the user generates a bracket, so the reveal animation runs then
+  // and not on every reload of a bracket restored from localStorage
+  const [justGenerated, setJustGenerated] = useState(false);
 
   useEffect(() => {
     // console.log(isTourneyFinished);
@@ -146,6 +150,9 @@ export default function Bracket() {
       .fill(null)
       .map(() => ({ winner: null, loser: null }));
 
+    // only a freshly generated bracket plays the slot-machine reveal - a
+    // reload restored from localStorage should show the teams immediately
+    setJustGenerated(true);
     setBracketState({
       selected,
       teams: pairs,
@@ -156,6 +163,7 @@ export default function Bracket() {
   const cancelGame = () => {
     localStorage.removeItem(STORAGE_KEY);
     setBracketState(initialState);
+    setJustGenerated(false);
     setIsModalOpen(false);
   };
 
@@ -163,6 +171,7 @@ export default function Bracket() {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem("tourneySummary");
     setBracketState(initialState);
+    setJustGenerated(false);
     setIsTourneyFinished(false);
     setHasSubmittedResults(false);
     setSummaryText("");
@@ -220,6 +229,13 @@ export default function Bracket() {
 
   // how many teams did we get?
   const teamCount = teams?.length ?? 0;
+
+  // slot-machine reveal of the shuffled teams, one player at a time
+  const { teams: displayTeams, isRevealing } = useTeamReveal(
+    teams,
+    selected,
+    justGenerated
+  );
 
   // reserve-team support for odd player counts (see reserveConfig.ts)
   const reserveCfg =
@@ -286,7 +302,7 @@ export default function Bracket() {
         <div className="bracket-scroll-content">
           {teams &&
             RenderBracket(teamCount, {
-              teams,
+              teams: displayTeams ?? teams,
               matchResults: matchResults!,
               onChange: (newResults) =>
                 setBracketState({ ...bracketState, matchResults: newResults }),
@@ -294,6 +310,7 @@ export default function Bracket() {
               fireConfetti: true,
               reserveMode: Boolean(reserveCfg),
               hasSubmittedResults,
+              isRevealing,
             })}
         </div>
       </Space>

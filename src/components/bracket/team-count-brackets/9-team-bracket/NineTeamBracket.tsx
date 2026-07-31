@@ -6,6 +6,7 @@ import { Team, BracketProps } from "../../../../types";
 import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
+import TeamSlot from "../../_components/TeamSlot";
 import confirmWinner from "../../_helpers/confirmWinner";
 import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
@@ -17,6 +18,7 @@ export default function NineTeamBracket({
   setIsTourneyFinished,
   fireConfetti,
   hasSubmittedResults,
+  isRevealing,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -39,7 +41,7 @@ export default function NineTeamBracket({
   const team9 = teams[8];
 
   const showModal = (matchNum: number) => {
-    if (blockedBySubmission(hasSubmittedResults)) return;
+    if (blockedBySubmission(hasSubmittedResults, isRevealing)) return;
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
@@ -221,21 +223,13 @@ export default function NineTeamBracket({
       <div className="match-row top-row ">
         <div className="round1-column">
           <div className="match-cell lower-match-col upper-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team8)}
-              readOnly
               title="8 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team9)}
-              readOnly
               title="9 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 1 <TrophyFilled onClick={() => showModal(1)} />
@@ -245,26 +239,18 @@ export default function NineTeamBracket({
 
         <div className="round1-column">
           <div className="match-cell lower-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team1)}
-              readOnly
               title="1 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 1"
+            <TeamSlot
               value={renderTeamName(matchResults[1].winner)}
-              readOnly
+              placeholder="Winner of 1"
               title={
                 renderTeamName(matchResults[1].winner)
                   ? "Winner of 1"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 5 <TrophyFilled onClick={() => showModal(5)} />
@@ -272,21 +258,13 @@ export default function NineTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team4)}
-              readOnly
               title="4 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team5)}
-              readOnly
               title="5 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 2 <TrophyFilled onClick={() => showModal(2)} />
@@ -294,21 +272,13 @@ export default function NineTeamBracket({
           </div>
 
           <div className="match-cell lower-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team2)}
-              readOnly
               title="2 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team7)}
-              readOnly
               title="7 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 3 <TrophyFilled onClick={() => showModal(3)} />
@@ -316,21 +286,13 @@ export default function NineTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team3)}
-              readOnly
               title="3 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(team6)}
-              readOnly
               title="6 Seed"
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 4 <TrophyFilled onClick={() => showModal(4)} />
@@ -341,31 +303,23 @@ export default function NineTeamBracket({
         {/* round 3 */}
         <div className="round1-column">
           <div className="match-cell lower-match-col lower-line angle-down45">
-            <input
-              placeholder="Winner of 5"
-              className="team-input"
+            <TeamSlot
               value={renderTeamName(matchResults[5].winner)}
-              readOnly
+              placeholder="Winner of 5"
               title={
                 renderTeamName(matchResults[5].winner)
                   ? "Winner of 5"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 2"
+            <TeamSlot
               value={renderTeamName(matchResults[2].winner)}
-              readOnly
+              placeholder="Winner of 2"
               title={
                 renderTeamName(matchResults[2].winner)
                   ? "Winner of 2"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 10 <TrophyFilled onClick={() => showModal(10)} />
@@ -373,31 +327,23 @@ export default function NineTeamBracket({
           </div>
 
           <div className="match-cell lower-match-col2 upper-line angle-up45">
-            <input
-              className="team-input"
-              placeholder="Winner of 3"
+            <TeamSlot
               value={renderTeamName(matchResults[3].winner)}
-              readOnly
+              placeholder="Winner of 3"
               title={
                 renderTeamName(matchResults[3].winner)
                   ? "Winner of 3"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 4"
+            <TeamSlot
               value={renderTeamName(matchResults[4].winner)}
-              readOnly
+              placeholder="Winner of 4"
               title={
                 renderTeamName(matchResults[4].winner)
                   ? "Winner of 4"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 9 <TrophyFilled onClick={() => showModal(9)} />
@@ -406,29 +352,21 @@ export default function NineTeamBracket({
         </div>
 
         <div className="match-cell lower-line lower-match-col3">
-          <input
-            className="team-input"
-            placeholder="Winner of 10"
+          <TeamSlot
             value={renderTeamName(matchResults[10].winner)}
-            readOnly
+            placeholder="Winner of 10"
             title={
               renderTeamName(matchResults[10].winner)
                 ? "Winner of 10"
                 : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
-          <input
-            className="team-input"
-            placeholder="Winner of 9"
+          <TeamSlot
             value={renderTeamName(matchResults[9].winner)}
-            readOnly
+            placeholder="Winner of 9"
             title={
               renderTeamName(matchResults[9].winner) ? "Winner of 9" : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
           <span className="match-number">
             Match 14 <TrophyFilled onClick={() => showModal(14)} />
@@ -436,31 +374,23 @@ export default function NineTeamBracket({
         </div>
 
         <div className="match-cell lower-match-col4">
-          <input
-            className="team-input"
-            placeholder="Winner of 14"
+          <TeamSlot
             value={renderTeamName(matchResults[14].winner)}
-            readOnly
+            placeholder="Winner of 14"
             title={
               renderTeamName(matchResults[14].winner)
                 ? "Winner of 14"
                 : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
-          <input
-            className="team-input"
-            placeholder="Winner of losers"
+          <TeamSlot
             value={renderTeamName(matchResults[15].winner)}
-            readOnly
+            placeholder="Winner of losers"
             title={
               renderTeamName(matchResults[15].winner)
                 ? "Winner of losers"
                 : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
           <span className="match-number">
             Match 16 <TrophyFilled onClick={() => showModal(16)} />
@@ -470,31 +400,23 @@ export default function NineTeamBracket({
         {needsReset ? (
           <div className="match-row">
             <div className="match-cell lower-match-col4 no-dash">
-              <input
-                className="team-input"
+              <TeamSlot
                 value={renderTeamName(matchResults[16].winner)}
                 placeholder="Winner of 16"
-                readOnly
                 title={
                   renderTeamName(matchResults[16].winner)
                     ? "Winner of 16"
                     : undefined
                 }
-                tabIndex={-1}
-                onMouseDown={(e) => e.preventDefault()}
               />
-              <input
-                className="team-input"
+              <TeamSlot
                 value={renderTeamName(matchResults[16].loser)}
                 placeholder="Loser of 16 (if necessary)"
-                readOnly
                 title={
                   renderTeamName(matchResults[16].loser)
                     ? "loser of 16"
                     : undefined
                 }
-                tabIndex={-1}
-                onMouseDown={(e) => e.preventDefault()}
               />
               <span className="match-number">
                 Match 17 <TrophyFilled onClick={() => showModal(17)} />
@@ -525,27 +447,19 @@ export default function NineTeamBracket({
           {/* Losers Round 1 */}
 
           <div className="match-cell lower-match-col2 upper-line">
-            <input
-              className="team-input"
-              placeholder="Loser of 4"
+            <TeamSlot
               value={renderTeamName(matchResults[4].loser)}
-              readOnly
+              placeholder="Loser of 4"
               title={
                 renderTeamName(matchResults[4].loser) ? "loser of 4" : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Loser of 1"
+            <TeamSlot
               value={renderTeamName(matchResults[1].loser)}
-              readOnly
+              placeholder="Loser of 1"
               title={
                 renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 6 <TrophyFilled onClick={() => showModal(6)} />
@@ -554,29 +468,21 @@ export default function NineTeamBracket({
         </div>
         <div className="round1-column">
           <div className="match-cell lower-match-col upper-line">
-            <input
-              className="team-input"
-              placeholder="Loser of 3"
+            <TeamSlot
               value={renderTeamName(matchResults[3].loser)}
-              readOnly
+              placeholder="Loser of 3"
               title={
                 renderTeamName(matchResults[3].loser) ? "loser of 3" : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 6"
+            <TeamSlot
               value={renderTeamName(matchResults[6].winner)}
-              readOnly
+              placeholder="Winner of 6"
               title={
                 renderTeamName(matchResults[6].winner)
                   ? "Winner of 6"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 8 <TrophyFilled onClick={() => showModal(8)} />
@@ -584,27 +490,19 @@ export default function NineTeamBracket({
           </div>
 
           <div className="match-cell upper-line">
-            <input
-              className="team-input"
-              placeholder="Loser of 2"
+            <TeamSlot
               value={renderTeamName(matchResults[2].loser)}
-              readOnly
+              placeholder="Loser of 2"
               title={
                 renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Loser of 5"
+            <TeamSlot
               value={renderTeamName(matchResults[5].loser)}
-              readOnly
+              placeholder="Loser of 5"
               title={
                 renderTeamName(matchResults[5].loser) ? "loser of 5" : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 7 <TrophyFilled onClick={() => showModal(7)} />
@@ -615,31 +513,23 @@ export default function NineTeamBracket({
         {/* Losers Round 3 */}
         <div className="round1-column">
           <div className="match-cell lower-line single-cell">
-            <input
-              className="team-input"
-              placeholder="Loser of 10"
+            <TeamSlot
               value={renderTeamName(matchResults[10].loser)}
-              readOnly
+              placeholder="Loser of 10"
               title={
                 renderTeamName(matchResults[10].loser)
                   ? "loser of 10"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 8"
+            <TeamSlot
               value={renderTeamName(matchResults[8].winner)}
-              readOnly
+              placeholder="Winner of 8"
               title={
                 renderTeamName(matchResults[8].winner)
                   ? "winner of 8"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 12 <TrophyFilled onClick={() => showModal(12)} />
@@ -647,29 +537,21 @@ export default function NineTeamBracket({
           </div>
 
           <div className="match-cell upper-line single-cell">
-            <input
-              className="team-input"
-              placeholder="Loser of 9"
+            <TeamSlot
               value={renderTeamName(matchResults[9].loser)}
-              readOnly
+              placeholder="Loser of 9"
               title={
                 renderTeamName(matchResults[9].loser) ? "loser of 9" : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
-            <input
-              className="team-input"
-              placeholder="Winner of 7"
+            <TeamSlot
               value={renderTeamName(matchResults[7].winner)}
-              readOnly
+              placeholder="Winner of 7"
               title={
                 renderTeamName(matchResults[7].winner)
                   ? "Winner of 7"
                   : undefined
               }
-              tabIndex={-1}
-              onMouseDown={(e) => e.preventDefault()}
             />
             <span className="match-number">
               Match 11 <TrophyFilled onClick={() => showModal(11)} />
@@ -679,31 +561,23 @@ export default function NineTeamBracket({
 
         {/* Losers Round 4 */}
         <div className="match-cell lower-match-col upper-line single-cell">
-          <input
-            className="team-input"
-            placeholder="Winner of 12"
+          <TeamSlot
             value={renderTeamName(matchResults[12].winner)}
-            readOnly
+            placeholder="Winner of 12"
             title={
               renderTeamName(matchResults[12].winner)
                 ? "Winner of 12"
                 : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
-          <input
-            className="team-input"
-            placeholder="Winner of 11"
+          <TeamSlot
             value={renderTeamName(matchResults[11].winner)}
-            readOnly
+            placeholder="Winner of 11"
             title={
               renderTeamName(matchResults[11].winner)
                 ? "Winner of 11"
                 : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
           <span className="match-number">
             Match 13 <TrophyFilled onClick={() => showModal(13)} />
@@ -711,29 +585,21 @@ export default function NineTeamBracket({
         </div>
 
         <div className="match-cell upper-line angle-up90 single-cell">
-          <input
-            className="team-input"
-            placeholder="Loser of 14"
+          <TeamSlot
             value={renderTeamName(matchResults[14].loser)}
-            readOnly
+            placeholder="Loser of 14"
             title={
               renderTeamName(matchResults[14].loser) ? "Loser of 14" : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
-          <input
-            className="team-input"
-            placeholder="Winner of 13"
+          <TeamSlot
             value={renderTeamName(matchResults[13].winner)}
-            readOnly
+            placeholder="Winner of 13"
             title={
               renderTeamName(matchResults[13].winner)
                 ? "Winner of 13"
                 : undefined
             }
-            tabIndex={-1}
-            onMouseDown={(e) => e.preventDefault()}
           />
           <span className="match-number">
             Match 15 <TrophyFilled onClick={() => showModal(15)} />
