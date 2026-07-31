@@ -7,8 +7,12 @@ interface RankedPlayer extends PlayerFromDB {
 }
 
 const sortAndRankData = (data: PlayerFromDB[]): RankedPlayer[] => {
-  // copy + sort by descending score
-  const sortedData = [...data].sort((a, b) => b.score - a.score);
+  // A score of 0 means the player has never played - the worst a tournament
+  // can leave you with is 2.5 (0 wins, 2 losses, from a base of 3). Filter
+  // before ranking so the remaining ranks stay contiguous.
+  const sortedData = data
+    .filter((player) => player.score > 0)
+    .sort((a, b) => b.score - a.score);
 
   let currentRank = 0;
   let lastScore: number | null = null;
@@ -24,8 +28,9 @@ const sortAndRankData = (data: PlayerFromDB[]): RankedPlayer[] => {
 
 export default function PowerRankings() {
   const { players } = useOutletContext<OutletContext>();
+  const ranked = sortAndRankData(players);
 
-  if (players.length === 0) {
+  if (ranked.length === 0) {
     return (
       <div className="main-container">
         <div className="powerrankings-container">
@@ -57,7 +62,7 @@ export default function PowerRankings() {
               </tr>
             </thead>
             <tbody className="power-table-tbody">
-              {sortAndRankData(players).map((p) => (
+              {ranked.map((p) => (
                 <tr key={p.id} className="power-row">
                   <td className="power-table-cell">
                     <span className="power-glass">{p.name}</span>
