@@ -8,6 +8,12 @@ import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
 import { isSameTeam } from "../../_helpers/isSameTeam";
+import { blockedBySubmission } from "../../_helpers/canOpenMatch";
+import {
+  LOSERS_FINAL_SLOTS,
+  GRAND_FINAL_SLOTS,
+  resolveSeries,
+} from "../../_helpers/reserveSeries";
 
 export default function FourTeamBracket({
   teams,
@@ -15,6 +21,8 @@ export default function FourTeamBracket({
   onChange,
   setIsTourneyFinished,
   fireConfetti,
+  reserveMode,
+  hasSubmittedResults,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -31,8 +39,113 @@ export default function FourTeamBracket({
   const team3 = teams[2];
   const team4 = teams[3];
 
+  // ---------------------------------------------------------------------
+  // 7-player (reserve) bracket
+  //
+  //   M1  Team 2 v Team 3            only winners round-1 match
+  //   M2  Team 1 (bye) v Winner 1    semifinal
+  //   M3  Loser 1 v Loser 2          losers R1 - loser is out and DONATES
+  //   M4  Winner 3 v Reserve         losers final
+  //   M5  (same teams)               losers decider, ONLY if M4 did not settle it
+  //       Winner 2 v losers winner   grand final      - M5 or M6
+  //       (same teams)               grand final decider, if needed - M6 or M7
+  //
+  // The losers decider is conditional, so the two finals renumber themselves
+  // depending on whether it exists (see grandFinalNumber).
+  //
+  // The losers final and grand final are each played until one side has 2
+  // losses across the whole tournament, so a team that already lost only has
+  // to be beaten once more. Each game is stored in its own result slot.
+  // ---------------------------------------------------------------------
+  const reserveTeam = team4;
+
+  const losersFinalEntrants =
+    reserveMode && matchResults[3]?.winner && reserveTeam.length === 2
+      ? { A: matchResults[3].winner, B: reserveTeam }
+      : null;
+  const losersFinal = resolveSeries(
+    losersFinalEntrants,
+    LOSERS_FINAL_SLOTS,
+    matchResults
+  );
+
+  const grandFinalEntrants =
+    reserveMode && matchResults[2]?.winner && losersFinal.winner
+      ? { A: matchResults[2].winner, B: losersFinal.winner }
+      : null;
+  const grandFinal = resolveSeries(
+    grandFinalEntrants,
+    GRAND_FINAL_SLOTS,
+    matchResults
+  );
+
   const showModal = (matchNum: number) => {
+    if (blockedBySubmission(hasSubmittedResults)) return;
     let A: Team, B: Team;
+
+    if (reserveMode) {
+      switch (matchNum) {
+        case 1:
+          A = team2;
+          B = team3;
+          break;
+        case 2:
+          if (!matchResults[1].winner) {
+            return message.error("Need winner from Match 1 first.");
+          }
+          A = team1;
+          B = matchResults[1].winner;
+          break;
+        case 3:
+          if (!matchResults[1].loser || !matchResults[2].loser) {
+            return message.error("Need losers from Match 1 and 2 first.");
+          }
+          A = matchResults[1].loser;
+          B = matchResults[2].loser;
+          break;
+        case 4:
+          if (!matchResults[3].winner) {
+            return message.error("Need winner from Match 3 first.");
+          }
+          if (reserveTeam.length < 2) {
+            return message.error(
+              `${reserveTeam[0].name} is waiting for a partner - finish Match 3 first.`
+            );
+          }
+          A = matchResults[3].winner;
+          B = reserveTeam;
+          break;
+        case 5:
+          if (!matchResults[2].winner) {
+            return message.error("Need winner from Match 2 first.");
+          }
+          if (!losersFinal.winner) {
+            return message.error("Finish the losers final first.");
+          }
+          A = matchResults[2].winner;
+          B = losersFinal.winner;
+          break;
+        default:
+          return;
+      }
+
+      // Series matches write to the next free slot instead of a fixed index.
+      // Once a series is decided there is no free slot, so fall back to its
+      // last played game - that keeps the deciding game correctable.
+      const series =
+        matchNum === 4 ? losersFinal : matchNum === 5 ? grandFinal : null;
+      const slot = series
+        ? series.nextSlot ?? series.lastPlayedSlot
+        : matchNum;
+      if (slot == null) return;
+
+      setModalTeams({ A, B });
+      setSelectedWinner(null);
+      setCurrentMatch(slot);
+      setIsModalOpen(true);
+      return;
+    }
+
     switch (matchNum) {
       case 1:
         A = team1;
@@ -77,9 +190,18 @@ export default function FourTeamBracket({
       case 7:
         if (!matchResults[6].winner || !matchResults[6].loser)
           return message.error("Complete Grand Final first.");
-        // if winners-bracket champ wins GF, tournament ends
-        if (matchResults[6].winner === matchResults[4].winner)
-          return message.info("Tournament is over — no reset final needed.");
+        // champion already decided - reopen the deciding match so a
+        // misclicked winner can still be corrected with the lock code
+        if (isSameTeam(matchResults[6].winner, matchResults[4].winner!)) {
+          setModalTeams({
+            A: matchResults[6].winner,
+            B: matchResults[6].loser,
+          });
+          setSelectedWinner(null);
+          setCurrentMatch(6);
+          setIsModalOpen(true);
+          return;
+        }
         // otherwise reset final
         A = matchResults[6].winner;
         B = matchResults[6].loser;
@@ -111,16 +233,303 @@ export default function FourTeamBracket({
   const semiWinner = matchResults[4]?.winner;
   const grandWinner = matchResults[6]?.winner;
   const resetWinner = matchResults[7]?.winner;
-  const tournamentOver = Boolean(
-    grandWinner && semiWinner && isSameTeam(grandWinner, semiWinner)
-  );
-  const needsReset = Boolean(grandWinner && !tournamentOver);
+  const tournamentOver = reserveMode
+    ? Boolean(grandFinal.winner)
+    : Boolean(grandWinner && semiWinner && isSameTeam(grandWinner, semiWinner));
+  const needsReset = reserveMode
+    ? false
+    : Boolean(grandWinner && !tournamentOver);
 
   isTournamentFinsihed({
-    resetWinner,
+    resetWinner: reserveMode ? grandFinal.winner : resetWinner,
     tournamentOver,
     setIsTourneyFinished,
   });
+
+  if (reserveMode) {
+    const champion = grandFinal.winner;
+    // The losers final needed a second game if game 1 did not end the series.
+    // That box stays visible for the rest of the tournament - those games count
+    // toward every player's score, so they belong on the bracket permanently.
+    const losersFinalDecider = losersFinal.games.length > 1 ||
+      Boolean(losersFinal.games.length > 0 && !losersFinal.winner);
+    // The grand final can need up to three games: if both teams arrive
+    // undefeated, one has to lose twice. So render a box per extra game the
+    // series has actually reached - a fixed pair would leave game 3 nowhere to
+    // go. Played boxes stay put; the champion is announced in the banner.
+    const grandFinalExtras = Math.max(
+      0,
+      (champion ? grandFinal.games.length : grandFinal.games.length + 1) - 1
+    );
+    // The losers decider only exists sometimes, so everything after it shifts
+    // by one: finals start at Match 5 or 6.
+    const grandFinalNumber = losersFinalDecider ? 6 : 5;
+
+    return (
+      <div className="bracket-shell">
+        {/* Top row headers */}
+        <div className="header-row">
+          <div className="column-header">Round 1</div>
+          <div className="column-header">Semifinals</div>
+          <div className="column-header">Finals</div>
+        </div>
+
+        {/* Top row matches */}
+        <div className="match-row top-row">
+          <div className="round1-column">
+            <div className="match-cell lower-match-col upper-line">
+              <input
+                className="team-input"
+                value={renderTeamName(team2)}
+                readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                title="2 Seed"
+              />
+              <input
+                className="team-input"
+                value={renderTeamName(team3)}
+                readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                title="3 Seed"
+              />
+              <span className="match-number">
+                Match 1 <TrophyFilled onClick={() => showModal(1)} />
+              </span>
+            </div>
+          </div>
+
+          {/* Semifinals - team 1 has the bye */}
+          <div className="match-cell lower-line lower-match-col">
+            <input
+              className="team-input"
+              value={renderTeamName(team1)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title="1 Seed (bye)"
+            />
+            <input
+              className="team-input"
+              placeholder="Winner of 1"
+              value={renderTeamName(matchResults[1].winner)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title={
+                renderTeamName(matchResults[1].winner)
+                  ? "Winner of 1"
+                  : undefined
+              }
+            />
+            <span className="match-number">
+              Match 2 <TrophyFilled onClick={() => showModal(2)} />
+            </span>
+          </div>
+
+          {/* Grand final - only draws its arrow when a later box follows it */}
+          <div
+            className={`match-cell lower-match-col2${
+              grandFinalExtras > 0 || !champion ? "" : " no-dash"
+            }`}
+          >
+            <input
+              className="team-input"
+              placeholder="Winner of 2"
+              value={renderTeamName(matchResults[2].winner)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title={
+                renderTeamName(matchResults[2].winner)
+                  ? "Winner of 2"
+                  : undefined
+              }
+            />
+            <input
+              className="team-input"
+              placeholder="Winner of 4"
+              value={renderTeamName(losersFinal.winner)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title={
+                renderTeamName(losersFinal.winner) ? "Winner of 4" : undefined
+              }
+            />
+            <span className="match-number">
+              Match{" "}
+              <span key={grandFinalNumber} className="match-number-value">
+                {grandFinalNumber}
+              </span>{" "}
+              <TrophyFilled onClick={() => showModal(5)} />
+            </span>
+          </div>
+
+          {/* one box per extra grand-final game the series has reached */}
+          {grandFinalExtras > 0 && grandFinalEntrants
+            ? Array.from({ length: grandFinalExtras }, (_, i) => (
+                <div className="match-row" key={`gf-extra-${i}`}>
+                  {/* arrow only if another game box follows this one */}
+                  <div
+                    className={`match-cell lower-match-col2${
+                      i === grandFinalExtras - 1 ? " no-dash" : ""
+                    }`}
+                  >
+                    <input
+                      className="team-input"
+                      value={renderTeamName(grandFinalEntrants.A)}
+                      readOnly
+                      tabIndex={-1}
+                      onMouseDown={(e) => e.preventDefault()}
+                      title="Grand final decider"
+                    />
+                    <input
+                      className="team-input"
+                      value={renderTeamName(grandFinalEntrants.B)}
+                      readOnly
+                      tabIndex={-1}
+                      onMouseDown={(e) => e.preventDefault()}
+                      title="Grand final decider"
+                    />
+                    <span className="match-number">
+                      Match{" "}
+                      <span
+                        key={grandFinalNumber + 1 + i}
+                        className="match-number-value"
+                      >
+                        {grandFinalNumber + 1 + i}
+                      </span>{" "}
+                      <TrophyFilled onClick={() => showModal(5)} />
+                    </span>
+                  </div>
+                </div>
+              ))
+            : !champion && (
+                <div className="match-row">
+                  <div className="match-cell lower-match-col2 no-dash">
+                    <h1>?</h1>
+                  </div>
+                </div>
+              )}
+        </div>
+
+        {/* Bottom row headers */}
+        <div className="header-row losers-headers">
+          <div className="column-header">Losers Round 1</div>
+          <div className="column-header">Losers Finals</div>
+          {losersFinalDecider && (
+            <div className="column-header decider-cell">Losers Decider</div>
+          )}
+        </div>
+
+        {/* Bottom row matches */}
+        <div className="match-row bottom-row">
+          {/* Losers round 1 - loser is eliminated and donates a player */}
+          <div className="match-cell lower-match-col upper-line">
+            <input
+              className="team-input"
+              placeholder="Loser of 1"
+              value={renderTeamName(matchResults[1].loser)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title={
+                renderTeamName(matchResults[1].loser) ? "loser of 1" : undefined
+              }
+            />
+            <input
+              className="team-input"
+              placeholder="Loser of 2"
+              value={renderTeamName(matchResults[2].loser)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title={
+                renderTeamName(matchResults[2].loser) ? "loser of 2" : undefined
+              }
+            />
+            <span className="match-number">
+              Match 3 <TrophyFilled onClick={() => showModal(3)} />
+            </span>
+          </div>
+
+          {/* Losers final - reserve enters here. If game 1 does not decide it,
+              a decider box fades in and takes over the arrow to the finals. */}
+          <div
+            className={`match-cell upper-line angle-up65 single-cell${
+              losersFinalDecider ? " arrow-retired" : ""
+            }`}
+          >
+            <input
+              className="team-input"
+              placeholder="Winner of 3"
+              value={renderTeamName(matchResults[3].winner)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title={
+                renderTeamName(matchResults[3].winner)
+                  ? "Winner of 3"
+                  : undefined
+              }
+            />
+            <input
+              className="team-input"
+              value={renderTeamName(reserveTeam)}
+              readOnly
+              tabIndex={-1}
+              onMouseDown={(e) => e.preventDefault()}
+              title="Reserve Team"
+            />
+            <span className="match-number">
+              Match 4 <TrophyFilled onClick={() => showModal(4)} />
+            </span>
+          </div>
+
+          {/* Losers final decider - stays on the bracket once it exists, since
+              its result counts toward every player's score */}
+          {losersFinalDecider && losersFinalEntrants && (
+            <div className="match-cell upper-line angle-up90 single-cell decider-cell">
+              <input
+                className="team-input"
+                value={renderTeamName(losersFinalEntrants.A)}
+                readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                title="Losers final decider"
+              />
+              <input
+                className="team-input"
+                value={renderTeamName(losersFinalEntrants.B)}
+                readOnly
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                title="Losers final decider"
+              />
+              <span className="match-number">
+                Match 5 <TrophyFilled onClick={() => showModal(4)} />
+              </span>
+            </div>
+          )}
+        </div>
+
+        <WhoWonModal
+          open={isModalOpen}
+          teams={modalTeams}
+          selectedWinner={selectedWinner}
+          onSelect={setSelectedWinner}
+          onOk={handleOk}
+          onCancel={closeModal}
+          okDisabled={
+            currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
+          }
+        />
+        {fireConfetti && champion && <Confetti />}
+      </div>
+    );
+  }
 
   return (
     <div className="bracket-shell">
@@ -238,17 +647,9 @@ export default function FourTeamBracket({
           </span>
         </div>
 
-        {tournamentOver ? (
-          <div className="match-row final-row">
-            <div className="match-cell lower-match-col2 champ-cell no-dash">
-              <div className="champion-text">
-                {renderTeamName(grandWinner)} won!
-              </div>
-            </div>
-          </div>
-        ) : needsReset ? (
+        {needsReset ? (
           <div className="match-row">
-            <div className="match-cell lower-match-col2">
+            <div className="match-cell lower-match-col2 no-dash">
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[6].winner)}
@@ -279,15 +680,6 @@ export default function FourTeamBracket({
                 Match 7 <TrophyFilled onClick={() => showModal(7)} />
               </span>
             </div>
-            {resetWinner && (
-              <div className="match-row final-row">
-                <div className="match-cell lower-match-col2 no-dash">
-                  <div className="champion-text">
-                    {renderTeamName(resetWinner)} won!
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ) : (
           <div className="match-row">

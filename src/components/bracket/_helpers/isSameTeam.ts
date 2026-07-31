@@ -7,5 +7,6 @@ export function isSameTeam(teamA: Team, teamB: Team): boolean {
   // always be true once you’ve rehydrated from JSON,
   // because semiWinner and grandWinner were serialized (and then parsed)
   // into two distinct arrays with identical contents.
-  return teamA[0].id === teamB[0].id && teamA[1].id === teamB[1].id;
+  if (teamA.length !== teamB.length) return false;
+  return teamA.every((player, i) => player.id === teamB[i].id);
 }

@@ -7,7 +7,9 @@ export interface PlayerFromDB {
   championships: number;
 }
 
-export type Team = [PlayerFromDB, PlayerFromDB];
+// normally two players. A reserve team starts with one player and gains a
+// partner from the first eliminated team (odd player counts).
+export type Team = PlayerFromDB[];
 
 export interface MatchResult {
   winner: Team | null;
@@ -20,6 +22,18 @@ export interface BracketProps {
   onChange: (newResults: MatchResult[]) => void;
   setIsTourneyFinished: Dispatch<SetStateAction<boolean>>;
   fireConfetti: boolean;
+  // odd player count - one team is a reserve team (see reserveConfig.ts)
+  reserveMode?: boolean;
+  // once results are sent to the backend, matches can no longer be edited -
+  // the saved scores would no longer match the bracket
+  hasSubmittedResults?: boolean;
+}
+
+export interface DonorSelectProps {
+  open: boolean;
+  reservePlayer: PlayerFromDB | null;
+  eliminatedTeam: Team | null;
+  onConfirm: (donor: PlayerFromDB) => void;
 }
 
 export interface HistoryTournament {

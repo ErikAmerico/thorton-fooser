@@ -1,0 +1,91 @@
+/* Overlays the bracket rather than sitting in the flow - appearing or
+   disappearing must not shift anything else on the page. Sticky (not absolute)
+   so it stays centred in the viewport while the bracket scrolls sideways. */
+.champion-banner {
+  position: sticky;
+  top: 8px;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+  /* zero height keeps it out of the flow; the plate is taken out of this
+     collapsed box so its background and border are not clipped by it */
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.champion-banner-inner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 42px;
+  white-space: nowrap;
+  border-radius: 10px;
+  border: 1px solid #c09700;
+  /* gradient over an opaque base so the bracket does not read through it */
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(192, 151, 0, 0.28) 0%,
+      rgba(0, 0, 0, 0.75) 70%
+    ),
+    #000;
+  /* the centring translate lives in the animation too, so the keyframes do not
+     overwrite it - both animations below keep translateX(-50%) */
+  transform: translateX(-50%);
+  animation:
+    championBannerIn 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) both,
+    championGlow 2.6s ease-in-out infinite;
+}
+
+.champion-banner-label {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #e8c65a;
+  opacity: 0.85;
+}
+
+.champion-banner-names {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.55);
+  text-align: center;
+  line-height: 1.2;
+}
+
+@keyframes championBannerIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-14px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes championGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 14px rgba(192, 151, 0, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(192, 151, 0, 0.7);
+  }
+}
+
+@media (max-width: 600px) {
+  .champion-banner-inner {
+    padding: 8px 20px;
+  }
+
+  .champion-banner-names {
+    font-size: 18px;
+  }
+}

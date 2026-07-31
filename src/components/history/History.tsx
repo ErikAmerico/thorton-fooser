@@ -124,6 +124,12 @@ export default function History() {
           onChange: () => {},
           setIsTourneyFinished: () => {},
           fireConfetti: false,
+          // a 7-player reserve tournament stores its two finals as series, so
+          // it allocates more result slots than a normal 4-team bracket (9)
+          reserveMode:
+            current.teams.length === 4 && current.results.length > 9,
+          // past tournaments are already submitted - never editable
+          hasSubmittedResults: true,
         })}
       </div>
       <Modal

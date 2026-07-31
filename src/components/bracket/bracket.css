@@ -5,6 +5,8 @@
   background: linear-gradient(#000 0%, #1d1d1d 50%, #000 100%);
   background-color: black;
   height: calc(100vh);
+  /* anchors the champion banner, which overlays instead of taking up space */
+  position: relative;
 }
 
 .bracket-scroll-content {
@@ -160,6 +162,73 @@
   cursor: default;
 }
 
+/* 7-player bracket: a decider game appears as its own box that fades in */
+.decider-cell {
+  animation: deciderFadeIn 0.55s ease-out both;
+}
+
+@keyframes deciderFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* the feeding box's arrow fades out once the decider box takes over */
+.match-cell.arrow-retired::after {
+  animation: arrowFadeOut 0.4s ease-out both;
+}
+
+@keyframes arrowFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* the finals match number shifts when the losers decider appears - the key
+   change remounts this span, replaying the swap */
+.match-number-value {
+  display: inline-block;
+  animation: matchNumberSwap 0.5s ease-out both;
+}
+
+@keyframes matchNumberSwap {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+    color: #ffd700;
+  }
+  60% {
+    color: #ffd700;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    color: inherit;
+  }
+}
+
+/* the decider box's own arrow fades in with it */
+.match-cell.decider-cell::after {
+  animation: arrowFadeIn 0.55s ease-out 0.2s both;
+}
+
+@keyframes arrowFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .match-cell.placeholder {
   visibility: hidden;
 }
@@ -209,11 +278,6 @@
 
 .match-row.final-row {
   position: relative;
-}
-
-.champion-text {
-  margin-top: 25px;
-  color: #c09700;
 }
 
 .infoCircle:hover {

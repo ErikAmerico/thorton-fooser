@@ -7,6 +7,7 @@ import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
 
 export default function NineTeamBracket({
@@ -15,6 +16,7 @@ export default function NineTeamBracket({
   onChange,
   setIsTourneyFinished,
   fireConfetti,
+  hasSubmittedResults,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -37,6 +39,7 @@ export default function NineTeamBracket({
   const team9 = teams[8];
 
   const showModal = (matchNum: number) => {
+    if (blockedBySubmission(hasSubmittedResults)) return;
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
@@ -56,6 +59,11 @@ export default function NineTeamBracket({
         B = team6;
         break;
       case 5:
+        if (team1.length < 2) {
+          return message.error(
+            `${team1[0].name} is waiting for a partner - finish Match 6 first.`
+          );
+        }
         if (!matchResults[1].winner) {
           return message.error("Need winner from Match 1 first.");
         }
@@ -144,9 +152,18 @@ export default function NineTeamBracket({
       case 17:
         if (!matchResults[16].winner || !matchResults[16].loser)
           return message.error("Complete Grand Final first.");
-        // if winners-bracket champ wins GF, tournament ends
-        if (matchResults[16].winner === matchResults[14].winner)
-          return message.info("Tournament is over — no reset final needed.");
+        // champion already decided - reopen the deciding match so a
+        // misclicked winner can still be corrected with the lock code
+        if (isSameTeam(matchResults[16].winner, matchResults[14].winner!)) {
+          setModalTeams({
+            A: matchResults[16].winner,
+            B: matchResults[16].loser,
+          });
+          setSelectedWinner(null);
+          setCurrentMatch(16);
+          setIsModalOpen(true);
+          return;
+        }
         // otherwise reset final
         A = matchResults[16].winner;
         B = matchResults[16].loser;
@@ -450,17 +467,9 @@ export default function NineTeamBracket({
           </span>
         </div>
 
-        {tournamentOver ? (
-          <div className="match-row final-row">
-            <div className="match-cell lower-match-col4 champ-cell no-dash">
-              <div className="champion-text">
-                {renderTeamName(grandWinner)} won!
-              </div>
-            </div>
-          </div>
-        ) : needsReset ? (
+        {needsReset ? (
           <div className="match-row">
-            <div className="match-cell lower-match-col4">
+            <div className="match-cell lower-match-col4 no-dash">
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[16].winner)}
@@ -491,15 +500,6 @@ export default function NineTeamBracket({
                 Match 17 <TrophyFilled onClick={() => showModal(17)} />
               </span>
             </div>
-            {resetWinner && (
-              <div className="match-row final-row">
-                <div className="match-cell lower-match-col4 no-dash">
-                  <div className="champion-text">
-                    {renderTeamName(resetWinner)} won!
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ) : (
           <div className="match-row">

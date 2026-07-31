@@ -7,6 +7,7 @@ import renderTeamName from "../../_helpers/renderTeamName";
 import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
 
 export default function TwoTeamBracket({
@@ -15,6 +16,7 @@ export default function TwoTeamBracket({
   onChange,
   setIsTourneyFinished,
   fireConfetti,
+  hasSubmittedResults,
 }: BracketProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<number | null>(null);
@@ -30,6 +32,7 @@ export default function TwoTeamBracket({
   const team2 = teams[1];
 
   const showModal = (matchNum: number) => {
+    if (blockedBySubmission(hasSubmittedResults)) return;
     let A: Team, B: Team;
     switch (matchNum) {
       case 1:
@@ -40,15 +43,24 @@ export default function TwoTeamBracket({
         if (!matchResults[1].winner || !matchResults[1].loser) {
           return message.error("Complete Match 1 first.");
         }
-        if (matchResults[1].winner === matchResults[2].winner) {
-          return message.info("Tournament is over — no reset final needed.");
-        }
         A = matchResults[1].winner;
         B = matchResults[1].loser;
         break;
       case 3:
         if (!matchResults[2].loser || !matchResults[2].winner) {
           return message.error("Complete Grand Final first.");
+        }
+        // Match 1's winner also won the grand final - no reset needed, so
+        // reopen the grand final to correct a misclicked winner
+        if (isSameTeam(matchResults[2].winner, matchResults[1].winner!)) {
+          setModalTeams({
+            A: matchResults[2].winner,
+            B: matchResults[2].loser,
+          });
+          setSelectedWinner(null);
+          setCurrentMatch(2);
+          setIsModalOpen(true);
+          return;
         }
         A = matchResults[2].winner;
         B = matchResults[2].loser;
@@ -154,17 +166,9 @@ export default function TwoTeamBracket({
           </span>
         </div>
 
-        {tournamentOver ? (
-          <div className="match-row final-row">
-            <div className="match-cell lower-match-col champ-cell no-dash">
-              <div className="champion-text">
-                {renderTeamName(grandWinner)} won!
-              </div>
-            </div>
-          </div>
-        ) : needsReset ? (
+        {needsReset ? (
           <div className="match-row">
-            <div className="match-cell lower-match-col">
+            <div className="match-cell lower-match-col no-dash">
               <input
                 className="team-input"
                 value={renderTeamName(matchResults[2].winner)}
@@ -195,15 +199,6 @@ export default function TwoTeamBracket({
                 Match 3 <TrophyFilled onClick={() => showModal(3)} />
               </span>
             </div>
-            {resetWinner && (
-              <div className="match-row final-row">
-                <div className="match-cell lower-match-col no-dash">
-                  <div className="champion-text">
-                    {renderTeamName(resetWinner)} won!
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ) : (
           <div className="match-row">
