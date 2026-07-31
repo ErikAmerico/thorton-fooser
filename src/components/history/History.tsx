@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { OutletContext } from "../../types";
 import { useOutletContext } from "react-router-dom";
 import { RenderBracket } from "../bracket/_components/BracketRenderer";
+import ChampionBanner from "../bracket/_components/champion-banner/ChampionBanner";
+import { getChampion } from "../bracket/_helpers/getChampion";
+import { reserveChampion } from "../bracket/_helpers/reserveSeries";
+import { RESERVE_CONFIG } from "../bracket/_helpers/reserveConfig";
 import { Spin, Alert, Button, Modal } from "antd";
 
 import {
@@ -93,6 +97,23 @@ export default function History() {
   const prev = () => setIdx((i) => Math.max(0, i - 1));
   const next = () => setIdx((i) => Math.min(validHistory.length - 1, i + 1));
 
+  // a 7-player reserve tournament stores its two finals as series, so it
+  // allocates more result slots than a normal 4-team bracket (9)
+  const isReserve =
+    current.teams.length === 4 && current.results.length > 9;
+  // older tournaments predate the current result shape - getChampion returns
+  // null for anything it cannot read, so those simply show no banner
+  const reserveCfg = isReserve
+    ? RESERVE_CONFIG[current.teams.length]
+    : undefined;
+  const champion = getChampion(
+    current.results,
+    current.teams.length,
+    reserveCfg
+      ? reserveChampion(current.results, current.teams[reserveCfg.seat])
+      : undefined
+  );
+
   return (
     <div className="bracket-scroll-wrapper">
       <div className="history-header">
@@ -117,6 +138,10 @@ export default function History() {
         />
       </div>
 
+      <div className="history-champion">
+        <ChampionBanner champion={champion} />
+      </div>
+
       <div className="history-bracket">
         {RenderBracket(current.teams.length, {
           teams: current.teams,
@@ -124,10 +149,7 @@ export default function History() {
           onChange: () => {},
           setIsTourneyFinished: () => {},
           fireConfetti: false,
-          // a 7-player reserve tournament stores its two finals as series, so
-          // it allocates more result slots than a normal 4-team bracket (9)
-          reserveMode:
-            current.teams.length === 4 && current.results.length > 9,
+          reserveMode: isReserve,
           // past tournaments are already submitted - never editable
           hasSubmittedResults: true,
         })}

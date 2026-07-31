@@ -44,3 +44,21 @@
 .history-info {
   margin-top: 5px;
 }
+
+/* On the bracket page the champion banner overlays the bracket so it cannot
+   shift anything. Here it sits under the date in normal flow instead, since
+   there is a header above it and nothing to avoid pushing down. */
+.history-champion .champion-banner {
+  position: static;
+  height: auto;
+  margin: 10px 0 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.history-champion .champion-banner-inner {
+  position: static;
+  left: auto;
+  transform: none;
+  animation: championGlow 2.6s ease-in-out infinite;
+}
