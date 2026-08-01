@@ -64,7 +64,13 @@ export function useTeamReveal(
   // a second player mid-tournament, which would otherwise grow slots.length
   // and make a finished reveal look unfinished - restarting the whole draw.
   const totalSlots = useRef(0);
-  const active = locked >= 0 && locked < totalSlots.current;
+  // drives the reel itself
+  const spinning = locked >= 0 && locked < totalSlots.current;
+  // What the UI must treat as "still revealing". `finishing` is the 700ms
+  // window after the last name lands, while the final team still carries its
+  // pop marker - trophies have to stay blocked through it, or a match could be
+  // recorded with a marked name written into matchResults.
+  const active = spinning || finishing;
 
   // The reveal runs at most once per bracket. Teams can legitimately change
   // afterwards - the 7-player reserve gains a donor from the first eliminated
@@ -98,7 +104,7 @@ export function useTeamReveal(
   // The reel reschedules itself with a growing delay so it decelerates into
   // the lock; a separate timeout ends the spin and moves to the next slot.
   useEffect(() => {
-    if (!active) return;
+    if (!spinning) return;
     const spinMs = SPIN_MS;
     let reel: ReturnType<typeof setTimeout>;
     const startedAt = Date.now();
@@ -119,7 +125,7 @@ export function useTeamReveal(
       clearTimeout(reel);
       clearTimeout(lock);
     };
-  }, [active, locked]);
+  }, [spinning, locked]);
 
   /** Jump straight to the finished teams. */
   const skip = () => setLocked(totalSlots.current);
@@ -170,7 +176,7 @@ export function useTeamReveal(
   }, [finalTeams, slots, locked, spinFrame, pool]);
 
   // which team/player slot is mid-spin, so the UI can highlight that cell
-  const spinningAt = active ? slots[locked] : null;
+  const spinningAt = spinning ? slots[locked] : null;
 
   return { teams, isRevealing: active, skip, spinningAt };
 }

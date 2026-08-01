@@ -81,7 +81,9 @@ export default function FourTeamBracket({
     matchResults
   );
 
-  const showModal = (matchNum: number) => {
+  // gameIndex targets a specific game of a series (0-based), so an earlier
+  // game can be reopened and corrected rather than only the latest one
+  const showModal = (matchNum: number, gameIndex?: number) => {
     if (blockedBySubmission(hasSubmittedResults, isRevealing)) return;
     let A: Team, B: Team;
 
@@ -132,12 +134,17 @@ export default function FourTeamBracket({
       }
 
       // Series matches write to the next free slot instead of a fixed index.
-      // Once a series is decided there is no free slot, so fall back to its
-      // last played game - that keeps the deciding game correctable.
+      // Each played game renders its own box and passes its game number, so
+      // every game stays correctable - not just the most recent one. Without a
+      // game number (the "play the next one" trophy) fall back to the next free
+      // slot, or the last played game once the series is decided.
       const series =
         matchNum === 4 ? losersFinal : matchNum === 5 ? grandFinal : null;
+      const seriesSlots = matchNum === 4 ? LOSERS_FINAL_SLOTS : GRAND_FINAL_SLOTS;
       const slot = series
-        ? series.nextSlot ?? series.lastPlayedSlot
+        ? gameIndex != null
+          ? seriesSlots[gameIndex] ?? null
+          : series.nextSlot ?? series.lastPlayedSlot
         : matchNum;
       if (slot == null) return;
 
@@ -378,7 +385,7 @@ export default function FourTeamBracket({
                       >
                         {grandFinalNumber + 1 + i}
                       </span>{" "}
-                      <TrophyFilled onClick={() => showModal(5)} />
+                      <TrophyFilled onClick={() => showModal(5, i + 1)} />
                     </span>
                   </div>
                 </div>
@@ -462,7 +469,7 @@ export default function FourTeamBracket({
                 title="Losers final decider"
               />
               <span className="match-number">
-                Match 5 <TrophyFilled onClick={() => showModal(4)} />
+                Match 5 <TrophyFilled onClick={() => showModal(4, 1)} />
               </span>
             </div>
           )}
