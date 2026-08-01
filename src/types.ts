@@ -76,6 +76,9 @@ export interface WhoWonModalProps {
   onOk: () => void;
   onCancel: () => void;
   okDisabled: boolean;
+  // matches already played from this result, which changing it would
+  // contradict - shown as a warning once the lock code is entered
+  downstream?: number[];
 }
 
 export interface ConfirmWinnerArgs {

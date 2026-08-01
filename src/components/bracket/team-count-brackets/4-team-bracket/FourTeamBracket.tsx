@@ -8,6 +8,7 @@ import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import TeamSlot from "../../_components/TeamSlot";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { downstreamOf } from "../../_helpers/matchGraph";
 import { isSameTeam } from "../../_helpers/isSameTeam";
 import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import {
@@ -491,6 +492,14 @@ export default function FourTeamBracket({
           okDisabled={
             currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
           }
+          downstream={
+            currentMatch !== null
+              ? // reserve mode has no fixed feed graph - its finals are series
+                // spread over several slots, so slot-to-slot dependencies do
+                // not describe it. The series resolver guards those instead.
+                []
+              : []
+          }
         />
         {fireConfetti && champion && <Confetti />}
       </div>
@@ -675,6 +684,11 @@ export default function FourTeamBracket({
         onCancel={closeModal}
         okDisabled={
           currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
+        }
+        downstream={
+          currentMatch !== null
+            ? downstreamOf(currentMatch, 4, teams, matchResults, reserveMode)
+            : []
         }
       />
 

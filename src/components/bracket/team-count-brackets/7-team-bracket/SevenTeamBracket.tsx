@@ -8,6 +8,7 @@ import isTournamentFinsihed from "../../_helpers/isTournamentFinished";
 import WhoWonModal from "../../_components/WhoWonModal";
 import TeamSlot from "../../_components/TeamSlot";
 import confirmWinner from "../../_helpers/confirmWinner";
+import { downstreamOf } from "../../_helpers/matchGraph";
 import { blockedBySubmission } from "../../_helpers/canOpenMatch";
 import { isSameTeam } from "../../_helpers/isSameTeam";
 
@@ -496,6 +497,11 @@ export default function SevenTeamBracket({
         onCancel={closeModal}
         okDisabled={
           currentMatch !== null && Boolean(matchResults[currentMatch]?.winner)
+        }
+        downstream={
+          currentMatch !== null
+            ? downstreamOf(currentMatch, 7, teams, matchResults)
+            : []
         }
       />
       {fireConfetti && !needsReset && grandWinner && <Confetti />}

@@ -217,6 +217,48 @@
   color: #000;
 }
 
+/* Says why Submit Results is disabled. Zero height so it overlays rather than
+   shifting the bracket, the same approach as the champion banner. */
+.stale-warning-bar {
+  position: sticky;
+  /* same line as Cancel Game / Submit Results, like the reserve button */
+  top: 11px;
+  left: 0;
+  z-index: 5;
+  width: 100vw;
+  max-width: 100%;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.stale-warning {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  white-space: nowrap;
+  background: #000;
+  border: 1px solid #a80000;
+  border-radius: 4px;
+  padding: 3px 12px;
+  font-size: 13px;
+  font-family: sans-serif;
+  color: #ff8a8a;
+}
+
+/* shown in the Who Won modal when a correction would contradict later games */
+.downstream-warning {
+  margin-top: 16px;
+  padding: 8px 12px;
+  border: 1px solid #c09700;
+  border-radius: 6px;
+  background: rgba(192, 151, 0, 0.12);
+  color: #e8c65a;
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: left;
+}
+
 /* ---- slot-machine team reveal ----------------------------------------- */
 
 /* the slot being drawn: gold-lit, with each name sliding up out of view as

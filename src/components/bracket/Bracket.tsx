@@ -13,6 +13,11 @@ import DonorSelectModal from "./_components/donor-select-modal/DonorSelectModal"
 import ChampionBanner from "./_components/champion-banner/ChampionBanner";
 import { getChampion } from "./_helpers/getChampion";
 import { isSameTeam } from "./_helpers/isSameTeam";
+import {
+  staleMatches,
+  staleReserveMatches,
+  labelStaleSlots,
+} from "./_helpers/matchGraph";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { RESERVE_CONFIG } from "./_helpers/reserveConfig";
 import { useTeamReveal } from "./_helpers/useTeamReveal";
@@ -20,6 +25,8 @@ import {
   RESERVE_RESULT_SLOTS,
   reserveChampion,
   lossesFor,
+  LOSERS_FINAL_SLOTS,
+  GRAND_FINAL_SLOTS,
 } from "./_helpers/reserveSeries";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
@@ -191,6 +198,16 @@ export default function Bracket() {
     if (!champion) {
       return message.error(
         "This bracket has no champion yet - finish or fix the remaining matches first."
+      );
+    }
+    // A correction left results that contradict the matches feeding them. Those
+    // games could not have happened, and they score points, so submitting now
+    // would post wrong scores for everyone in them.
+    if (staleSlots.length > 0) {
+      return message.error(
+        staleLabels.length === 1
+          ? `${staleLabels[0]} no longer matches the bracket - replay it before submitting.`
+          : `${staleLabels.join(", ")} no longer match the bracket - replay them before submitting.`
       );
     }
 
@@ -387,9 +404,57 @@ export default function Bracket() {
       )
     : null;
 
+  // Matches whose stored result no longer matches who feeds them - the mark of
+  // a correction made after later games were already played. Those results
+  // describe games that could not have happened and still score points, so the
+  // bracket must not be submitted until they are replayed.
+  // The 7-player bracket has no fixed feed graph (its finals are series spread
+  // over several slots), so it gets an equivalent check of its own.
+  const isReserveBracket = Boolean(reserveCfg) && teamCount === 4;
+  const staleSlots = isReserveBracket
+    ? staleReserveMatches(
+        teams,
+        matchResults ?? null,
+        LOSERS_FINAL_SLOTS,
+        GRAND_FINAL_SLOTS
+      )
+    : staleMatches(teamCount, teams, matchResults ?? null);
+
+  // Slot numbers are not match numbers in the 7-player bracket - it spreads two
+  // series over slots 4-10 while only labelling Match 1 to 6 on screen. Name
+  // them the way the bracket does, or the warning points at nothing.
+  const losersFinalPlayed = LOSERS_FINAL_SLOTS.filter(
+    (s) => matchResults?.[s]?.winner
+  ).length;
+  const staleLabels = labelStaleSlots(
+    staleSlots,
+    isReserveBracket,
+    LOSERS_FINAL_SLOTS,
+    GRAND_FINAL_SLOTS,
+    losersFinalPlayed > 1
+  );
+
   return (
     <div className="bracket-scroll-wrapper">
       {teams && <ChampionBanner champion={champion} />}
+
+      {/* Says why Submit Results is disabled - a correction left results that
+          contradict the matches feeding them. Overlays so it cannot shift the
+          bracket, same as the champion banner. */}
+      {staleSlots.length > 0 && !hasSubmittedResults && (
+        <div
+          className="stale-warning-bar"
+          // both this and the reserve button sit top-right; drop this one a
+          // line when they are on screen together so they cannot overlap
+          style={canChangeDonor ? { top: 44 } : undefined}
+        >
+          <span className="stale-warning">
+            {staleLabels.length === 1
+              ? `${staleLabels[0]} no longer matches the bracket - replay it to submit.`
+              : `${staleLabels.join(", ")} no longer match the bracket - replay them to submit.`}
+          </span>
+        </div>
+      )}
 
       {/* The donor pick is otherwise one-way - offer a redo until the reserve
           team has actually played with that partner. Overlays rather than
@@ -422,8 +487,14 @@ export default function Bracket() {
             onEndGame={showEndGameModal}
             onSubmitResults={showSubmitModal}
             onShowInfo={showInfoModal}
-            // follows the champion, not the raw slots - see `champion` above
-            isTourneyFinished={Boolean(champion) && !hasSubmittedResults}
+            // follows the champion, not the raw slots - see `champion` above,
+            // and never while a correction has left results contradicting
+            // the matches that feed them
+            isTourneyFinished={
+              Boolean(champion) &&
+              staleSlots.length === 0 &&
+              !hasSubmittedResults
+            }
             hasSubmittedResults={hasSubmittedResults}
             setIsSummaryModalOpen={setIsSummaryModalOpen}
             onGenerateNewReport={generateNewSummary}
