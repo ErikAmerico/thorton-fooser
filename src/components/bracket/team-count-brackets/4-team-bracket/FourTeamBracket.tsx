@@ -225,6 +225,9 @@ export default function FourTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 4,
+      grandFinalSlot: 6,
+      resetFinalSlot: 7,
     });
 
   const closeModal = () => {

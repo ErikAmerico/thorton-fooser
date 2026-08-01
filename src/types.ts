@@ -83,6 +83,11 @@ export interface ConfirmWinnerArgs {
   matchResults: MatchResult[];
   onChange: (newResults: MatchResult[]) => void;
   closeModal: () => void;
+  // slot indices for this bracket, so a reset final that a correction made
+  // unnecessary can be discarded instead of lingering in the results
+  winnersFinalSlot?: number;
+  grandFinalSlot?: number;
+  resetFinalSlot?: number;
 }
 
 export interface CancelGameProps {

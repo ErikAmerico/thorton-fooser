@@ -165,6 +165,9 @@ export default function SevenTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 10,
+      grandFinalSlot: 12,
+      resetFinalSlot: 13,
     });
 
   const closeModal = () => {

@@ -172,6 +172,9 @@ export default function EightTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 12,
+      grandFinalSlot: 14,
+      resetFinalSlot: 15,
     });
 
   const closeModal = () => {

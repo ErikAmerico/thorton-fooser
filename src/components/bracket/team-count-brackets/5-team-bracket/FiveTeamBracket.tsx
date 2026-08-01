@@ -137,6 +137,9 @@ export default function FiveTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 6,
+      grandFinalSlot: 8,
+      resetFinalSlot: 9,
     });
 
   const closeModal = () => {

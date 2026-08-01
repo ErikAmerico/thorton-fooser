@@ -187,6 +187,9 @@ export default function NineTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 14,
+      grandFinalSlot: 16,
+      resetFinalSlot: 17,
     });
 
   const closeModal = () => {

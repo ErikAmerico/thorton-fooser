@@ -148,6 +148,9 @@ export default function SixTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 8,
+      grandFinalSlot: 10,
+      resetFinalSlot: 11,
     });
 
   const closeModal = () => {

@@ -24,15 +24,18 @@ function championOf(
   gf: number,
   rf: number
 ): Team | null {
-  const resetWinner = matchResults[rf]?.winner ?? null;
-  if (resetWinner) return resetWinner;
-
   const grandWinner = matchResults[gf]?.winner ?? null;
   const wbWinner = matchResults[wb]?.winner ?? null;
   if (!grandWinner || !wbWinner) return null;
 
-  // the undefeated team won the grand final - no reset needed, title decided
-  return isSameTeam(grandWinner, wbWinner) ? grandWinner : null;
+  // The undefeated team won the grand final - no reset is needed, so the title
+  // is already decided. A reset result may still be sitting in slot rf from
+  // before a correction; it describes a game that no longer belongs to this
+  // bracket, so it must not be read here.
+  if (isSameTeam(grandWinner, wbWinner)) return grandWinner;
+
+  // the losers-bracket team won, so the reset final decides it
+  return matchResults[rf]?.winner ?? null;
 }
 
 // teamCount -> [winners-final slot, grand-final slot, reset-final slot]

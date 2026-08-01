@@ -84,6 +84,9 @@ export default function TwoTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 1,
+      grandFinalSlot: 2,
+      resetFinalSlot: 3,
     });
 
   const closeModal = () => {

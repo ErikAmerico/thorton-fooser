@@ -99,6 +99,9 @@ export default function ThreeTeamBracket({
       matchResults,
       onChange,
       closeModal,
+      winnersFinalSlot: 2,
+      grandFinalSlot: 4,
+      resetFinalSlot: 5,
     });
 
   const closeModal = () => {

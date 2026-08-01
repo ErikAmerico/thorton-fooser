@@ -245,6 +245,27 @@ export default function Bracket() {
     reserveCfg && matchResults
       ? matchResults[reserveCfg.feederMatch]?.loser ?? null
       : null;
+  // A correction to the feeder match can un-eliminate the team that donated,
+  // which would leave the donor on the reserve team AND on their original team
+  // - one player on two live teams. Detect that and send them back.
+  const donorIsStale = Boolean(
+    reserveTeam &&
+      reserveTeam.length === 2 &&
+      eliminatedTeam &&
+      !eliminatedTeam.some((p) => p.id === reserveTeam[1].id)
+  );
+
+  useEffect(() => {
+    if (!donorIsStale || !teams || !reserveCfg) return;
+    const newTeams = teams.map((team, i) =>
+      i === reserveCfg.seat ? [team[0]] : team
+    );
+    setBracketState({ ...bracketState, teams: newTeams });
+    message.info("That team is back in - pick a new player for the reserve.");
+    // bracketState is the object we are replacing; including it would loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [donorIsStale]);
+
   // feeder match decided but the reserve team is still solo - pick a donor
   const donorNeeded = Boolean(
     reserveTeam && reserveTeam.length === 1 && eliminatedTeam
@@ -271,7 +292,9 @@ export default function Bracket() {
           champion={getChampion(
             matchResults,
             teamCount,
-            reserveCfg && matchResults
+            // only the 7-player bracket resolves its champion from a series;
+            // every other reserve count uses the standard CHAMPION_SLOTS path
+            reserveCfg && matchResults && teamCount === 4
               ? reserveChampion(matchResults, teams[reserveCfg.seat])
               : undefined
           )}
