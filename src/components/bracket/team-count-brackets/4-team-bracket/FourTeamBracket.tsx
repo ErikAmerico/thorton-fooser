@@ -225,9 +225,13 @@ export default function FourTeamBracket({
       matchResults,
       onChange,
       closeModal,
-      winnersFinalSlot: 4,
-      grandFinalSlot: 6,
-      resetFinalSlot: 7,
+      // Reserve mode has no reset final - slots 4-6 are the losers-final
+      // series and 7-10 the grand-final series. Passing the standard bracket's
+      // slot numbers here would make confirmWinner erase grand-final game 1
+      // the moment it is recorded.
+      ...(reserveMode
+        ? {}
+        : { winnersFinalSlot: 4, grandFinalSlot: 6, resetFinalSlot: 7 }),
     });
 
   const closeModal = () => {

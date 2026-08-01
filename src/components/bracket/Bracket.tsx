@@ -12,6 +12,7 @@ import SummaryModal from "./_components/summary-modal/SummaryModal";
 import DonorSelectModal from "./_components/donor-select-modal/DonorSelectModal";
 import ChampionBanner from "./_components/champion-banner/ChampionBanner";
 import { getChampion } from "./_helpers/getChampion";
+import { isSameTeam } from "./_helpers/isSameTeam";
 import { shufflePlayerFromDB } from "./_helpers/shufflePlayerFromDB";
 import { RESERVE_CONFIG } from "./_helpers/reserveConfig";
 import { useTeamReveal } from "./_helpers/useTeamReveal";
@@ -256,11 +257,26 @@ export default function Bracket() {
   );
 
   useEffect(() => {
-    if (!donorIsStale || !teams || !reserveCfg) return;
+    if (!donorIsStale || !teams || !reserveCfg || !matchResults) return;
+    const staleReserve = teams[reserveCfg.seat];
     const newTeams = teams.map((team, i) =>
       i === reserveCfg.seat ? [team[0]] : team
     );
-    setBracketState({ ...bracketState, teams: newTeams });
+    // Any match the reserve already played was recorded with the old pairing.
+    // Leaving those results would keep advancing a team that no longer exists
+    // and could put the returned donor on both sides of a later match, so drop
+    // every result the stale reserve team appears in.
+    const newResults = matchResults.map((m) =>
+      (m.winner && isSameTeam(m.winner, staleReserve)) ||
+      (m.loser && isSameTeam(m.loser, staleReserve))
+        ? { winner: null, loser: null }
+        : m
+    );
+    setBracketState({
+      ...bracketState,
+      teams: newTeams,
+      matchResults: newResults,
+    });
     message.info("That team is back in - pick a new player for the reserve.");
     // bracketState is the object we are replacing; including it would loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
