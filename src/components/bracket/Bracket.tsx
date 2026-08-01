@@ -25,6 +25,7 @@ import {
   RESERVE_RESULT_SLOTS,
   reserveChampion,
   lossesFor,
+  resolveSeries,
   LOSERS_FINAL_SLOTS,
   GRAND_FINAL_SLOTS,
 } from "./_helpers/reserveSeries";
@@ -205,7 +206,9 @@ export default function Bracket() {
     // would post wrong scores for everyone in them.
     if (staleSlots.length > 0) {
       return message.error(
-        staleLabels.length === 1
+        staleNeedsLosersFinalFirst
+          ? "Finish the losers final first - the finals need replaying before submitting."
+          : staleLabels.length === 1
           ? `${staleLabels[0]} no longer matches the bracket - replay it before submitting.`
           : `${staleLabels.join(", ")} no longer match the bracket - replay them before submitting.`
       );
@@ -423,15 +426,42 @@ export default function Bracket() {
   // Slot numbers are not match numbers in the 7-player bracket - it spreads two
   // series over slots 4-10 while only labelling Match 1 to 6 on screen. Name
   // them the way the bracket does, or the warning points at nothing.
-  const losersFinalPlayed = LOSERS_FINAL_SLOTS.filter(
-    (s) => matchResults?.[s]?.winner
-  ).length;
+  // Resolve the losers final exactly as FourTeamBracket does. Counting played
+  // games alone is not enough: the component also shows the decider box while
+  // a single game has been played and the series is still open, and that
+  // shifts every finals label by one. Getting it wrong points the warning at a
+  // real box that is a different match.
+  const reserveLosersFinal =
+    isReserveBracket && matchResults && teams
+      ? resolveSeries(
+          matchResults[3]?.winner && teams[3]?.length === 2
+            ? { A: matchResults[3].winner, B: teams[3] }
+            : null,
+          LOSERS_FINAL_SLOTS,
+          matchResults
+        )
+      : null;
+  const losersFinalDecider = Boolean(
+    reserveLosersFinal &&
+      (reserveLosersFinal.games.length > 1 ||
+        (reserveLosersFinal.games.length > 0 && !reserveLosersFinal.winner))
+  );
   const staleLabels = labelStaleSlots(
     staleSlots,
     isReserveBracket,
     LOSERS_FINAL_SLOTS,
     GRAND_FINAL_SLOTS,
-    losersFinalPlayed > 1
+    losersFinalDecider
+  );
+  // The grand final only renders once the losers final has a winner, so a
+  // correction that reopens the losers final can flag grand-final games whose
+  // boxes are not on screen. Naming them alone reads as a bug, so say what to
+  // do first - replaying the losers final brings those boxes back.
+  const staleNeedsLosersFinalFirst = Boolean(
+    isReserveBracket &&
+      reserveLosersFinal &&
+      !reserveLosersFinal.winner &&
+      staleSlots.some((s) => GRAND_FINAL_SLOTS.includes(s))
   );
 
   return (
@@ -449,7 +479,9 @@ export default function Bracket() {
           style={canChangeDonor ? { top: 44 } : undefined}
         >
           <span className="stale-warning">
-            {staleLabels.length === 1
+            {staleNeedsLosersFinalFirst
+              ? "Finish the losers final first - the finals need replaying to submit."
+              : staleLabels.length === 1
               ? `${staleLabels[0]} no longer matches the bracket - replay it to submit.`
               : `${staleLabels.join(", ")} no longer match the bracket - replay them to submit.`}
           </span>
