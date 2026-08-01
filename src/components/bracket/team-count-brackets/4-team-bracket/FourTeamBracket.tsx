@@ -355,7 +355,9 @@ export default function FourTeamBracket({
               <span key={grandFinalNumber} className="match-number-value">
                 {grandFinalNumber}
               </span>{" "}
-              <TrophyFilled onClick={() => showModal(5)} />
+              {/* game 1 of the series - without the index this falls through
+                  to the next free slot and silently records an extra game */}
+              <TrophyFilled onClick={() => showModal(5, 0)} />
             </span>
           </div>
 
@@ -452,7 +454,8 @@ export default function FourTeamBracket({
               title="Reserve Team"
             />
             <span className="match-number">
-              Match 4 <TrophyFilled onClick={() => showModal(4)} />
+              {/* game 1 of the series - see the grand final above */}
+              Match 4 <TrophyFilled onClick={() => showModal(4, 0)} />
             </span>
           </div>
 
