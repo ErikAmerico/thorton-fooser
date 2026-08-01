@@ -282,9 +282,28 @@ export default function Bracket() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [donorIsStale]);
 
+  // Reopened by the user after a misclick on "Lock In" - the pick is otherwise
+  // one-way, and there is no undo once the modal closes.
+  const [redoDonor, setRedoDonor] = useState(false);
+
   // feeder match decided but the reserve team is still solo - pick a donor
   const donorNeeded = Boolean(
-    reserveTeam && reserveTeam.length === 1 && eliminatedTeam
+    reserveTeam && (reserveTeam.length === 1 || redoDonor) && eliminatedTeam
+  );
+
+  // Changing the partner is only safe while the reserve has not played yet;
+  // afterwards those results would reference a team that no longer exists.
+  const reservePlayedYet = Boolean(
+    reserveTeam &&
+      reserveTeam.length === 2 &&
+      matchResults?.some(
+        (m) =>
+          (m.winner && isSameTeam(m.winner, reserveTeam)) ||
+          (m.loser && isSameTeam(m.loser, reserveTeam))
+      )
+  );
+  const canChangeDonor = Boolean(
+    reserveTeam && reserveTeam.length === 2 && eliminatedTeam && !reservePlayedYet
   );
 
   const assignDonor = (donor: PlayerFromDB) => {
@@ -293,9 +312,11 @@ export default function Bracket() {
     // slot-machine reveal must not replay, so close the reveal window first.
     setJustGenerated(false);
     const newTeams = teams.map((team, i) =>
-      i === reserveCfg.seat ? [...team, donor] : team
+      // replacing an earlier pick keeps only the original reserve player
+      i === reserveCfg.seat ? [team[0], donor] : team
     );
     setBracketState({ ...bracketState, teams: newTeams });
+    setRedoDonor(false);
     message.success(
       `${donor.name} joins ${reserveTeam[0].name} on the reserve team!`
     );
@@ -316,6 +337,21 @@ export default function Bracket() {
           )}
         />
       )}
+
+      {/* The donor pick is otherwise one-way - offer a redo until the reserve
+          team has actually played with that partner. Overlays rather than
+          sitting in the flow, so appearing does not shift the bracket. */}
+      {canChangeDonor && !hasSubmittedResults && (
+        <div className="change-donor-bar">
+          <button
+            className="change-donor-btn"
+            onClick={() => setRedoDonor(true)}
+          >
+            Change reserve partner
+          </button>
+        </div>
+      )}
+
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         {!teams && (
           <PlayerPicker
@@ -339,7 +375,6 @@ export default function Bracket() {
             onGenerateNewReport={generateNewSummary}
           />
         )}
-
 
         <div className="bracket-scroll-content">
           {teams &&
@@ -382,6 +417,8 @@ export default function Bracket() {
         reservePlayer={reserveTeam?.[0] ?? null}
         eliminatedTeam={eliminatedTeam}
         onConfirm={assignDonor}
+        // backing out is only offered when changing an existing pick
+        onCancel={redoDonor ? () => setRedoDonor(false) : undefined}
       />
     </div>
   );

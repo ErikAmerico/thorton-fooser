@@ -9,6 +9,7 @@ export default function DonorSelectModal({
   reservePlayer,
   eliminatedTeam,
   onConfirm,
+  onCancel,
 }: DonorSelectProps) {
   const [highlight, setHighlight] = useState<number | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
@@ -100,6 +101,17 @@ export default function DonorSelectModal({
           {donor && !spinning ? `Lock In ${donor.name}` : "Lock In"}
         </Button>
       </div>
+      {/* only offered when reopening an existing pick - the first time round
+          a partner has to be chosen before the bracket can continue */}
+      {onCancel && (
+        <Button
+          className="donor-keep-btn"
+          onClick={onCancel}
+          disabled={spinning}
+        >
+          Keep current partner
+        </Button>
+      )}
     </Modal>
   );
 }

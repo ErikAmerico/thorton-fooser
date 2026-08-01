@@ -45,6 +45,8 @@ export interface DonorSelectProps {
   reservePlayer: PlayerFromDB | null;
   eliminatedTeam: Team | null;
   onConfirm: (donor: PlayerFromDB) => void;
+  // only supplied when reopening an existing pick, so it can be backed out of
+  onCancel?: () => void;
 }
 
 export interface HistoryTournament {

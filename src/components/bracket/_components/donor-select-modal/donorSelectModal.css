@@ -69,3 +69,16 @@
   border-color: #ababab;
   color: black;
 }
+
+/* shown only when reopening an existing pick */
+.donor-keep-btn {
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid #666;
+  color: #bbb;
+}
+
+.donor-keep-btn:hover {
+  border-color: #c09700 !important;
+  color: #c09700 !important;
+}

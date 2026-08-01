@@ -63,7 +63,7 @@ export default function SixTeamBracket({
           );
         }
         if (!matchResults[2].winner) {
-          return message.error("Need Winner from Match 1 first.");
+          return message.error("Need winner from Match 2 first.");
         }
         A = team2;
         B = matchResults[2].winner;

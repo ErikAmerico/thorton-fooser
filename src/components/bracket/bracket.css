@@ -176,6 +176,47 @@
   cursor: default;
 }
 
+/* Undo for a misclicked donor pick - only while the reserve has not played.
+   Sticky with zero height so it overlays the bracket instead of shifting it,
+   the same approach as the champion banner. */
+.change-donor-bar {
+  position: sticky;
+  /* sits on the same line as Cancel Game / Submit Results */
+  top: 11px;
+  left: 0;
+  z-index: 5;
+  /* the wrapper scrolls horizontally, so pin to the viewport rather than the
+     bracket's full content width - otherwise the button drifts off screen */
+  width: 100vw;
+  max-width: 100%;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Anchored to the right of the sticky parent, which spans the viewport - so it
+   stays on screen however far the bracket is scrolled sideways. */
+.change-donor-btn {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  pointer-events: auto;
+  background: #000;
+  border: 1px solid #c09700;
+  color: #c09700;
+  border-radius: 4px;
+  padding: 3px 14px;
+  font-size: 13px;
+  font-family: sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.change-donor-btn:hover {
+  background: #c09700;
+  color: #000;
+}
+
 /* ---- slot-machine team reveal ----------------------------------------- */
 
 /* the slot being drawn: gold-lit, with each name sliding up out of view as

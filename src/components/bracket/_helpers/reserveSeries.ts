@@ -17,13 +17,25 @@ export const LOSERS_FINAL_SLOTS = [4, 5, 6];
 export const GRAND_FINAL_SLOTS = [7, 8, 9, 10];
 export const RESERVE_RESULT_SLOTS = 11;
 
-/** Losses a team has accumulated across every game played so far. */
-export function lossesFor(team: Team, matchResults: MatchResult[]): number {
-  return matchResults.reduce(
-    (total, match) =>
-      match.loser && isSameTeam(match.loser, team) ? total + 1 : total,
-    0
-  );
+/**
+ * Losses a team has accumulated, optionally ignoring everything after a given
+ * slot.
+ *
+ * A series must be judged only on what had happened by the time it was played.
+ * Counting later rounds too means that once the losers-final winner picks up
+ * their second loss in the grand final, re-resolving the losers final flips its
+ * answer to the team that actually lost it - so reopening a grand-final game
+ * offers an opponent who is already out.
+ */
+export function lossesFor(
+  team: Team,
+  matchResults: MatchResult[],
+  upToSlot?: number
+): number {
+  return matchResults.reduce((total, match, slot) => {
+    if (upToSlot != null && slot > upToSlot) return total;
+    return match.loser && isSameTeam(match.loser, team) ? total + 1 : total;
+  }, 0);
 }
 
 /** The games of a series that have been played, in order. */
@@ -90,8 +102,9 @@ function lastPlayedSlot(
 
 /**
  * Resolve a series between two teams. `entrants` may be null while the bracket
- * is still waiting on a feeder match. Losses are counted tournament-wide, so a
- * team arriving with one loss only needs to be beaten once more.
+ * is still waiting on a feeder match. Losses are counted tournament-wide up to
+ * this series' own last slot, so a team arriving with one loss only needs to be
+ * beaten once more - but a later round cannot rewrite who won this one.
  */
 export function resolveSeries(
   entrants: { A: Team; B: Team } | null,
@@ -111,8 +124,12 @@ export function resolveSeries(
     };
   }
 
-  const lossesA = lossesFor(entrants.A, matchResults);
-  const lossesB = lossesFor(entrants.B, matchResults);
+  // Judge the series only on results up to its own last slot. Anything later
+  // belongs to a subsequent round and must not retroactively change who won
+  // this one - see lossesFor.
+  const upTo = slots[slots.length - 1];
+  const lossesA = lossesFor(entrants.A, matchResults, upTo);
+  const lossesB = lossesFor(entrants.B, matchResults, upTo);
 
   if (lossesA >= 2 || lossesB >= 2) {
     const eliminated = lossesA >= 2 ? entrants.A : entrants.B;
