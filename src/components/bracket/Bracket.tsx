@@ -19,6 +19,7 @@ import { useTeamReveal } from "./_helpers/useTeamReveal";
 import {
   RESERVE_RESULT_SLOTS,
   reserveChampion,
+  lossesFor,
 } from "./_helpers/reserveSeries";
 import { useLocalStorageBracketState } from "./_helpers/useLocalStorageBracketState";
 import { MatchResult, PlayerFromDB, Team, OutletContext } from "../../types";
@@ -184,8 +185,16 @@ export default function Bracket() {
       //avoiding typescript null error. This will never be null.
       return message.error("Cannot submit: no bracket has been generated yet");
     }
+    // A correction can leave the bracket in a state the slots call "finished"
+    // while no champion can actually be computed. Submitting then would post
+    // scores from a bracket with holes in it.
+    if (!champion) {
+      return message.error(
+        "This bracket has no champion yet - finish or fix the remaining matches first."
+      );
+    }
 
-    const finalScores = calculateScores(matchResults, isTourneyFinished);
+    const finalScores = calculateScores(matchResults, true);
     try {
       await batchUpdateScoresAndSendTournamentData(
         finalScores,
@@ -246,14 +255,35 @@ export default function Bracket() {
     reserveCfg && matchResults
       ? matchResults[reserveCfg.feederMatch]?.loser ?? null
       : null;
-  // A correction to the feeder match can un-eliminate the team that donated,
-  // which would leave the donor on the reserve team AND on their original team
-  // - one player on two live teams. Detect that and send them back.
+  // A correction can un-eliminate the team that donated, leaving the donor on
+  // the reserve team AND on their original team - one player on two live
+  // teams. Two ways that happens, and both have to be checked:
+  //   - the feeder's loser changed, so the donor is no longer part of it
+  //   - the feeder's loser is unchanged but a correction elsewhere erased
+  //     their other loss, so they are alive again at one loss
+  // The second is why membership alone is not enough: the stored slot still
+  // names them, so only a real loss count reveals it.
+  const donorTeamStillOut = Boolean(
+    reserveTeam &&
+      reserveTeam.length === 2 &&
+      eliminatedTeam &&
+      matchResults &&
+      lossesFor(eliminatedTeam, matchResults) >= 2
+  );
   const donorIsStale = Boolean(
     reserveTeam &&
       reserveTeam.length === 2 &&
       eliminatedTeam &&
-      !eliminatedTeam.some((p) => p.id === reserveTeam[1].id)
+      (!eliminatedTeam.some((p) => p.id === reserveTeam[1].id) ||
+        !donorTeamStillOut)
+  );
+  // If the feeder's loser is no longer actually eliminated, no donor can come
+  // from that team - so the modal must not reopen asking for one. Every pick
+  // would be stale the instant it was made, and with no cancel on a first-time
+  // pick that loops forever with no way out. Clear the feeder result instead,
+  // which returns the bracket to a state the user can play or correct.
+  const feederNeedsReplay = Boolean(
+    reserveTeam && eliminatedTeam && matchResults && !donorTeamStillOut
   );
 
   useEffect(() => {
@@ -272,12 +302,22 @@ export default function Bracket() {
         ? { winner: null, loser: null }
         : m
     );
+    // The feeder's loser is not actually eliminated any more, so there is no
+    // team to donate from. Clearing the feeder closes the donor modal instead
+    // of reopening it on a pick that would be stale immediately.
+    if (feederNeedsReplay) {
+      newResults[reserveCfg.feederMatch] = { winner: null, loser: null };
+    }
     setBracketState({
       ...bracketState,
       teams: newTeams,
       matchResults: newResults,
     });
-    message.info("That team is back in - pick a new player for the reserve.");
+    message.info(
+      feederNeedsReplay
+        ? "That team is back in - replay the match that eliminated them."
+        : "That team is back in - pick a new player for the reserve."
+    );
     // bracketState is the object we are replacing; including it would loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [donorIsStale]);
@@ -286,9 +326,17 @@ export default function Bracket() {
   // one-way, and there is no undo once the modal closes.
   const [redoDonor, setRedoDonor] = useState(false);
 
-  // feeder match decided but the reserve team is still solo - pick a donor
+  // Feeder match decided but the reserve team is still solo - pick a donor.
+  // Never ask while that team is not genuinely eliminated: every pick would be
+  // stale on arrival and the modal would reopen forever with no way out.
+  const feederLoserIsOut = Boolean(
+    eliminatedTeam && matchResults && lossesFor(eliminatedTeam, matchResults) >= 2
+  );
   const donorNeeded = Boolean(
-    reserveTeam && (reserveTeam.length === 1 || redoDonor) && eliminatedTeam
+    reserveTeam &&
+      (reserveTeam.length === 1 || redoDonor) &&
+      eliminatedTeam &&
+      feederLoserIsOut
   );
 
   // Changing the partner is only safe while the reserve has not played yet;
@@ -322,21 +370,26 @@ export default function Bracket() {
     );
   };
 
+  // The single source of truth for "is this tournament over". Each bracket
+  // also derives tournamentOver/resetWinner from raw slots, but those can
+  // disagree with getChampion - a correction can leave a reset result behind
+  // with no winners final, so the slots say finished while no champion can be
+  // computed. Submit Results must follow the champion, not the slots.
+  const champion = teams
+    ? getChampion(
+        matchResults,
+        teamCount,
+        // only the 7-player bracket resolves its champion from a series;
+        // every other reserve count uses the standard CHAMPION_SLOTS path
+        reserveCfg && matchResults && teamCount === 4
+          ? reserveChampion(matchResults, teams[reserveCfg.seat])
+          : undefined
+      )
+    : null;
+
   return (
     <div className="bracket-scroll-wrapper">
-      {teams && (
-        <ChampionBanner
-          champion={getChampion(
-            matchResults,
-            teamCount,
-            // only the 7-player bracket resolves its champion from a series;
-            // every other reserve count uses the standard CHAMPION_SLOTS path
-            reserveCfg && matchResults && teamCount === 4
-              ? reserveChampion(matchResults, teams[reserveCfg.seat])
-              : undefined
-          )}
-        />
-      )}
+      {teams && <ChampionBanner champion={champion} />}
 
       {/* The donor pick is otherwise one-way - offer a redo until the reserve
           team has actually played with that partner. Overlays rather than
@@ -369,7 +422,8 @@ export default function Bracket() {
             onEndGame={showEndGameModal}
             onSubmitResults={showSubmitModal}
             onShowInfo={showInfoModal}
-            isTourneyFinished={isTourneyFinished && !hasSubmittedResults}
+            // follows the champion, not the raw slots - see `champion` above
+            isTourneyFinished={Boolean(champion) && !hasSubmittedResults}
             hasSubmittedResults={hasSubmittedResults}
             setIsSummaryModalOpen={setIsSummaryModalOpen}
             onGenerateNewReport={generateNewSummary}

@@ -1,6 +1,15 @@
 import { MatchResult, Team } from "../../../types";
 import { isSameTeam } from "./isSameTeam";
 
+/** How many matches this team has lost across the whole bracket. */
+function countLosses(team: Team, matchResults: MatchResult[]): number {
+  return matchResults.reduce(
+    (total, match) =>
+      match.loser && isSameTeam(match.loser, team) ? total + 1 : total,
+    0
+  );
+}
+
 /**
  * The champion of a finished bracket, or null while it is still in progress.
  *
@@ -32,10 +41,17 @@ function championOf(
   // is already decided. A reset result may still be sitting in slot rf from
   // before a correction; it describes a game that no longer belongs to this
   // bracket, so it must not be read here.
-  if (isSameTeam(grandWinner, wbWinner)) return grandWinner;
+  const winner = isSameTeam(grandWinner, wbWinner)
+    ? grandWinner
+    : // the losers-bracket team won, so the reset final decides it
+      matchResults[rf]?.winner ?? null;
 
-  // the losers-bracket team won, so the reset final decides it
-  return matchResults[rf]?.winner ?? null;
+  // Double elimination: the champion cannot have lost twice. A correction can
+  // leave a slot naming a team that has since been eliminated, so verify the
+  // result rather than trusting it - otherwise Submit would post scores that
+  // crown a team with two losses.
+  if (winner && countLosses(winner, matchResults) >= 2) return null;
+  return winner;
 }
 
 // teamCount -> [winners-final slot, grand-final slot, reset-final slot]
@@ -63,7 +79,14 @@ export function getChampion(
   reserveChampion?: Team | null
 ): Team | null {
   if (!matchResults) return null;
-  if (reserveChampion !== undefined) return reserveChampion;
+  if (reserveChampion !== undefined) {
+    // same sanity check as the standard path - a series resolver reading
+    // corrected slots can also name a team that has since lost twice
+    if (reserveChampion && countLosses(reserveChampion, matchResults) >= 2) {
+      return null;
+    }
+    return reserveChampion;
+  }
 
   const slots = CHAMPION_SLOTS[teamCount];
   if (!slots) return null;

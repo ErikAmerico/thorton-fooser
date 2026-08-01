@@ -264,10 +264,13 @@ export default function FourTeamBracket({
 
   if (reserveMode) {
     const champion = grandFinal.winner;
-    // The losers final needed a second game if game 1 did not end the series.
-    // That box stays visible for the rest of the tournament - those games count
-    // toward every player's score, so they belong on the bracket permanently.
-    const losersFinalDecider = losersFinal.games.length > 1 ||
+    // The losers final needs at most 2 games: Winner of Match 3 always arrives
+    // with exactly one loss (that is how they got to the losers bracket), so
+    // one more eliminates them, while the reserve arrives at zero and needs
+    // two. A second box appears if game 1 did not settle it, and stays for the
+    // rest of the tournament since those games score points.
+    const losersFinalDecider =
+      losersFinal.games.length > 1 ||
       Boolean(losersFinal.games.length > 0 && !losersFinal.winner);
     // The grand final can need up to three games: if both teams arrive
     // undefeated, one has to lose twice. So render a box per extra game the
